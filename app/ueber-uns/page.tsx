@@ -48,7 +48,7 @@ export default function AboutPage() {
                 </span>
               </div>
               <h2 className="text-h2 md:text-h2-lg text-primary mb-6">
-                "Alles, was gut wird, braucht Zeit"
+                &ldquo;Alles, was gut wird, braucht Zeit&rdquo;
               </h2>
               <div className="space-y-4 text-base md:text-body text-primary-dark">
                 <p>
@@ -196,7 +196,7 @@ export default function AboutPage() {
 
               <div className="mt-8 pt-8 border-t border-primary/10 text-center">
                 <p className="text-body-lg text-primary italic font-serif">
-                  "Das ist Olivadis. Das Olivenöl der Griechen."
+                  &ldquo;Das ist Olivadis. Das Olivenöl der Griechen.&rdquo;
                 </p>
               </div>
             </div>

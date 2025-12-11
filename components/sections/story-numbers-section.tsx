@@ -93,7 +93,7 @@ export default function StoryNumbersSection() {
           {/* Bottom Quote */}
           <div className="mt-20 text-center">
             <blockquote className="text-xl md:text-2xl font-serif italic text-white/95 max-w-3xl mx-auto leading-relaxed">
-              "Jede Flasche trägt die Liebe und das Wissen von drei Generationen griechischer Olivenbauern"
+              &ldquo;Jede Flasche trägt die Liebe und das Wissen von drei Generationen griechischer Olivenbauern&rdquo;
             </blockquote>
             <p className="mt-4 text-cream/80 text-sm">
               — Die Olivadis Familie
