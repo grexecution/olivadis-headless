@@ -3,7 +3,9 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getProduct, getAllProducts, getProductVariations, getStockStatus } from '@/lib/woocommerce/products'
 import { AddToCartButton } from '@/components/product/add-to-cart'
-import FamilyOriginSection from '@/components/sections/family-origin-section'
+import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-section'
+import TestimonialsSection from '@/components/sections/testimonials-section'
+import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ProductTabs } from '@/components/product/product-tabs'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 import { formatEUR } from '@/lib/utils/currency'
@@ -23,9 +25,11 @@ export default async function ProductPage({
 }) {
   const { slug } = await params
   let product
+  let testimonials: Testimonial[] = []
 
   try {
     product = await getProduct(slug)
+    testimonials = await getTestimonials()
   } catch (error) {
     notFound()
   }
@@ -284,8 +288,11 @@ export default async function ProductPage({
 
       </div>
 
-      {/* Family & Origin Section */}
-      <FamilyOriginSection />
+      {/* Map Section with Family & Origin */}
+      <FamilyOriginHeroSection />
+
+      {/* Testimonials Section */}
+      <TestimonialsSection testimonials={testimonials} />
     </div>
   )
 }
