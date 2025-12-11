@@ -13,9 +13,9 @@ import {
 import { Recipe } from '@/types/recipe'
 
 interface RecipePageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateStaticParams() {
@@ -32,7 +32,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: RecipePageProps): Promise<Metadata> {
   try {
-    const recipe = await getRecipe(params.slug)
+    const { slug } = await params
+    const recipe = await getRecipe(slug)
     return {
       title: `${recipe.title} | Rezepte | Olivadis`,
       description: recipe.excerpt || `${recipe.title} - Ein köstliches Rezept mit Olivadis Premium Olivenöl`,
@@ -50,10 +51,11 @@ export async function generateMetadata({ params }: RecipePageProps): Promise<Met
 }
 
 export default async function RecipePage({ params }: RecipePageProps) {
+  const { slug } = await params
   let recipe: Recipe
 
   try {
-    recipe = await getRecipe(params.slug)
+    recipe = await getRecipe(slug)
   } catch (error) {
     console.error('Failed to fetch recipe:', error)
     notFound()
