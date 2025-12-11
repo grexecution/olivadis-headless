@@ -13,6 +13,10 @@ interface CheckoutRequestBody {
   payment_method?: string
   payment_method_title?: string
   customer_note?: string
+  coupon_lines?: Array<{
+    code: string
+    discount?: string
+  }>
 }
 
 /**
@@ -58,7 +62,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create order data for WooCommerce
-    const orderData = {
+    const orderData: any = {
       billing: body.billing,
       shipping: body.shipping,
       line_items: body.line_items,
@@ -67,6 +71,11 @@ export async function POST(request: NextRequest) {
       customer_note: body.customer_note || '',
       set_paid: false, // Order needs to be paid
       status: 'pending' as const,
+    }
+
+    // Add coupon lines if provided
+    if (body.coupon_lines && body.coupon_lines.length > 0) {
+      orderData.coupon_lines = body.coupon_lines
     }
 
     // Create order via WooCommerce API

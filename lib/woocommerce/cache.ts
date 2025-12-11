@@ -1,5 +1,5 @@
 import { unstable_cache } from 'next/cache'
-import { Product, ProductVariation } from './products'
+import { Product, ProductVariation, ProductCategory } from './products'
 import { wooClient } from './client'
 
 // Cache product data for 1 hour
@@ -67,5 +67,25 @@ export const getCachedProductVariations = unstable_cache(
   {
     revalidate: 3600, // 1 hour
     tags: ['variations']
+  }
+)
+
+export const getCachedCategories = unstable_cache(
+  async (params?: {
+    per_page?: number
+    hide_empty?: boolean
+  }): Promise<ProductCategory[]> => {
+    const queryParams = new URLSearchParams()
+
+    if (params?.per_page) queryParams.append('per_page', params.per_page.toString())
+    if (params?.hide_empty !== undefined) queryParams.append('hide_empty', params.hide_empty.toString())
+
+    const endpoint = `/products/categories${queryParams.toString() ? `?${queryParams.toString()}` : ''}`
+    return wooClient.request<ProductCategory[]>(endpoint)
+  },
+  ['categories'],
+  {
+    revalidate: 3600, // 1 hour
+    tags: ['categories']
   }
 )

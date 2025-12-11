@@ -29,12 +29,17 @@ const config: Config = {
         serif: ['Lora', 'Georgia', 'serif'],
       },
       fontSize: {
-        // Display & Headings
-        'display': ['88px', { lineHeight: '80.655px', letterSpacing: '-3.52px', fontWeight: '700' }],
-        'h1': ['88px', { lineHeight: '80.655px', letterSpacing: '-3.52px', fontWeight: '700' }],
-        'h2': ['56px', { lineHeight: '70px', letterSpacing: '-2.24px', fontWeight: '700' }],
-        'h3': ['26.642px', { lineHeight: '1.2', letterSpacing: '-0.5328px', fontWeight: '700' }],
-        'h4': ['24px', { lineHeight: '1.3', letterSpacing: '-0.48px', fontWeight: '700' }],
+        // Display & Headings - Responsive for mobile
+        'display': ['48px', { lineHeight: '1.1', letterSpacing: '-1.92px', fontWeight: '700' }],
+        'display-lg': ['88px', { lineHeight: '80.655px', letterSpacing: '-3.52px', fontWeight: '700' }],
+        'h1': ['40px', { lineHeight: '1.1', letterSpacing: '-1.6px', fontWeight: '700' }],
+        'h1-lg': ['88px', { lineHeight: '80.655px', letterSpacing: '-3.52px', fontWeight: '700' }],
+        'h2': ['32px', { lineHeight: '1.2', letterSpacing: '-1.28px', fontWeight: '700' }],
+        'h2-lg': ['56px', { lineHeight: '70px', letterSpacing: '-2.24px', fontWeight: '700' }],
+        'h3': ['24px', { lineHeight: '1.2', letterSpacing: '-0.48px', fontWeight: '700' }],
+        'h3-lg': ['26.642px', { lineHeight: '1.2', letterSpacing: '-0.5328px', fontWeight: '700' }],
+        'h4': ['20px', { lineHeight: '1.3', letterSpacing: '-0.4px', fontWeight: '700' }],
+        'h4-lg': ['24px', { lineHeight: '1.3', letterSpacing: '-0.48px', fontWeight: '700' }],
 
         // Body Text
         'body-lg': ['20px', { lineHeight: '1.5', letterSpacing: '-0.4px', fontWeight: '500' }],

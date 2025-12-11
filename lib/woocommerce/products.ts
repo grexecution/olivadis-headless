@@ -1,4 +1,4 @@
-import { getCachedProducts, getCachedProduct, getCachedProductVariations } from './cache'
+import { getCachedProducts, getCachedProduct, getCachedProductVariations, getCachedCategories } from './cache'
 import { getCached } from './dev-cache'
 
 export interface ProductImage {
@@ -12,6 +12,13 @@ export interface ProductCategory {
   id: number
   name: string
   slug: string
+  description?: string
+  count?: number
+  image?: {
+    id: number
+    src: string
+    alt: string
+  }
 }
 
 export interface ProductAttribute {
@@ -154,7 +161,10 @@ export async function getProductVariations(productId: number): Promise<ProductVa
 }
 
 export async function getFeaturedProducts(): Promise<Product[]> {
-  return getProducts({ featured: true, per_page: 2 })
+  // Get first 3 products to display on homepage
+  // To use actual featured products from WooCommerce, mark products as "featured" in WooCommerce admin
+  // and change this to: return getProducts({ featured: true, per_page: 3 })
+  return getProducts({ per_page: 3, status: 'publish' })
 }
 
 export async function getAllProducts(): Promise<Product[]> {
@@ -163,6 +173,10 @@ export async function getAllProducts(): Promise<Product[]> {
     return getCached('all-products', () => getProducts({ per_page: 100 }))
   }
   return getProducts({ per_page: 100 })
+}
+
+export async function getCategories(): Promise<ProductCategory[]> {
+  return getCachedCategories({ per_page: 100, hide_empty: true })
 }
 
 export async function getProductsByCategory(categorySlug: string): Promise<Product[]> {

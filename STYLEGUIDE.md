@@ -21,7 +21,7 @@ The Olivadis brand uses a rich, natural green palette inspired by olive groves.
 
 **Tailwind Usage:**
 ```tsx
-className="bg-primary text-primary-dark hover:bg-primary-light"
+className="bg-primary text-cream hover:bg-primary-light"
 ```
 
 ### Secondary Colors (Cream/Beige)

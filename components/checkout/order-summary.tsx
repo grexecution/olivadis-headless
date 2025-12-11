@@ -1,18 +1,45 @@
 'use client'
 
 import { CartItem } from '@/lib/cart-context'
+import { Country } from '@/lib/woocommerce/countries-taxes'
+import { formatEUR } from '@/lib/utils/currency'
 import Image from 'next/image'
-import { ShoppingBag } from 'lucide-react'
+import { ShoppingBag, CheckCircle, Lock } from 'lucide-react'
+import { decodeHtmlEntities } from '@/lib/utils/html'
 
 interface OrderSummaryProps {
   items: CartItem[]
   subtotal: number
   shipping?: number
+  shippingMethodTitle?: string
   tax?: number
+  taxRate?: number
+  couponDiscount?: number
+  appliedCoupon?: {
+    code: string
+    freeShipping?: boolean
+  } | null
+  isLoading?: boolean
+  selectedCountry?: string
+  countries?: Country[]
 }
 
-export function OrderSummary({ items, subtotal, shipping = 0, tax = 0 }: OrderSummaryProps) {
-  const total = subtotal + shipping + tax
+export function OrderSummary({
+  items,
+  subtotal,
+  shipping = 0,
+  shippingMethodTitle = 'Versand',
+  tax = 0,
+  taxRate = 0,
+  couponDiscount = 0,
+  appliedCoupon = null,
+  isLoading = false,
+  selectedCountry = 'DE',
+  countries = []
+}: OrderSummaryProps) {
+  // WooCommerce prices already include tax, so total is subtotal + shipping - coupon
+  const total = subtotal + shipping - couponDiscount
+  const countryName = countries.find(c => c.code === selectedCountry)?.name || selectedCountry
 
   return (
     <div className="bg-cream-light rounded-md p-6 border border-primary/10">
@@ -29,6 +56,7 @@ export function OrderSummary({ items, subtotal, shipping = 0, tax = 0 }: OrderSu
                   src={item.image}
                   alt={item.name}
                   fill
+                  sizes="80px"
                   className="object-cover"
                 />
               ) : (
@@ -41,21 +69,21 @@ export function OrderSummary({ items, subtotal, shipping = 0, tax = 0 }: OrderSu
             {/* Product Details */}
             <div className="flex-1">
               <h4 className="text-body font-bold text-primary">
-                {item.name}
+                {decodeHtmlEntities(item.name)}
               </h4>
               {item.variation?.attributes && (
                 <p className="mt-1 text-body-sm text-primary/60">
                   {item.variation.attributes.map((attr) => (
-                    <span key={attr.name}>{attr.value} </span>
+                    <span key={attr.name}>{decodeHtmlEntities(attr.value)} </span>
                   ))}
                 </p>
               )}
               <div className="mt-2 flex justify-between items-center">
-                <span className="text-body text-primary/60">
+                <span className="text-body-sm text-primary/60">
                   Qty: {item.quantity}
                 </span>
-                <span className="text-price text-primary font-bold">
-                  €{(item.price * item.quantity).toFixed(2)}
+                <span className="text-body font-semibold text-primary">
+                  {formatEUR(item.price * item.quantity)}
                 </span>
               </div>
             </div>
@@ -67,26 +95,34 @@ export function OrderSummary({ items, subtotal, shipping = 0, tax = 0 }: OrderSu
       <div className="border-t border-primary/10 mb-4" />
 
       {/* Order Totals */}
-      <div className="space-y-3">
+      <div className="space-y-2">
         {/* Subtotal */}
-        <div className="flex justify-between text-body">
+        <div className="flex justify-between text-body-sm">
           <span className="text-primary/60">Zwischensumme</span>
-          <span className="text-primary font-bold">€{subtotal.toFixed(2)}</span>
+          <span className="text-primary font-medium">{formatEUR(subtotal)}</span>
         </div>
 
         {/* Shipping */}
-        <div className="flex justify-between text-body">
-          <span className="text-primary/60">Versand</span>
-          <span className="text-primary font-bold">
-            {shipping === 0 ? 'Im nächsten Schritt berechnet' : `€${shipping.toFixed(2)}`}
+        <div className="flex justify-between text-body-sm">
+          <span className="text-primary/60">{shippingMethodTitle}</span>
+          <span className="text-primary font-medium text-xs">
+            {shipping === 0 ? 'Kostenlos' : formatEUR(shipping)}
           </span>
         </div>
 
         {/* Tax */}
         {tax > 0 && (
-          <div className="flex justify-between text-body">
+          <div className="flex justify-between text-body-sm">
             <span className="text-primary/60">MwSt. (20%)</span>
-            <span className="text-primary font-bold">€{tax.toFixed(2)}</span>
+            <span className="text-primary font-medium">{formatEUR(tax)}</span>
+          </div>
+        )}
+
+        {/* Coupon Discount */}
+        {couponDiscount > 0 && appliedCoupon && (
+          <div className="flex justify-between text-body-sm">
+            <span className="text-primary-light font-medium">Gutschein ({appliedCoupon.code})</span>
+            <span className="text-primary-light font-medium">-{formatEUR(couponDiscount)}</span>
           </div>
         )}
 
@@ -96,15 +132,40 @@ export function OrderSummary({ items, subtotal, shipping = 0, tax = 0 }: OrderSu
         {/* Total */}
         <div className="flex justify-between text-h4 font-bold">
           <span className="text-primary">Gesamt</span>
-          <span className="text-primary">€{total.toFixed(2)}</span>
+          <span className="text-primary">{formatEUR(total)}</span>
         </div>
+
+        {/* Tax Notice */}
+        {taxRate > 0 && (
+          <p className="text-xs text-primary/60 pt-2">
+            Alle Preise inkl. {taxRate.toFixed(0)}% MwSt. ({countryName})
+          </p>
+        )}
       </div>
 
-      {/* Tax Notice */}
-      <div className="mt-4 pt-4 border-t border-primary/10">
-        <p className="text-body-sm text-primary/60 text-center">
-          Alle Preise inkl. MwSt.
-        </p>
+      {/* Place Order Button */}
+      <button
+        type="submit"
+        disabled={isLoading}
+        className="w-full mt-6 bg-primary text-cream py-4 rounded-lg font-bold text-button hover:bg-primary-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      >
+        {isLoading ? (
+          <>
+            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-cream"></div>
+            Bestellung wird bearbeitet...
+          </>
+        ) : (
+          <>
+            <CheckCircle className="h-5 w-5" />
+            Jetzt kaufen
+          </>
+        )}
+      </button>
+
+      {/* Security Badge */}
+      <div className="mt-4 flex items-center justify-center gap-2 text-xs text-primary-dark/60">
+        <Lock className="h-4 w-4" />
+        Sichere SSL-verschlüsselte Zahlung
       </div>
     </div>
   )

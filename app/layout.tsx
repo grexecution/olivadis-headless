@@ -24,7 +24,9 @@ export default function RootLayout({
       <body className="antialiased bg-background text-foreground font-sans">
         <Providers>
           <Navbar />
-          {children}
+          <div className="pt-20">
+            {children}
+          </div>
           <SideCart />
           <Footer />
         </Providers>

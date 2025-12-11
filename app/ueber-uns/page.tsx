@@ -28,8 +28,8 @@ export default function AboutPage() {
 
         <div className="container relative z-10">
           <div className="max-w-3xl">
-            <h1 className="text-h1 mb-6">Willkommen bei der Olivadis Familie</h1>
-            <p className="text-body-lg leading-relaxed">
+            <h1 className="text-h1 md:text-h1-lg mb-6">Willkommen bei der Olivadis Familie</h1>
+            <p className="text-base md:text-body-lg leading-relaxed">
               Wir sind ein griechischer Familienbetrieb aus Pteleos, der mit Leidenschaft
               und Tradition Premium-Olivenöl produziert.
             </p>
@@ -47,10 +47,10 @@ export default function AboutPage() {
                   Unsere Geschichte
                 </span>
               </div>
-              <h2 className="text-h2 text-primary mb-6">
+              <h2 className="text-h2 md:text-h2-lg text-primary mb-6">
                 "Alles, was gut wird, braucht Zeit"
               </h2>
-              <div className="space-y-4 text-body text-primary-dark">
+              <div className="space-y-4 text-base md:text-body text-primary-dark">
                 <p>
                   Diese Worte meines Vaters begleiten mich seit meiner Kindheit. Schon als kleines Kind
                   lernte ich von ihm die Kunst des Olivenanbaus und die Bedeutung von Geduld im Ernteprozess.

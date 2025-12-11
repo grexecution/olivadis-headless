@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation'
 import { getProduct, getAllProducts, getProductVariations, getStockStatus } from '@/lib/woocommerce/products'
 import { AddToCartButton } from '@/components/product/add-to-cart'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
+import { ProductTabs } from '@/components/product/product-tabs'
+import { decodeHtmlEntities } from '@/lib/utils/html'
+import { formatEUR } from '@/lib/utils/currency'
 
 export async function generateStaticParams() {
   const products = await getAllProducts()
@@ -59,7 +62,7 @@ export default async function ProductPage({
               </Link>
             </li>
             <li>/</li>
-            <li className="text-primary-dark">{product.name}</li>
+            <li className="text-primary-dark">{decodeHtmlEntities(product.name)}</li>
           </ol>
         </nav>
 
@@ -71,7 +74,7 @@ export default async function ProductPage({
               {product.images[0]?.src ? (
                 <Image
                   src={product.images[0].src}
-                  alt={product.images[0].alt || product.name}
+                  alt={decodeHtmlEntities(product.images[0].alt || product.name)}
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
@@ -101,7 +104,7 @@ export default async function ProductPage({
                   >
                     <Image
                       src={image.src}
-                      alt={image.alt || product.name}
+                      alt={decodeHtmlEntities(image.alt || product.name)}
                       fill
                       className="object-cover"
                       sizes="(max-width: 768px) 25vw, 12vw"
@@ -114,36 +117,87 @@ export default async function ProductPage({
 
           {/* Product Info */}
           <div>
-            <h1 className="text-h2 text-primary mb-4">{product.name}</h1>
+            {/* 5 Star Rating */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="flex gap-0.5" aria-label="5 von 5 Sternen">
+                {[...Array(5)].map((_, i) => (
+                  <svg
+                    key={i}
+                    className="w-5 h-5 fill-primary"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                  >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <span className="text-sm text-primary-dark/70">(Ausgezeichnet)</span>
+            </div>
 
-            {/* Price */}
-            <div className="mb-6">
-              {isOnSale ? (
-                <div className="flex items-baseline gap-4">
-                  <span className="text-price text-primary font-bold">
-                    €{price.toFixed(2)}
-                  </span>
-                  <span className="text-body-lg text-primary-dark/40 line-through">
-                    €{regularPrice.toFixed(2)}
-                  </span>
-                  <span className="bg-primary text-cream px-3 py-1 rounded-md text-body-sm font-bold">
-                    Sparen Sie €{(regularPrice - price).toFixed(2)}
-                  </span>
-                </div>
-              ) : (
-                <span className="text-price text-primary font-bold">
-                  €{price.toFixed(2)}
-                </span>
-              )}
+            <h1 className="text-h3 md:text-h3-lg text-primary mb-4 font-serif">
+              {decodeHtmlEntities(product.name)}
+            </h1>
+
+            {/* Origin Badge */}
+            <div className="mb-4">
+              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-full">
+                <span className="text-sm font-semibold">🇬🇷 Aus Griechenland</span>
+              </div>
             </div>
 
             {/* Short Description */}
             {product.short_description && (
               <div
-                className="text-body text-primary-dark mb-6 prose prose-sm max-w-none"
+                className="text-base text-primary-dark/90 mb-6 leading-relaxed"
                 dangerouslySetInnerHTML={{ __html: product.short_description }}
               />
             )}
+
+            {/* Feature List */}
+            <div className="mb-6 p-4 bg-cream/50 rounded-lg border border-primary/10">
+              <h3 className="text-base font-bold text-primary mb-3">Produktmerkmale:</h3>
+              <ul className="space-y-2">
+                <li className="flex items-start gap-2 text-sm text-primary-dark">
+                  <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>100% Bio-zertifiziert aus Familienanbau</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-primary-dark">
+                  <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Kaltgepresst für höchste Qualität</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-primary-dark">
+                  <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Direkt aus Griechenland importiert</span>
+                </li>
+                <li className="flex items-start gap-2 text-sm text-primary-dark">
+                  <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span>Sorgfältig verpackt für sicheren Versand</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Recipe Unlock Badge */}
+            <div className="mb-6 p-4 bg-primary/5 rounded-lg border border-primary/20">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-primary flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+                <div>
+                  <h3 className="text-base font-bold text-primary mb-1">Exklusive Rezepte enthalten!</h3>
+                  <p className="text-sm text-primary-dark/70">
+                    Mit diesem Kauf erhalten Sie Zugang zu exklusiven griechischen Rezepten in unserem Rezeptbereich.
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* Stock Status */}
             <div className="mb-6">
@@ -170,10 +224,34 @@ export default async function ProductPage({
               </div>
             )}
 
-            {/* Add to Cart */}
-            <div className="mb-8">
+            {/* Price & Add to Cart */}
+            <div className="space-y-4">
+              {/* Price */}
+              <div>
+                {isOnSale ? (
+                  <div className="flex items-baseline gap-4">
+                    <span className="text-price text-primary font-bold">
+                      {formatEUR(price)}
+                    </span>
+                    <span className="text-body-lg text-primary-dark/40 line-through">
+                      {formatEUR(regularPrice)}
+                    </span>
+                    <span className="bg-primary text-cream px-3 py-1 rounded-md text-body-sm font-bold">
+                      Sparen Sie {formatEUR(regularPrice - price)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-price text-primary font-bold">
+                    €{price.toFixed(2)}
+                  </span>
+                )}
+              </div>
+
+              {/* Add to Cart */}
               <AddToCartButton product={product} />
             </div>
+
+            <div className="mb-8"></div>
 
             {/* Product Meta */}
             <div className="border-t border-primary-dark/10 pt-6 space-y-3">
@@ -201,73 +279,13 @@ export default async function ProductPage({
           </div>
         </div>
 
-        {/* Product Description */}
-        {product.description && (
-          <div className="mt-12 bg-white rounded-lg p-8 shadow">
-            <h2 className="text-h3 text-primary mb-6 pb-4 border-b border-primary-dark/10">
-              Produktbeschreibung
-            </h2>
-            <div
-              className="prose prose-sm max-w-none text-body text-primary-dark"
-              dangerouslySetInnerHTML={{ __html: product.description }}
-            />
-          </div>
-        )}
-
-        {/* Additional Information from ACF fields */}
-        {product.acf && (
-          <div className="mt-12 bg-white rounded-lg p-8 shadow">
-            <h2 className="text-h3 text-primary mb-6 pb-4 border-b border-primary-dark/10">
-              Zusätzliche Informationen
-            </h2>
-            <div className="space-y-6">
-              {product.acf.product_detail_description && (
-                <div>
-                  <h3 className="text-h4 text-primary mb-3">Produktdetails</h3>
-                  <div
-                    className="prose prose-sm max-w-none text-body text-primary-dark"
-                    dangerouslySetInnerHTML={{ __html: product.acf.product_detail_description }}
-                  />
-                </div>
-              )}
-              {product.acf.scope_of_delivery && (
-                <div>
-                  <h3 className="text-h4 text-primary mb-3">Lieferumfang</h3>
-                  <div
-                    className="prose prose-sm max-w-none text-body text-primary-dark"
-                    dangerouslySetInnerHTML={{ __html: product.acf.scope_of_delivery }}
-                  />
-                </div>
-              )}
-              {product.acf.shipping_information && (
-                <div>
-                  <h3 className="text-h4 text-primary mb-3">Versandinformationen</h3>
-                  <div
-                    className="prose prose-sm max-w-none text-body text-primary-dark"
-                    dangerouslySetInnerHTML={{ __html: product.acf.shipping_information }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+        {/* Product Tabs - Always Show */}
+        <ProductTabs product={product} />
 
       </div>
 
       {/* Family & Origin Section */}
       <FamilyOriginSection />
-
-      <div className="container">
-        {/* Back to Shop Link */}
-        <div className="mt-12 pb-12 text-center">
-          <Link
-            href="/shop"
-            className="inline-block text-primary text-body-lg font-bold hover:text-primary-light transition-colors"
-          >
-            ← Zurück zum Shop
-          </Link>
-        </div>
-      </div>
     </div>
   )
 }

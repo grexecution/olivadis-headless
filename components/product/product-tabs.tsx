@@ -1,0 +1,181 @@
+'use client'
+
+import { useState } from 'react'
+import { Product } from '@/lib/woocommerce/products'
+
+interface ProductTabsProps {
+  product: Product
+}
+
+export function ProductTabs({ product }: ProductTabsProps) {
+  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'shipping'>('description')
+
+  return (
+    <div className="mt-12 bg-white rounded-lg shadow overflow-hidden">
+      {/* Tab Navigation */}
+      <div className="flex border-b border-primary-dark/10">
+        <button
+          onClick={() => setActiveTab('description')}
+          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
+            activeTab === 'description'
+              ? 'bg-primary text-cream'
+              : 'bg-cream/50 text-primary hover:bg-cream'
+          }`}
+        >
+          Beschreibung
+        </button>
+        <button
+          onClick={() => setActiveTab('details')}
+          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
+            activeTab === 'details'
+              ? 'bg-primary text-cream'
+              : 'bg-cream/50 text-primary hover:bg-cream'
+          }`}
+        >
+          Details
+        </button>
+        <button
+          onClick={() => setActiveTab('shipping')}
+          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
+            activeTab === 'shipping'
+              ? 'bg-primary text-cream'
+              : 'bg-cream/50 text-primary hover:bg-cream'
+          }`}
+        >
+          Versand
+        </button>
+      </div>
+
+      {/* Tab Content */}
+      <div className="p-8">
+        {activeTab === 'description' && (
+          <div>
+            {product.description ? (
+              <div
+                className="prose prose-sm max-w-none text-body text-primary-dark"
+                dangerouslySetInnerHTML={{ __html: product.description }}
+              />
+            ) : (
+              <p className="text-body text-primary-dark/70">
+                Keine Beschreibung verfügbar.
+              </p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'details' && (
+          <div className="space-y-6">
+            {/* Product Details from ACF */}
+            {product.acf?.product_detail_description && (
+              <div>
+                <h3 className="text-h4 text-primary mb-3 font-serif">Produktdetails</h3>
+                <div
+                  className="prose prose-sm max-w-none text-body text-primary-dark"
+                  dangerouslySetInnerHTML={{ __html: product.acf.product_detail_description }}
+                />
+              </div>
+            )}
+
+            {/* Additional Information */}
+            {product.acf?.additional_information && (
+              <div>
+                <h3 className="text-h4 text-primary mb-3 font-serif">Zusätzliche Informationen</h3>
+                <div
+                  className="prose prose-sm max-w-none text-body text-primary-dark"
+                  dangerouslySetInnerHTML={{ __html: product.acf.additional_information }}
+                />
+              </div>
+            )}
+
+            {/* Scope of Delivery */}
+            {product.acf?.scope_of_delivery && (
+              <div>
+                <h3 className="text-h4 text-primary mb-3 font-serif">Lieferumfang</h3>
+                <div
+                  className="prose prose-sm max-w-none text-body text-primary-dark"
+                  dangerouslySetInnerHTML={{ __html: product.acf.scope_of_delivery }}
+                />
+              </div>
+            )}
+
+            {/* Weight and Dimensions */}
+            {(product.weight || product.sku) && (
+              <div>
+                <h3 className="text-h4 text-primary mb-3 font-serif">Spezifikationen</h3>
+                <div className="space-y-2">
+                  {product.weight && (
+                    <div className="flex gap-3">
+                      <span className="text-body font-semibold text-primary-dark">Gewicht:</span>
+                      <span className="text-body text-primary-dark/70">{product.weight}</span>
+                    </div>
+                  )}
+                  {product.sku && (
+                    <div className="flex gap-3">
+                      <span className="text-body font-semibold text-primary-dark">Artikelnummer:</span>
+                      <span className="text-body text-primary-dark/70">{product.sku}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* Default message if no details */}
+            {!product.acf?.product_detail_description &&
+             !product.acf?.additional_information &&
+             !product.acf?.scope_of_delivery &&
+             !product.weight &&
+             !product.sku && (
+              <p className="text-body text-primary-dark/70">
+                Keine zusätzlichen Details verfügbar.
+              </p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'shipping' && (
+          <div className="space-y-6">
+            {/* Shipping Info from ACF or default */}
+            {product.acf?.shipping_information ? (
+              <div
+                className="prose prose-sm max-w-none text-body text-primary-dark"
+                dangerouslySetInnerHTML={{ __html: product.acf.shipping_information }}
+              />
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-h4 text-primary mb-3 font-serif">Versand nach Deutschland</h3>
+                  <p className="text-body text-primary-dark/70">
+                    Wir versenden Ihre Bestellung innerhalb von 2-3 Werktagen.
+                    Die Lieferzeit beträgt in der Regel 3-5 Werktage nach Versand.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-h4 text-primary mb-3 font-serif">Versand nach Österreich</h3>
+                  <p className="text-body text-primary-dark/70">
+                    Der Versand nach Österreich erfolgt innerhalb von 2-3 Werktagen.
+                    Die Lieferzeit beträgt in der Regel 4-6 Werktage nach Versand.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="text-h4 text-primary mb-3 font-serif">Verpackung</h3>
+                  <p className="text-body text-primary-dark/70">
+                    Alle unsere Produkte werden sorgfältig verpackt, um eine sichere Lieferung zu gewährleisten.
+                    Wir verwenden umweltfreundliche Verpackungsmaterialien, wann immer möglich.
+                  </p>
+                </div>
+
+                <div className="p-4 bg-primary/5 rounded-lg border border-primary/10">
+                  <p className="text-body-sm text-primary-dark/70">
+                    <strong className="text-primary">Kostenloser Versand</strong> ab einem Bestellwert von 79€
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}

@@ -1,19 +1,31 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check, X, ShoppingCart, ArrowRight } from 'lucide-react'
-import { getFeaturedProducts } from '@/lib/woocommerce/products'
-import { ProductCard } from '@/components/product/product-card'
+import { getCategories } from '@/lib/woocommerce/products'
+import { getTestimonials } from '@/lib/woocommerce/testimonials'
 import { ScrollIndicator } from '@/components/ui/scroll-indicator'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
+import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-section'
+import TestimonialsSection from '@/components/sections/testimonials-section'
+import CTASection from '@/components/sections/cta-section'
+import { decodeHtmlEntities } from '@/lib/utils/html'
 
 export default async function Home() {
-  let featuredProducts = []
+  let categories = []
+  let testimonials = []
 
   try {
-    featuredProducts = await getFeaturedProducts()
+    categories = await getCategories()
   } catch (error) {
-    console.error('Failed to fetch featured products:', error)
+    console.error('Failed to fetch categories:', error)
     // Continue with empty array - show empty state
+  }
+
+  try {
+    testimonials = await getTestimonials()
+  } catch (error) {
+    console.error('Failed to fetch testimonials:', error)
+    // Continue with empty array
   }
 
   return (
@@ -38,12 +50,22 @@ export default async function Home() {
         {/* Content */}
         <div className="container relative z-10">
           <div className="max-w-4xl text-cream">
-            {/* Trust Badge */}
-            <div className="inline-flex items-center gap-2 bg-cream/20 backdrop-blur-sm text-cream px-4 py-2 rounded-full mb-6">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-              <span className="text-sm font-semibold">100% Bio & Familiengeführt</span>
+            {/* Trust Badges */}
+            <div className="flex flex-wrap gap-2 md:gap-3 mb-6">
+              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+                <span className="text-xs md:text-sm font-semibold">100% Bio & Familiengeführt</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                <span className="text-xs md:text-sm font-semibold">🇬🇷 Aus Griechenland</span>
+              </div>
+
+              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                <span className="text-xs md:text-sm font-semibold">⭐⭐⭐⭐⭐ Bewertungen</span>
+              </div>
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-serif">
@@ -75,7 +97,7 @@ export default async function Home() {
 
         {/* Featured Product Mini Box - Sleek Version */}
         <div className="absolute bottom-8 right-8 z-20 hidden lg:block">
-          <div className="bg-white/98 backdrop-blur-md rounded-xl shadow-2xl p-4 w-72 border border-primary/10 hover:shadow-3xl transition-all duration-300">
+          <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-2xl p-4 w-72 border border-primary/10 hover:shadow-3xl transition-all duration-300">
             <div className="flex gap-3 items-center">
               <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-cream/50 flex-shrink-0 p-2">
                 <Image
@@ -105,109 +127,106 @@ export default async function Home() {
         <ScrollIndicator />
       </section>
 
-      {/* Featured Products Section */}
-      <section className="bg-cream py-20" aria-labelledby="featured-products">
+      {/* Product Categories Section */}
+      <section className="bg-cream py-20" aria-labelledby="categories">
         <div className="container">
-          <div className="text-center mb-12">
-            <h2 id="featured-products" className="text-h2 text-primary mb-4">Empfohlene Produkte</h2>
-            <p className="text-body-lg text-primary-dark">
-              Entdecken Sie unsere Premium-Auswahl an Bio-Olivenölen
+          <div className="text-center mb-16">
+            <h2 id="categories" className="text-h2 md:text-h2-lg text-primary mb-4 font-serif">
+              Unsere <span className="italic text-primary-light">Produktkategorien</span>
+            </h2>
+            <p className="text-base md:text-body-lg text-primary-dark max-w-2xl mx-auto">
+              Entdecken Sie unsere vielfältige Auswahl an griechischen Bio-Produkten
             </p>
           </div>
 
-          {featuredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {featuredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
+          {categories.length > 0 ? (
+            <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto mb-12">
+              {categories
+                .filter(cat => cat.slug !== 'uncategorized')
+                .map((category) => (
+                  <Link
+                    key={category.id}
+                    href={`/shop?category=${category.slug}`}
+                    className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500"
+                  >
+                    {/* Category Image */}
+                    <div className="aspect-[4/3] relative bg-primary/5">
+                      {category.image?.src ? (
+                        <Image
+                          src={category.image.src}
+                          alt={decodeHtmlEntities(category.name)}
+                          fill
+                          className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 bg-gradient-to-br from-primary to-primary-light flex items-center justify-center">
+                          <span className="text-6xl opacity-20">🫒</span>
+                        </div>
+                      )}
+
+                      {/* Overlay Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
+
+                      {/* Category Content */}
+                      <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                        <h3 className="text-h3 md:text-h3-lg font-serif text-white mb-2">
+                          {decodeHtmlEntities(category.name)}
+                        </h3>
+
+                        {category.description && (
+                          <p className="text-sm text-white/90 mb-3 line-clamp-2">
+                            {decodeHtmlEntities(category.description)}
+                          </p>
+                        )}
+
+                        <div className="flex items-center justify-between">
+                          <span className="text-white/80 text-sm font-medium">
+                            {category.count} {category.count === 1 ? 'Produkt' : 'Produkte'}
+                          </span>
+
+                          <div className="flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all">
+                            <span className="text-sm">Entdecken</span>
+                            <ArrowRight className="w-5 h-5" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
             </div>
           ) : (
-            <div className="max-w-md mx-auto bg-white p-8 rounded-lg border border-primary/20">
-              <p className="text-body text-primary-dark/70 text-center">
-                Empfohlene Produkte werden hier angezeigt, sobald Sie Ihre WooCommerce-API-Anmeldedaten in <code className="bg-cream px-2 py-1 rounded text-sm">.env.local</code> konfiguriert haben
+            <div className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-md border border-primary/10 mb-12">
+              <p className="text-base md:text-body text-primary-dark/70 text-center">
+                Kategorien werden hier angezeigt, sobald Sie Ihre WooCommerce-API-Anmeldedaten in <code className="bg-cream px-2 py-1 rounded text-sm">.env.local</code> konfiguriert haben
               </p>
             </div>
           )}
 
-          <div className="text-center mt-12">
+          <div className="text-center">
             <Link
               href="/shop"
-              className="inline-block text-primary text-body-lg font-bold hover:text-primary-light transition-colors"
+              className="inline-flex items-center gap-2 bg-primary !text-white px-8 py-4 rounded-full text-button font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-lg"
             >
-              Alle Produkte ansehen →
+              Alle Produkte ansehen
+              <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Family & Origin Section */}
-      <FamilyOriginSection />
-
-      {/* About/Story Section with Background Image */}
-      <section className="relative bg-background py-20 overflow-hidden" aria-labelledby="family-tradition">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=1600&auto=format&fit=crop&q=80"
-            alt=""
-            fill
-            className="object-cover"
-            priority={false}
-          />
-          <div className="absolute inset-0 bg-background/90" />
-        </div>
-
-        <div className="container relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 id="family-tradition" className="text-h2 text-primary mb-6">
-                Eine Familientradition seit Generationen
-              </h2>
-              <p className="text-body text-primary-dark mb-4">
-                Bei Olivadis kultivieren wir seit Generationen die feinsten Oliven in den sonnenverwöhnten Hainen Griechenlands. Unsere Leidenschaft für Qualität und Nachhaltigkeit treibt alles an, was wir tun.
-              </p>
-              <p className="text-body text-primary-dark mb-6">
-                Jede Flasche Olivadis-Olivenöl trägt die Essenz der Hingabe unserer Familie, vom Baum bis zum Tisch.
-              </p>
-              <Link
-                href="/ueber-uns"
-                className="inline-block bg-primary text-cream px-8 py-4 rounded-full text-button hover:bg-primary/90 transition-colors font-bold"
-              >
-                Entdecken Sie unsere Geschichte
-              </Link>
-            </div>
-
-            {/* Image Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {[
-                { src: 'https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=600&auto=format&fit=crop&q=80', alt: 'Olivenbäume in Griechenland' },
-                { src: 'https://images.unsplash.com/photo-1600335895229-6e75511892c8?w=600&auto=format&fit=crop&q=80', alt: 'Olivenöl wird gegossen' },
-                { src: 'https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=600&auto=format&fit=crop&q=80', alt: 'Frische Oliven' },
-                { src: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&auto=format&fit=crop&q=80', alt: 'Griechische Landschaft' }
-              ].map((image, i) => (
-                <div key={i} className="aspect-square bg-cream rounded-lg overflow-hidden relative">
-                  <Image
-                    src={image.src}
-                    alt={image.alt}
-                    fill
-                    className="object-cover hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Family & Origin Hero Section - New Design */}
+      <FamilyOriginHeroSection />
 
       {/* Product Delivery Section with Video */}
       <section className="bg-cream/80 py-20" aria-labelledby="product-delivery">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="space-y-6">
-              <h2 id="product-delivery" className="text-h2 text-primary">
+              <h2 id="product-delivery" className="text-h2 md:text-h2-lg text-primary">
                 So sieht unser <span className="font-serif italic text-primary-light">Olivenöl</span> aus, wenn es bei Ihnen ankommt
               </h2>
-              <p className="text-body-lg text-primary-dark">
+              <p className="text-base md:text-body-lg text-primary-dark">
                 Unser Olivenöl kommt in einer hochwertigen Glasflasche zu Ihnen nach Hause, die so dekorativ ist, dass selbst Ihre Gäste staunen werden.
               </p>
               <Link
@@ -245,7 +264,7 @@ export default async function Home() {
             </div>
             {/* Olivadis Column */}
             <div className="bg-[rgba(60,224,77,0.05)] rounded-tl-2xl rounded-bl-2xl lg:rounded-tr-none lg:rounded-br-none rounded-tr-2xl rounded-br-2xl lg:rounded-bl-2xl p-8 lg:p-12">
-              <h3 className="text-h3 text-center mb-6">
+              <h3 className="text-h3 md:text-h3-lg text-center mb-6">
                 <span className="font-serif italic text-primary-light">Olivadis</span> natives Olivenöl extra
               </h3>
               <div className="relative h-64 lg:h-80 mb-8 flex items-center justify-center">
@@ -278,7 +297,7 @@ export default async function Home() {
 
             {/* Conventional Column */}
             <div className="bg-background rounded-tr-2xl rounded-br-2xl lg:rounded-tl-none lg:rounded-bl-none rounded-tl-2xl rounded-bl-2xl lg:rounded-tr-2xl p-8 lg:p-12 mt-8 lg:mt-0">
-              <h3 className="text-h3 text-center mb-6">
+              <h3 className="text-h3 md:text-h3-lg text-center mb-6">
                 <span className="font-serif italic text-red-700">Herkömmliches</span> Supermarkt-Olivenöl
               </h3>
               <div className="relative h-64 lg:h-80 mb-8 flex items-center justify-center">
@@ -322,119 +341,16 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* New Release - Snack Olives Section */}
-      <section className="bg-cream/80 py-20" aria-labelledby="new-release">
-        <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-block bg-primary/10 px-4 py-1.5 rounded-full">
-                <span className="text-sm text-primary font-bold">Neue Veröffentlichung</span>
-              </div>
-              <h2 id="new-release" className="text-h2 text-primary">
-                <span className="font-serif italic text-primary-light">Olivadis</span> Snack Oliven 🫒
-              </h2>
-              <p className="text-body-lg text-primary-dark">
-                Für kurze Zeit und limitiert: Original Amfissis-Oliven direkt von unserem Olivenhain in Griechenland gepflückt.
-                Jetzt in 3 unwiderstehlichen Sorten erhältlich. Die perfekte Ergänzung zu Ihrem Olivenöl.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="bg-primary-dark text-cream px-5 py-2 rounded-full text-sm font-bold">
-                  Schwarze Oliven mit Kern
-                </span>
-                <span className="bg-[#a26351] text-cream px-5 py-2 rounded-full text-sm font-bold">
-                  Schwarze Oliven mit Oregano
-                </span>
-                <span className="bg-primary-light text-cream px-5 py-2 rounded-full text-sm font-bold">
-                  Grüne Oliven mit Kern
-                </span>
-              </div>
-            </div>
-            <div className="bg-background rounded-2xl shadow-xl overflow-hidden relative h-[400px] lg:h-[500px]">
-              <div className="absolute inset-0 flex items-center justify-center p-8">
-                <Image
-                  src="https://images.unsplash.com/photo-1611250282021-10f90a1e8ab4?w=600&auto=format&fit=crop&q=80"
-                  alt="Olivadis Snack Oliven Sortiment"
-                  width={400}
-                  height={400}
-                  className="object-contain"
-                />
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 bg-primary p-6 lg:p-8">
-                <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
-                  <div className="text-cream">
-                    <h3 className="text-xl lg:text-2xl font-bold mb-2">Schwarze Amfissia-Oliven mit Kern</h3>
-                    <p className="text-sm mb-2 opacity-90">3x300g</p>
-                    <p className="text-2xl lg:text-3xl font-bold">€26.90</p>
-                  </div>
-                  <Link
-                    href="/shop"
-                    className="inline-flex items-center gap-2 bg-cream text-primary px-6 py-3 rounded-lg text-sm font-bold hover:bg-cream/90 transition-all hover:scale-105 w-full sm:w-auto justify-center"
-                  >
-                    <ShoppingCart className="w-4 h-4" aria-hidden="true" />
-                    Jetzt vorbestellen
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Testimonials / Wall of Love */}
+      <TestimonialsSection testimonials={testimonials} />
 
-      {/* Final CTA Section - Clean & Cool */}
-      <section className="relative py-32 overflow-hidden" aria-labelledby="final-cta">
-        {/* Subtle Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, #1C4220 1px, transparent 0)',
-            backgroundSize: '40px 40px'
-          }} />
-        </div>
-
-        <div className="container relative z-10">
-          <div className="max-w-4xl mx-auto text-center space-y-12">
-            {/* Heading */}
-            <div className="space-y-6">
-              <h2 id="final-cta" className="text-h1 text-primary leading-tight">
-                Bereit für <span className="font-serif italic text-primary-light">echtes</span> Olivenöl?
-              </h2>
-              <p className="text-body-lg text-primary-dark max-w-2xl mx-auto leading-relaxed">
-                Entdecken Sie den Unterschied, den authentisches Bio-Olivenöl aus Griechenland macht.
-              </p>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="flex flex-wrap justify-center gap-8 py-8">
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-primary" aria-hidden="true" />
-                </div>
-                <span className="text-sm font-bold text-primary">100% Bio-zertifiziert</span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-primary" aria-hidden="true" />
-                </div>
-                <span className="text-sm font-bold text-primary">Frische 2024 Ernte</span>
-              </div>
-              <div className="flex items-center gap-3 bg-white/50 backdrop-blur-sm px-6 py-3 rounded-full shadow-md">
-                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Check className="w-5 h-5 text-primary" aria-hidden="true" />
-                </div>
-                <span className="text-sm font-bold text-primary">Direkt vom Erzeuger</span>
-              </div>
-            </div>
-
-            {/* CTA Button */}
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-3 bg-primary text-cream px-12 py-5 rounded-full text-button hover:bg-primary-light transition-all hover:scale-105 font-bold shadow-2xl hover:shadow-3xl"
-            >
-              Jetzt Olivenöl entdecken
-              <ArrowRight className="w-5 h-5" aria-hidden="true" />
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Final CTA Section */}
+      <CTASection
+        heading="Bereit für echtes griechisches Bio-Olivenöl?"
+        subheading="Entdecken Sie den Unterschied, den authentisches Olivenöl aus Griechenland macht."
+        buttonText="Jetzt entdecken"
+        variant="primary"
+      />
     </main>
   )
 }

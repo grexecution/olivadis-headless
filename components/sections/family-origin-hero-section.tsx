@@ -1,0 +1,124 @@
+'use client'
+
+import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import { MapPin } from 'lucide-react'
+import dynamic from 'next/dynamic'
+
+// Dynamically import map component to avoid SSR issues
+const MapComponent = dynamic(() => import('./map-component'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-full flex items-center justify-center">
+      <MapPin className="w-8 h-8 text-white/50 animate-pulse" />
+    </div>
+  ),
+})
+
+interface FamilyMember {
+  name: string
+  role: string
+  image: string
+}
+
+const familyMembers: FamilyMember[] = [
+  {
+    name: 'Miltiadis',
+    role: 'Gründer & Vater',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
+  },
+  {
+    name: 'Niki',
+    role: 'Tochter & Geschäftsführerin',
+    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80',
+  },
+  {
+    name: 'Cris',
+    role: 'Sohn',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
+  },
+]
+
+export default function FamilyOriginHeroSection() {
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return (
+    <section className="relative h-[500px] md:h-[600px] overflow-hidden" aria-labelledby="family-origin-hero">
+      {/* Full-screen Map Background */}
+      <div className="absolute inset-0 z-0">
+        {mounted && <MapComponent />}
+        {/* Very light gradient overlay to show maximum map detail */}
+        <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-primary/10 to-primary/30" />
+      </div>
+
+      {/* Content Container */}
+      <div className="container relative z-10 h-full flex flex-col justify-between py-12 md:py-16">
+        {/* Top Content - Just space for alignment */}
+        <div></div>
+
+        {/* Bottom Content - Family Tree Layout */}
+        <div className="flex flex-col items-center gap-8">
+          {/* Founder - Largest */}
+          <div className="group flex items-center gap-3 bg-primary/95 backdrop-blur-md px-6 py-4 rounded-full border-2 border-cream/60 shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
+            {/* Larger circular photo for founder */}
+            <div className="relative w-16 h-16 rounded-full overflow-hidden ring-4 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
+              <Image
+                src={familyMembers[0].image}
+                alt={familyMembers[0].name}
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            {/* Founder Text */}
+            <div className="text-left pr-2">
+              <h3 className="text-xl font-bold text-white font-serif leading-tight">
+                {familyMembers[0].name}
+              </h3>
+              <p className="text-sm text-cream/90">
+                {familyMembers[0].role}
+              </p>
+            </div>
+          </div>
+
+          {/* Connection Line */}
+          <div className="w-0.5 h-8 bg-cream/50" />
+
+          {/* Children - Smaller, Side by Side */}
+          <div className="flex flex-wrap justify-center gap-4">
+            {familyMembers.slice(1).map((member, index) => (
+              <div
+                key={index}
+                className="group flex items-center gap-2 bg-primary/90 backdrop-blur-md px-4 py-3 rounded-full border border-cream/40 shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
+              >
+                {/* Smaller circular photo for children */}
+                <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+
+                {/* Children Text */}
+                <div className="text-left pr-2">
+                  <h3 className="text-base font-bold text-white font-serif leading-tight">
+                    {member.name}
+                  </h3>
+                  <p className="text-xs text-cream/90">
+                    {member.role}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}

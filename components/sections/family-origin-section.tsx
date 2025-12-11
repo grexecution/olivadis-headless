@@ -56,20 +56,25 @@ export default function FamilyOriginSection() {
   return (
     <section className="bg-background py-20" aria-labelledby="family-origin">
       <div className="container">
+        {/* Main Section Heading */}
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <h2 id="family-origin" className="text-h2 md:text-h2-lg text-primary mb-4">
+            Familie & <span className="font-serif italic text-primary-light">Herkunft</span>
+          </h2>
+          <p className="text-base md:text-body-lg text-primary-dark leading-relaxed">
+            Seit Generationen widmen wir uns mit Herz und Seele dem Anbau der besten Oliven in Pteleos, Griechenland.
+          </p>
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Family Section */}
           <div className="space-y-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-primary" aria-hidden="true" />
-                </div>
-                <h2 id="family-origin" className="text-h2 text-primary">
-                  Die <span className="font-serif italic text-primary-light">Olivadis</span> Familie
-                </h2>
+            <div className="flex items-center gap-3 mb-6">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Users className="w-5 h-5 text-primary" aria-hidden="true" />
               </div>
-              <p className="text-body-lg text-primary-dark leading-relaxed">
-                Seit Generationen widmen wir uns mit Herz und Seele dem Anbau der besten Oliven in Pteleos, Griechenland.
+              <p className="text-xl font-bold text-primary">
+                Die Olivadis Familie
               </p>
             </div>
 
@@ -100,40 +105,16 @@ export default function FamilyOriginSection() {
 
           {/* Map Section */}
           <div className="space-y-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-primary-light/10 flex items-center justify-center">
-                  <MapPin className="w-6 h-6 text-primary-light" aria-hidden="true" />
-                </div>
-                <h3 className="text-h3 text-primary">
-                  Direkt aus <span className="font-serif italic text-primary-light">Pteleos</span>
-                </h3>
-              </div>
-              <p className="text-body text-primary-dark leading-relaxed">
-                Unser Olivenhain liegt im Herzen Griechenlands, wo das mediterrane Klima und die fruchtbare Erde
-                perfekte Bedingungen für erstklassiges Olivenöl schaffen.
-              </p>
-            </div>
-
             {/* Map Container */}
-            <div className="relative h-[400px] rounded-2xl overflow-hidden shadow-xl border-4 border-primary/20">
+            <div className="relative h-[450px] rounded-2xl overflow-hidden shadow-xl border-4 border-primary/20">
               {mounted && <MapComponent />}
             </div>
 
-            {/* Location Details */}
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center bg-white/50 backdrop-blur-sm p-4 rounded-xl border border-primary/10">
-                <p className="text-2xl font-bold text-primary-light mb-1">300+</p>
-                <p className="text-xs text-primary-dark font-semibold">Sonnentage</p>
-              </div>
-              <div className="text-center bg-white/50 backdrop-blur-sm p-4 rounded-xl border border-primary/10">
-                <p className="text-2xl font-bold text-primary-light mb-1">1970</p>
-                <p className="text-xs text-primary-dark font-semibold">Seit</p>
-              </div>
-              <div className="text-center bg-white/50 backdrop-blur-sm p-4 rounded-xl border border-primary/10">
-                <p className="text-2xl font-bold text-primary-light mb-1">100%</p>
-                <p className="text-xs text-primary-dark font-semibold">Bio</p>
-              </div>
+            {/* Elegant bottom text */}
+            <div className="text-center">
+              <p className="text-body text-primary-dark/70 leading-relaxed italic">
+                Seit 1970 kultivieren wir <span className="font-semibold text-primary">100% Bio</span> Oliven unter der griechischen Sonne
+              </p>
             </div>
           </div>
         </div>

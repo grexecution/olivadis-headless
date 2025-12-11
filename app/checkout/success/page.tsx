@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { CheckCircle, ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { formatEUR } from '@/lib/utils/currency'
 
 interface OrderDetails {
   id: number
@@ -119,8 +120,7 @@ export default function CheckoutSuccessPage() {
               <div className="flex justify-between text-h4 font-bold">
                 <span className="text-primary">Gesamt</span>
                 <span className="text-primary">
-                  {order.currency === 'EUR' ? '€' : order.currency}
-                  {parseFloat(order.total).toFixed(2)}
+                  {formatEUR(parseFloat(order.total))}
                 </span>
               </div>
             </div>

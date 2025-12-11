@@ -4,71 +4,54 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { WooCommerceAddress } from '@/types/woocommerce'
+import { Country } from '@/lib/woocommerce/countries-taxes'
 
 interface CheckoutFormProps {
   onSubmit: (billing: WooCommerceAddress, shipping: WooCommerceAddress) => void
   isLoading?: boolean
 }
 
-export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps) {
-  const [sameAsBilling, setSameAsBilling] = useState(true)
-  const [formData, setFormData] = useState({
-    billing: {
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone: '',
-      address_1: '',
-      address_2: '',
-      city: '',
-      postcode: '',
-      country: 'AT',
-      state: '',
-      company: '',
-    },
-    shipping: {
-      first_name: '',
-      last_name: '',
-      address_1: '',
-      address_2: '',
-      city: '',
-      postcode: '',
-      country: 'AT',
-      state: '',
-      company: '',
-    },
-  })
+interface CheckoutFormData {
+  billing: WooCommerceAddress
+  shipping: WooCommerceAddress
+  sameAsBilling: boolean
+}
 
+interface CheckoutFormComponentProps {
+  formData: CheckoutFormData
+  onFormDataChange: (data: CheckoutFormData) => void
+  isLoading?: boolean
+  shippableCountries: string[]
+  countries: Country[]
+}
+
+export function CheckoutForm({ formData, onFormDataChange, isLoading = false, shippableCountries, countries }: CheckoutFormComponentProps) {
   const handleInputChange = (
     section: 'billing' | 'shipping',
     field: keyof WooCommerceAddress,
     value: string
   ) => {
-    setFormData(prev => ({
-      ...prev,
+    onFormDataChange({
+      ...formData,
       [section]: {
-        ...prev[section],
+        ...formData[section],
         [field]: value,
       },
-    }))
+    })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-
-    const shipping = sameAsBilling
-      ? {
-          ...formData.billing,
-          email: undefined,
-          phone: undefined,
-        }
-      : formData.shipping
-
-    onSubmit(formData.billing, shipping)
+  const setSameAsBilling = (value: boolean) => {
+    onFormDataChange({
+      ...formData,
+      sameAsBilling: value,
+    })
   }
+
+  // Filter countries to only shippable ones
+  const availableCountries = countries.filter(c => shippableCountries.includes(c.code))
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <div className="space-y-8">
       {/* Billing Information */}
       <div>
         <h3 className="text-h3 text-primary mb-6">Rechnungsinformationen</h3>
@@ -102,72 +85,63 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
             </div>
           </div>
 
-          <div>
-            <label htmlFor="billing_email" className="block text-body text-primary mb-2">
-              E-Mail *
-            </label>
-            <Input
-              id="billing_email"
-              type="email"
-              required
-              value={formData.billing.email}
-              onChange={(e) => handleInputChange('billing', 'email', e.target.value)}
-              placeholder="max.mustermann@beispiel.de"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="billing_email" className="block text-body text-primary mb-2">
+                E-Mail *
+              </label>
+              <Input
+                id="billing_email"
+                type="email"
+                required
+                value={formData.billing.email}
+                onChange={(e) => handleInputChange('billing', 'email', e.target.value)}
+                placeholder="max.mustermann@beispiel.de"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="billing_phone" className="block text-body text-primary mb-2">
+                Telefon *
+              </label>
+              <Input
+                id="billing_phone"
+                type="tel"
+                required
+                value={formData.billing.phone}
+                onChange={(e) => handleInputChange('billing', 'phone', e.target.value)}
+                placeholder="+43 123 456789"
+              />
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="billing_phone" className="block text-body text-primary mb-2">
-              Telefon *
-            </label>
-            <Input
-              id="billing_phone"
-              type="tel"
-              required
-              value={formData.billing.phone}
-              onChange={(e) => handleInputChange('billing', 'phone', e.target.value)}
-              placeholder="+43 123 456789"
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="billing_address_1" className="block text-body text-primary mb-2">
+                Adresse *
+              </label>
+              <Input
+                id="billing_address_1"
+                type="text"
+                required
+                value={formData.billing.address_1}
+                onChange={(e) => handleInputChange('billing', 'address_1', e.target.value)}
+                placeholder="Straße und Hausnummer"
+              />
+            </div>
 
-          <div>
-            <label htmlFor="billing_company" className="block text-body text-primary mb-2">
-              Firma (optional)
-            </label>
-            <Input
-              id="billing_company"
-              type="text"
-              value={formData.billing.company}
-              onChange={(e) => handleInputChange('billing', 'company', e.target.value)}
-              placeholder="Firmenname"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="billing_address_1" className="block text-body text-primary mb-2">
-              Adresse *
-            </label>
-            <Input
-              id="billing_address_1"
-              type="text"
-              required
-              value={formData.billing.address_1}
-              onChange={(e) => handleInputChange('billing', 'address_1', e.target.value)}
-              placeholder="Straße und Hausnummer"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="billing_address_2" className="block text-body text-primary mb-2">
-              Adresszeile 2 (optional)
-            </label>
-            <Input
-              id="billing_address_2"
-              type="text"
-              value={formData.billing.address_2}
-              onChange={(e) => handleInputChange('billing', 'address_2', e.target.value)}
-              placeholder="Wohnung, Stockwerk, etc."
-            />
+            <div>
+              <label htmlFor="billing_address_2" className="block text-body text-primary mb-2">
+                Adresszeile 2 (optional)
+              </label>
+              <Input
+                id="billing_address_2"
+                type="text"
+                value={formData.billing.address_2}
+                onChange={(e) => handleInputChange('billing', 'address_2', e.target.value)}
+                placeholder="Wohnung, Stockwerk, etc."
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -210,13 +184,11 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
               onChange={(e) => handleInputChange('billing', 'country', e.target.value)}
               className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
             >
-              <option value="AT">Österreich</option>
-              <option value="DE">Deutschland</option>
-              <option value="CH">Schweiz</option>
-              <option value="IT">Italien</option>
-              <option value="FR">Frankreich</option>
-              <option value="NL">Niederlande</option>
-              <option value="BE">Belgien</option>
+              {availableCountries.map(country => (
+                <option key={country.code} value={country.code}>
+                  {country.name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
@@ -224,21 +196,21 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
 
       {/* Shipping Address Toggle */}
       <div className="border-t border-primary/10 pt-6">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-center gap-3 cursor-pointer group">
           <input
             type="checkbox"
-            checked={sameAsBilling}
+            checked={formData.sameAsBilling}
             onChange={(e) => setSameAsBilling(e.target.checked)}
-            className="w-4 h-4 rounded border-gray-300 text-primary focus:ring-primary"
+            className="w-5 h-5 rounded border-2 border-primary/30 text-primary bg-white checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0 cursor-pointer transition-all duration-200 accent-primary"
           />
-          <span className="text-body text-primary">
+          <span className="text-body text-primary group-hover:text-primary-light transition-colors">
             Versandadresse ist identisch mit Rechnungsadresse
           </span>
         </label>
       </div>
 
       {/* Shipping Information */}
-      {!sameAsBilling && (
+      {!formData.sameAsBilling && (
         <div>
           <h3 className="text-h3 text-primary mb-6">Versandinformationen</h3>
           <div className="space-y-4">
@@ -351,31 +323,20 @@ export function CheckoutForm({ onSubmit, isLoading = false }: CheckoutFormProps)
                 onChange={(e) => handleInputChange('shipping', 'country', e.target.value)}
                 className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               >
-                <option value="AT">Österreich</option>
-                <option value="DE">Deutschland</option>
-                <option value="CH">Schweiz</option>
-                <option value="IT">Italien</option>
-                <option value="FR">Frankreich</option>
-                <option value="NL">Niederlande</option>
-                <option value="BE">Belgien</option>
+                {availableCountries.map(country => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
         </div>
       )}
 
-      {/* Submit Button */}
-      <div className="border-t border-primary/10 pt-6">
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full md:w-auto md:min-w-[200px]"
-          disabled={isLoading}
-        >
-          {isLoading ? 'Wird bearbeitet...' : 'Bestellung aufgeben'}
-        </Button>
-      </div>
-    </form>
+    </div>
   )
 }
+
+// Export the type for use in parent component
+export type { CheckoutFormData }

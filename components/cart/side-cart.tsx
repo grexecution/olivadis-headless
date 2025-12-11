@@ -7,6 +7,8 @@ import { useCart } from '@/lib/cart-context'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { decodeHtmlEntities } from '@/lib/utils/html'
+import { formatEUR } from '@/lib/utils/currency'
 
 export function SideCart() {
   const {
@@ -107,12 +109,12 @@ export function SideCart() {
                                 <div className="flex justify-between">
                                   <div className="flex-1">
                                     <h3 className="text-body font-bold text-primary">
-                                      {item.name}
+                                      {decodeHtmlEntities(item.name)}
                                     </h3>
                                     {item.variation?.attributes && (
                                       <p className="mt-1 text-body-sm text-primary/60">
                                         {item.variation.attributes.map((attr) => (
-                                          <span key={attr.name}>{attr.value} </span>
+                                          <span key={attr.name}>{decodeHtmlEntities(attr.value)} </span>
                                         ))}
                                       </p>
                                     )}
@@ -144,7 +146,7 @@ export function SideCart() {
                                     </button>
                                   </div>
                                   <p className="text-price text-primary font-bold">
-                                    €{(item.price * item.quantity).toFixed(2)}
+                                    {formatEUR(item.price * item.quantity)}
                                   </p>
                                 </div>
                               </div>
@@ -160,7 +162,7 @@ export function SideCart() {
                         {/* Subtotal */}
                         <div className="flex justify-between text-body mb-4">
                           <p className="text-primary/60">Zwischensumme</p>
-                          <p className="text-primary font-bold">€{totalPrice.toFixed(2)}</p>
+                          <p className="text-primary font-bold">{formatEUR(totalPrice)}</p>
                         </div>
 
                         <div className="border-b border-primary/10 mb-4" />
@@ -168,7 +170,7 @@ export function SideCart() {
                         {/* Total */}
                         <div className="flex justify-between text-h4 font-bold mb-6">
                           <p className="text-primary">Gesamt</p>
-                          <p className="text-primary">€{totalPrice.toFixed(2)}</p>
+                          <p className="text-primary">{formatEUR(totalPrice)}</p>
                         </div>
 
                         {/* Tax Notice */}

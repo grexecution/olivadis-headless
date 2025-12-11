@@ -30,8 +30,8 @@ export default async function ShopPage() {
         </div>
 
         <div className="container relative z-10 text-center">
-          <h1 className="text-h1 mb-4 font-serif">Shop</h1>
-          <p className="text-xl text-cream/90 max-w-2xl mx-auto">
+          <h1 className="text-h1 md:text-h1-lg mb-4 font-serif">Shop</h1>
+          <p className="text-lg md:text-xl text-cream/90 max-w-2xl mx-auto">
             Entdecken Sie unsere Premium-Olivenöl-Kollektion aus den sonnenverwöhnten Hainen Griechenlands
           </p>
         </div>
@@ -57,8 +57,8 @@ export default async function ShopPage() {
           ) : (
             <div className="text-center py-20">
               <div className="max-w-md mx-auto bg-cream p-8 rounded-lg">
-                <p className="text-h3 text-primary mb-4">Keine Produkte gefunden</p>
-                <p className="text-body text-primary-dark/70">
+                <p className="text-h3 md:text-h3-lg text-primary mb-4">Keine Produkte gefunden</p>
+                <p className="text-base md:text-body text-primary-dark/70">
                   Produkte werden hier angezeigt, sobald Sie Ihre WooCommerce-API-Anmeldedaten in <code className="bg-white px-2 py-1 rounded text-sm">.env.local</code> konfiguriert haben
                 </p>
               </div>

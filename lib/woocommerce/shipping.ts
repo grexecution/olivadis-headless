@@ -1,4 +1,5 @@
 import { wooClient } from './client'
+import { parseGermanNumber } from '@/lib/utils/currency'
 
 export interface ShippingRule {
   conditions: Array<{
@@ -151,45 +152,87 @@ export function findShippingZoneForCountry(
 }
 
 /**
- * Calculate shipping cost based on total cart weight and shipping zone
+ * Calculate shipping cost based on shipping zone (supports standard WooCommerce methods)
  */
 export function calculateShippingCost(
   zone: ShippingZoneWithMethods,
-  totalWeightKg: number
+  totalWeightKg: number,
+  cartSubtotal: number
 ): { cost: number; methodTitle: string } | null {
-  // Find the first enabled Flexible Shipping method
-  const flexibleShippingMethod = zone.methods.find(
-    method => method.enabled && method.method_id === 'flexible_shipping_single'
-  )
+  // Check all enabled methods and apply the first one that matches
+  for (const method of zone.methods) {
+    if (!method.enabled) continue
 
-  if (!flexibleShippingMethod || !flexibleShippingMethod.settings.method_rules) {
-    // No flexible shipping method found, return null
-    return null
+    // Free shipping method
+    if (method.method_id === 'free_shipping') {
+      const minAmount = parseFloat(method.settings.min_amount?.value || '0')
+
+      if (minAmount === 0 || cartSubtotal >= minAmount) {
+        return {
+          cost: 0,
+          methodTitle: method.title || 'Kostenloser Versand'
+        }
+      }
+      continue
+    }
+
+    // Flat rate shipping
+    if (method.method_id === 'flat_rate') {
+      // Handle German number format (5,99 -> 5.99)
+      const cost = parseGermanNumber(method.settings.cost?.value || '0')
+      return {
+        cost,
+        methodTitle: method.title || 'Versand'
+      }
+    }
+
+    // Flexible Shipping plugin support (weight-based or order-based rules)
+    if (method.method_id === 'flexible_shipping_single') {
+      if (!method.settings.method_rules) {
+        continue
+      }
+
+      const rules = method.settings.method_rules.value
+
+      // Find the matching rule based on order amount OR weight
+      const matchingRule = rules.find(rule => {
+        // Check for order amount condition
+        const orderAmountCondition = rule.conditions.find(c => c.condition_id === 'order_amount')
+        if (orderAmountCondition) {
+          const min = parseFloat(orderAmountCondition.min || '0')
+          const max = parseFloat(orderAmountCondition.max || '999999')
+          if (cartSubtotal >= min && cartSubtotal <= max) {
+            return true
+          }
+        }
+
+        // Check for weight condition (if products have weight)
+        if (totalWeightKg > 0) {
+          const weightCondition = rule.conditions.find(c => c.condition_id === 'weight')
+          if (weightCondition) {
+            const min = parseFloat(weightCondition.min || '0')
+            const max = parseFloat(weightCondition.max || '999999')
+            if (totalWeightKg >= min && totalWeightKg <= max) {
+              return true
+            }
+          }
+        }
+
+        return false
+      })
+
+      if (matchingRule) {
+        const cost = parseFloat(matchingRule.cost_per_order || '0')
+        return {
+          cost,
+          methodTitle: method.title || 'Versand'
+        }
+      }
+    }
   }
 
-  const rules = flexibleShippingMethod.settings.method_rules.value
-
-  // Find the matching rule based on weight
-  const matchingRule = rules.find(rule => {
-    const weightCondition = rule.conditions.find(c => c.condition_id === 'weight')
-    if (!weightCondition) return false
-
-    const min = parseFloat(weightCondition.min)
-    const max = parseFloat(weightCondition.max)
-
-    return totalWeightKg >= min && totalWeightKg <= max
-  })
-
-  if (!matchingRule) {
-    // No matching rule found - weight might be outside configured ranges
-    console.warn(`No shipping rule found for weight ${totalWeightKg}kg in zone ${zone.name}`)
-    return null
-  }
-
-  return {
-    cost: parseFloat(matchingRule.cost_per_order),
-    methodTitle: flexibleShippingMethod.title
-  }
+  // No matching shipping method found
+  return null
 }
 
 /**
@@ -216,7 +259,8 @@ export function calculateCartWeight(items: Array<{ weight?: string | number; qua
  */
 export async function calculateShippingForCheckout(
   countryCode: string,
-  cartItems: Array<{ id: number; weight?: string | number; quantity: number }>
+  cartItems: Array<{ id: number; weight?: string | number; quantity: number; price: number }>,
+  cartSubtotal: number
 ): Promise<{ cost: number; methodTitle: string } | null> {
   // 1. Get all shipping zones
   const zones = await getAllShippingZones()
@@ -239,11 +283,39 @@ export async function calculateShippingForCheckout(
 
   if (totalWeight === 0) {
     // Cart has no physical products (all virtual/digital)
-    // Return free shipping or null
+    // Return free shipping
     console.log('Cart has no weight (virtual products only)')
-    return { cost: 0, methodTitle: 'Free Shipping' }
+    return { cost: 0, methodTitle: 'Kostenloser Versand' }
   }
 
-  // 4. Calculate shipping cost based on weight and zone
-  return calculateShippingCost(zone, totalWeight)
+  // 4. Calculate shipping cost based on weight, subtotal, and zone
+  return calculateShippingCost(zone, totalWeight, cartSubtotal)
+}
+
+/**
+ * Get list of all countries that have shipping zones configured
+ */
+export function getShippableCountries(zones: ShippingZoneWithMethods[]): string[] {
+  const countries = new Set<string>()
+
+  for (const zone of zones) {
+    if (!zone.locations) continue
+
+    for (const location of zone.locations) {
+      if (location.type === 'country') {
+        countries.add(location.code)
+      } else if (location.type === 'continent') {
+        // Add all EU countries if EU continent is configured
+        if (location.code === 'EU') {
+          EU_COUNTRIES.forEach(c => countries.add(c))
+        }
+      } else if (location.type === 'state') {
+        // Extract country code from state location (format: "US:CA")
+        const [countryCode] = location.code.split(':')
+        countries.add(countryCode)
+      }
+    }
+  }
+
+  return Array.from(countries).sort()
 }

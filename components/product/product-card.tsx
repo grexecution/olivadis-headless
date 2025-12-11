@@ -4,6 +4,8 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Product } from '@/lib/woocommerce/products'
 import { AddToCartButton } from './add-to-cart'
+import { decodeHtmlEntities } from '@/lib/utils/html'
+import { formatEUR } from '@/lib/utils/currency'
 
 interface ProductCardProps {
   product: Product
@@ -21,7 +23,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.images[0]?.src ? (
           <Image
             src={product.images[0].src}
-            alt={product.images[0].alt || product.name}
+            alt={decodeHtmlEntities(product.images[0].alt || product.name)}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -51,7 +53,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="p-4 flex flex-col flex-1">
         <Link href={`/product/${product.slug}`}>
           <h3 className="text-h4 text-primary mb-2 hover:text-primary-light transition-colors">
-            {product.name}
+            {decodeHtmlEntities(product.name)}
           </h3>
         </Link>
 
@@ -68,10 +70,10 @@ export function ProductCard({ product }: ProductCardProps) {
           {isOnSale ? (
             <div className="flex items-baseline gap-2">
               <span className="text-price text-primary font-bold">
-                €{price.toFixed(2)}
+                {formatEUR(price)}
               </span>
               <span className="text-body-sm text-gray-400 line-through">
-                €{regularPrice.toFixed(2)}
+                {formatEUR(regularPrice)}
               </span>
             </div>
           ) : (
