@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 export default async function RezeptePage({
   searchParams,
 }: {
-  searchParams: { category?: string }
+  searchParams: Promise<{ category?: string }>
 }) {
+  const { category: selectedCategory } = await searchParams
   let recipes: Recipe[] = []
   let categories: RecipeCategoryResponse[] = []
-  let selectedCategory = searchParams.category
 
   try {
     // Fetch recipes and categories
