@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check, X, ShoppingCart, ArrowRight } from 'lucide-react'
-import { getCategories } from '@/lib/woocommerce/products'
-import { getTestimonials } from '@/lib/woocommerce/testimonials'
+import { getCategories, ProductCategory } from '@/lib/woocommerce/products'
+import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ScrollIndicator } from '@/components/ui/scroll-indicator'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
 import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-section'
@@ -11,8 +11,8 @@ import CTASection from '@/components/sections/cta-section'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 
 export default async function Home() {
-  let categories = []
-  let testimonials = []
+  let categories: ProductCategory[] = []
+  let testimonials: Testimonial[] = []
 
   try {
     categories = await getCategories()

@@ -1,9 +1,9 @@
 import Image from 'next/image'
-import { getAllProducts } from '@/lib/woocommerce/products'
+import { getAllProducts, Product } from '@/lib/woocommerce/products'
 import { ProductCard } from '@/components/product/product-card'
 
 export default async function ShopPage() {
-  let products = []
+  let products: Product[] = []
 
   try {
     products = await getAllProducts()
