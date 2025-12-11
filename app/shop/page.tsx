@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { getAllProducts, getCategories, Product, ProductCategory } from '@/lib/woocommerce/products'
 import { ProductCard } from '@/components/product/product-card'
 import ShopFilters from '@/components/shop/shop-filters'
@@ -58,30 +57,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero/Header Section with Background */}
-      <section className="relative bg-primary text-cream py-24 overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="https://images.unsplash.com/photo-1515694346937-94d85e41e6f0?w=1600&q=80"
-            alt="Olive oil products"
-            fill
-            className="object-cover"
-            priority
-          />
-          {/* Green Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-primary/95 to-primary/85"></div>
-        </div>
-
-        <div className="container relative z-10 text-center">
-          <h1 className="text-h1 md:text-h1-lg mb-4 font-serif">Shop</h1>
-          <p className="text-lg md:text-xl text-cream/90 max-w-2xl mx-auto">
-            Entdecken Sie unsere Premium-Olivenöl-Kollektion aus den sonnenverwöhnten Hainen Griechenlands
-          </p>
-        </div>
-      </section>
-
+    <div className="min-h-screen bg-background">
       {/* Main Shop Content */}
       <section className="bg-background py-12">
         <div className="container">

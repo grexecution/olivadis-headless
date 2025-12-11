@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SideCart } from "@/components/cart";
-import { Navbar, Footer } from "@/components/layout";
+import { Navbar, Footer, InventoryBar } from "@/components/layout";
 
 export const metadata: Metadata = {
   title: "Olivadis - Premium Bio-Olivenöl",
@@ -23,8 +23,9 @@ export default function RootLayout({
       </head>
       <body className="antialiased bg-background text-foreground font-sans">
         <Providers>
+          <InventoryBar />
           <Navbar />
-          <div className="pt-20">
+          <div className="pt-32">
             {children}
           </div>
           <SideCart />

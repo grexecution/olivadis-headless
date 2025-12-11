@@ -38,7 +38,7 @@ export function Navbar() {
 
   return (
     <nav className={`
-      fixed top-0 left-0 right-0 z-50 transition-all duration-300
+      fixed top-10 md:top-9 left-0 right-0 z-40 transition-all duration-300
       ${isScrolled ? 'md:px-4' : ''}
     `}>
       <div className={`
