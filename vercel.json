@@ -3,10 +3,5 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "framework": "nextjs",
-  "outputDirectory": ".next",
-  "env": {
-    "NEXT_PUBLIC_WOOCOMMERCE_URL": "@woocommerce-url",
-    "WOOCOMMERCE_CONSUMER_KEY": "@woocommerce-consumer-key",
-    "WOOCOMMERCE_CONSUMER_SECRET": "@woocommerce-consumer-secret"
-  }
+  "outputDirectory": ".next"
 }

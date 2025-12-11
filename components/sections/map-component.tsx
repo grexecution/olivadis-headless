@@ -66,29 +66,42 @@ function MapContent() {
       <Marker position={PTELEOS_COORDINATES} icon={customIcon} ref={markerRef}>
         <Popup className="custom-popup" closeButton={false} autoClose={false} closeOnClick={false}>
           <div style={{
-            padding: '8px',
+            padding: '16px 20px',
             fontFamily: 'Lora, serif',
             color: '#1C4220',
-            minWidth: '140px'
+            minWidth: '220px'
           }}>
             <h3 style={{
-              fontSize: '14px',
+              fontSize: '20px',
               fontWeight: 'bold',
-              marginBottom: '4px',
+              marginBottom: '8px',
               color: '#3B6912',
               textAlign: 'center'
             }}>
               🫒 Olivadis
             </h3>
             <p style={{
-              fontSize: '11px',
-              marginBottom: '2px',
+              fontSize: '14px',
+              marginBottom: '8px',
               marginTop: '0px',
-              lineHeight: '1.3',
+              lineHeight: '1.4',
               color: '#0B180C',
-              textAlign: 'center'
+              textAlign: 'center',
+              fontWeight: '600'
             }}>
               Pteleos, Griechenland
+            </p>
+            <p style={{
+              fontSize: '13px',
+              margin: '0',
+              lineHeight: '1.5',
+              color: '#1C4220',
+              textAlign: 'center',
+              fontStyle: 'italic',
+              borderTop: '1px solid #3B6912',
+              paddingTop: '8px'
+            }}>
+              100% unserer Produkte kommen von hier
             </p>
           </div>
         </Popup>

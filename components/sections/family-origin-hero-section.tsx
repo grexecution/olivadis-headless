@@ -60,12 +60,11 @@ export default function FamilyOriginHeroSection() {
         {/* Top Content - Just space for alignment */}
         <div></div>
 
-        {/* Bottom Content - Family Tree Layout */}
-        <div className="flex flex-col items-center gap-8">
-          {/* Founder - Largest */}
-          <div className="group flex items-center gap-3 bg-primary/95 backdrop-blur-md px-6 py-4 rounded-full border-2 border-cream/60 shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
-            {/* Larger circular photo for founder */}
-            <div className="relative w-16 h-16 rounded-full overflow-hidden ring-4 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
+        {/* Bottom Content - Horizontal Family Tags */}
+        <div className="flex flex-wrap justify-center gap-4">
+          {/* Miltiadis - First and slightly larger */}
+          <div className="group flex items-center gap-3 bg-primary/95 backdrop-blur-md px-5 py-3 rounded-full border-2 border-cream/60 shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
+            <div className="relative w-14 h-14 rounded-full overflow-hidden ring-3 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
               <Image
                 src={familyMembers[0].image}
                 alt={familyMembers[0].name}
@@ -73,50 +72,40 @@ export default function FamilyOriginHeroSection() {
                 className="object-cover"
               />
             </div>
-
-            {/* Founder Text */}
             <div className="text-left pr-2">
-              <h3 className="text-xl font-bold text-white font-serif leading-tight">
+              <h3 className="text-base font-bold text-white font-serif leading-tight">
                 {familyMembers[0].name}
               </h3>
-              <p className="text-sm text-cream/90">
+              <p className="text-xs text-cream/90">
                 {familyMembers[0].role}
               </p>
             </div>
           </div>
 
-          {/* Connection Line */}
-          <div className="w-0.5 h-8 bg-cream/50" />
-
-          {/* Children - Smaller, Side by Side */}
-          <div className="flex flex-wrap justify-center gap-4">
-            {familyMembers.slice(1).map((member, index) => (
-              <div
-                key={index}
-                className="group flex items-center gap-2 bg-primary/90 backdrop-blur-md px-4 py-3 rounded-full border border-cream/40 shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
-              >
-                {/* Smaller circular photo for children */}
-                <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
-                  <Image
-                    src={member.image}
-                    alt={member.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-
-                {/* Children Text */}
-                <div className="text-left pr-2">
-                  <h3 className="text-base font-bold text-white font-serif leading-tight">
-                    {member.name}
-                  </h3>
-                  <p className="text-xs text-cream/90">
-                    {member.role}
-                  </p>
-                </div>
+          {/* Niki and Cris - Same size */}
+          {familyMembers.slice(1).map((member, index) => (
+            <div
+              key={index}
+              className="group flex items-center gap-2 bg-primary/90 backdrop-blur-md px-4 py-3 rounded-full border border-cream/40 shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
+            >
+              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
+                <Image
+                  src={member.image}
+                  alt={member.name}
+                  fill
+                  className="object-cover"
+                />
               </div>
-            ))}
-          </div>
+              <div className="text-left pr-2">
+                <h3 className="text-sm font-bold text-white font-serif leading-tight">
+                  {member.name}
+                </h3>
+                <p className="text-xs text-cream/90">
+                  {member.role}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </section>
