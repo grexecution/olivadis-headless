@@ -240,6 +240,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
           <CouponInput
             onCouponApplied={(coupon) => setAppliedCoupon(coupon)}
             onCouponRemoved={() => setAppliedCoupon(null)}
+            appliedCoupon={appliedCoupon}
             cartItems={items}
           />
 
