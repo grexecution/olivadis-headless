@@ -3,9 +3,25 @@
 import { useState, useEffect } from 'react'
 import { Package } from 'lucide-react'
 
+// Format date in German format: "12.Dez.2025"
+function formatGermanDate(date: Date): string {
+  const day = date.getDate()
+  const year = date.getFullYear()
+
+  const germanMonths = [
+    'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+  ]
+
+  const month = germanMonths[date.getMonth()]
+
+  return `${day}.${month}.${year}`
+}
+
 export default function InventoryBar() {
   // Mock inventory data - in production this would come from WooCommerce API
-  const [inventoryPercentage] = useState(67) // 67% sold
+  const [inventoryPercentage] = useState(87) // 67% sold
+  const today = formatGermanDate(new Date())
   const currentYear = new Date().getFullYear()
   const nextHarvestMonth = 'November' // Olive harvest is typically October-November
 
@@ -17,7 +33,7 @@ export default function InventoryBar() {
           <div className="flex items-center gap-1.5 md:gap-3">
             <Package className="w-3.5 h-3.5 md:w-4 md:h-4 flex-shrink-0 text-primary" />
             <div className="flex items-center gap-1.5 md:gap-2">
-              <span className="font-semibold hidden sm:inline text-primary">Ernte {currentYear}:</span>
+              <span className="font-semibold hidden sm:inline text-primary">{today}:</span>
               <span className="text-primary/80">
                 {inventoryPercentage}% verkauft
               </span>

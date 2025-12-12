@@ -201,7 +201,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
             type="checkbox"
             checked={formData.sameAsBilling}
             onChange={(e) => setSameAsBilling(e.target.checked)}
-            className="w-5 h-5 rounded border-2 border-primary/30 text-primary bg-white checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0 cursor-pointer transition-all duration-200 accent-primary"
+            className="w-6 h-6 rounded border-2 border-primary/30 text-primary bg-white checked:bg-primary checked:border-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0 cursor-pointer transition-all duration-200 accent-primary"
           />
           <span className="text-body text-primary group-hover:text-primary-light transition-colors">
             Versandadresse ist identisch mit Rechnungsadresse

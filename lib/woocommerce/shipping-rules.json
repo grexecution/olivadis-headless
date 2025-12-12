@@ -1,0 +1,20 @@
+{
+  "AT": {
+    "freeShippingThreshold": 79,
+    "flatRate": 5.99,
+    "taxRate": 0.1,
+    "zoneName": "Österreich"
+  },
+  "DE": {
+    "freeShippingThreshold": 79,
+    "flatRate": 5.99,
+    "taxRate": 0.07,
+    "zoneName": "Germany"
+  },
+  "DEFAULT": {
+    "freeShippingThreshold": 100,
+    "flatRate": 9.99,
+    "taxRate": 0.2,
+    "zoneName": "Rest of World"
+  }
+}

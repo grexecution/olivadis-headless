@@ -46,6 +46,12 @@ class Olivadis_Admin_Settings {
             'default' => '',
         ));
 
+        register_setting('olivadis_headless_settings', 'olivadis_vercel_deploy_hook', array(
+            'type' => 'string',
+            'sanitize_callback' => array($this, 'sanitize_url'),
+            'default' => '',
+        ));
+
         // Add settings section
         add_settings_section(
             'olivadis_headless_main',
@@ -67,6 +73,14 @@ class Olivadis_Admin_Settings {
             'olivadis_revalidation_secret',
             'Revalidation Secret Key',
             array($this, 'render_secret_key_field'),
+            'olivadis-headless',
+            'olivadis_headless_main'
+        );
+
+        add_settings_field(
+            'olivadis_vercel_deploy_hook',
+            'Vercel Deploy Hook URL',
+            array($this, 'render_deploy_hook_field'),
             'olivadis-headless',
             'olivadis_headless_main'
         );
@@ -107,6 +121,21 @@ class Olivadis_Admin_Settings {
         <input type="text" name="olivadis_revalidation_secret" id="olivadis_revalidation_secret" value="<?php echo esc_attr($value); ?>" class="regular-text" placeholder="your-secret-key">
         <p class="description">Enter a secret key for webhook authentication. This should match the <code>REVALIDATION_SECRET</code> environment variable in your Next.js app.</p>
         <button type="button" class="button button-secondary" onclick="document.getElementById('olivadis_revalidation_secret').value = '<?php echo esc_js(wp_generate_password(32, false)); ?>'">Generate Random Key</button>
+        <?php
+    }
+
+    /**
+     * Render Vercel Deploy Hook URL field
+     */
+    public function render_deploy_hook_field() {
+        $value = get_option('olivadis_vercel_deploy_hook', '');
+        ?>
+        <input type="url" name="olivadis_vercel_deploy_hook" id="olivadis_vercel_deploy_hook" value="<?php echo esc_attr($value); ?>" class="large-text" placeholder="https://api.vercel.com/v1/integrations/deploy/...">
+        <p class="description">
+            <strong>Optional:</strong> Enter your Vercel Deploy Hook URL to automatically rebuild your site when shipping settings change.<br>
+            <strong>How to get this:</strong> In Vercel Dashboard → Settings → Git → Deploy Hooks → Create Hook → Copy URL<br>
+            <strong>When used:</strong> Triggers rebuild when WooCommerce shipping zones, rates, or tax settings are updated.
+        </p>
         <?php
     }
 

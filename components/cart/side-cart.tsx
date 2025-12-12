@@ -26,6 +26,7 @@ export function SideCart() {
   } = useCart()
 
   const { countryCode, country, loading: geoLoading } = useGeolocation()
+  const [expandedItemId, setExpandedItemId] = useState<string | null>(null)
 
   // Calculate cart totals INSTANTLY using client-side rules (<100ms)
   // No API calls, no delays, no loading states needed
@@ -211,23 +212,43 @@ export function SideCart() {
                                   </button>
                                 </div>
                                 <div className="mt-2 flex items-end justify-between">
-                                  <div className="flex items-center gap-2">
+                                  {/* Compact Quantity Selector - Click to expand */}
+                                  {expandedItemId === item.id ? (
+                                    // Expanded: Show full controls
+                                    <div className="flex items-center gap-1.5">
+                                      <button
+                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                        className="w-6 h-6 flex items-center justify-center rounded border border-primary/20 hover:bg-primary hover:text-cream transition-colors text-primary"
+                                        aria-label="Decrease quantity"
+                                      >
+                                        <Minus className="h-3 w-3" />
+                                      </button>
+                                      <span className="w-8 text-center text-sm font-bold text-primary">{item.quantity}</span>
+                                      <button
+                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                        className="w-6 h-6 flex items-center justify-center rounded border border-primary/20 hover:bg-primary hover:text-cream transition-colors text-primary"
+                                        aria-label="Increase quantity"
+                                      >
+                                        <Plus className="h-3 w-3" />
+                                      </button>
+                                      <button
+                                        onClick={() => setExpandedItemId(null)}
+                                        className="ml-1 text-xs text-primary/50 hover:text-primary"
+                                        aria-label="Close"
+                                      >
+                                        ✓
+                                      </button>
+                                    </div>
+                                  ) : (
+                                    // Collapsed: Show compact badge
                                     <button
-                                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                      className="rounded-md border border-primary/20 p-1 hover:bg-cream transition-colors text-primary"
-                                      aria-label="Decrease quantity"
+                                      onClick={() => setExpandedItemId(item.id)}
+                                      className="px-2 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors text-sm font-medium text-primary"
+                                      aria-label="Change quantity"
                                     >
-                                      <Minus className="h-3 w-3" />
+                                      ×{item.quantity}
                                     </button>
-                                    <span className="w-8 text-center text-body font-bold text-primary">{item.quantity}</span>
-                                    <button
-                                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                      className="rounded-md border border-primary/20 p-1 hover:bg-cream transition-colors text-primary"
-                                      aria-label="Increase quantity"
-                                    >
-                                      <Plus className="h-3 w-3" />
-                                    </button>
-                                  </div>
+                                  )}
                                   <p className="text-lg text-primary font-bold">
                                     {formatEUR(item.price * item.quantity)}
                                   </p>

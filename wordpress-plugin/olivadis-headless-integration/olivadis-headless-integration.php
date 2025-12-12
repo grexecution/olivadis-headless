@@ -49,6 +49,7 @@ function run_olivadis_headless() {
     require_once OLIVADIS_HEADLESS_PLUGIN_DIR . 'includes/class-recipe-fields.php';
     require_once OLIVADIS_HEADLESS_PLUGIN_DIR . 'includes/class-revalidation-hooks.php';
     require_once OLIVADIS_HEADLESS_PLUGIN_DIR . 'includes/class-product-hooks.php';
+    require_once OLIVADIS_HEADLESS_PLUGIN_DIR . 'includes/class-shipping-hooks.php';
     require_once OLIVADIS_HEADLESS_PLUGIN_DIR . 'admin/admin-settings.php';
 
     // Initialize recipe post type
@@ -62,6 +63,9 @@ function run_olivadis_headless() {
 
     // Initialize product hooks
     new Olivadis_Product_Hooks();
+
+    // Initialize shipping hooks
+    Olivadis_Shipping_Hooks::init();
 
     // Initialize admin settings
     new Olivadis_Admin_Settings();

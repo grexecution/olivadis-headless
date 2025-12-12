@@ -37,7 +37,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Heart className="w-8 h-8 text-primary-light fill-primary-light" aria-hidden="true" />
-            <h2 id="testimonials-heading" className="text-h2 md:text-h2-lg text-primary">
+            <h2 id="testimonials-heading" className="text-h2 md:text-h2-lg text-primary font-serif">
               Was unsere <span className="font-serif italic text-primary-light">Kunden</span> sagen
             </h2>
           </div>

@@ -36,7 +36,9 @@
       "Bash(xargs kill:*)",
       "Bash(git commit:*)",
       "Bash(curl:*)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "Bash(node scripts/sync-shipping-rules.js:*)",
+      "Bash(pkill:*)"
     ]
   }
 }

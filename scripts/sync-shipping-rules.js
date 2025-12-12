@@ -12,6 +12,18 @@
 const fs = require('fs')
 const path = require('path')
 
+// Load .env.local for local development
+const envPath = path.join(__dirname, '..', '.env.local')
+if (fs.existsSync(envPath)) {
+  const envContent = fs.readFileSync(envPath, 'utf8')
+  envContent.split('\n').forEach(line => {
+    const match = line.match(/^([^=]+)=(.*)$/)
+    if (match && !process.env[match[1]]) {
+      process.env[match[1]] = match[2]
+    }
+  })
+}
+
 const WOO_BASE_URL = process.env.WP_BASE_URL || process.env.NEXT_PUBLIC_WOOCOMMERCE_URL
 const WOO_CONSUMER_KEY = process.env.WOO_CONSUMER_KEY || process.env.WOOCOMMERCE_CONSUMER_KEY
 const WOO_CONSUMER_SECRET = process.env.WOO_CONSUMER_SECRET || process.env.WOOCOMMERCE_CONSUMER_SECRET

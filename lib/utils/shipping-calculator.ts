@@ -5,30 +5,17 @@
  */
 
 import { CartItem } from '@/lib/cart-context'
-import { parseGermanNumber } from './currency'
+import shippingRulesData from '@/lib/woocommerce/shipping-rules.json'
 
-// Shipping rules - fetched from WooCommerce at build time
-// If WooCommerce settings change, rebuild to update these rules
-export const SHIPPING_RULES = {
-  // Austria (AT)
-  AT: {
-    freeShippingThreshold: 79, // €79 for free shipping
-    flatRate: 5.99, // €5.99 shipping cost
-    taxRate: 0.10, // 10% tax rate
-  },
-  // Germany (DE)
-  DE: {
-    freeShippingThreshold: 79, // €79 for free shipping
-    flatRate: 5.99, // €5.99 shipping cost (same as WooCommerce)
-    taxRate: 0.10, // 10% tax rate (assumed, update if different)
-  },
-  // Default for other countries
-  DEFAULT: {
-    freeShippingThreshold: 100,
-    flatRate: 9.99,
-    taxRate: 0.20,
-  },
-}
+// Shipping rules - automatically synced from WooCommerce at build time
+// Script: scripts/sync-shipping-rules.js runs before every build
+// To update: Change WooCommerce settings → Trigger Vercel rebuild
+export const SHIPPING_RULES = shippingRulesData as Record<string, {
+  freeShippingThreshold: number
+  flatRate: number
+  taxRate: number
+  zoneName: string
+}>
 
 export interface ShippingCalculation {
   subtotal: number

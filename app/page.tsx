@@ -182,7 +182,7 @@ export default async function Home() {
       <section className="bg-cream py-12 md:py-20" aria-labelledby="categories">
         <div className="container">
           <div className="text-center mb-12 md:mb-16">
-            <h2 id="categories" className="text-h2 md:text-h2-lg text-primary mb-4 font-serif">
+            <h2 id="categories" className="text-h2 md:text-h2-lg text-primary mb-2 font-serif">
               Unsere <span className="italic text-primary-light">Produktkategorien</span>
             </h2>
             <p className="text-base md:text-body-lg text-primary-dark max-w-2xl mx-auto">
@@ -261,15 +261,6 @@ export default async function Home() {
             </div>
           )}
 
-          <div className="text-center">
-            <Link
-              href="/shop"
-              className="inline-flex items-center gap-2 bg-primary !text-white px-8 py-4 rounded-full text-button font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-lg"
-            >
-              Alle Produkte ansehen
-              <ArrowRight className="w-5 h-5" />
-            </Link>
-          </div>
         </div>
       </section>
 
@@ -281,28 +272,30 @@ export default async function Home() {
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="space-y-6">
-              <h2 id="product-delivery" className="text-h2 md:text-h2-lg text-primary">
-                So sieht unser <span className="font-serif italic text-primary-light">Olivenöl</span> aus, wenn es bei Ihnen ankommt
+              <h2 id="product-delivery" className="text-h2 md:text-h2-lg text-primary font-serif">
+                So sieht <span className="font-serif italic text-primary-light">unser Olivenöl</span> aus, wenn es <span className="font-serif italic text-primary-light">bei dir</span> ankommt
               </h2>
               <p className="text-base md:text-body-lg text-primary-dark">
                 Unser Olivenöl kommt in einer hochwertigen Glasflasche zu Ihnen nach Hause, die so dekorativ ist, dass selbst Ihre Gäste staunen werden.
               </p>
               <Link
                 href="/shop"
-                className="inline-flex items-center gap-2 bg-primary text-cream px-8 py-4 rounded-lg text-button font-bold hover:bg-primary/90 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 bg-primary !text-white px-8 py-4 rounded-full text-button font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-lg"
               >
                 Jetzt kaufen
                 <ArrowRight className="w-5 h-5" aria-hidden="true" />
               </Link>
             </div>
-            <div className="relative h-[400px] lg:h-[500px] rounded-2xl shadow-2xl overflow-hidden bg-background">
-              <iframe
-                src="https://player.vimeo.com/video/908381235?h=d9e1443ba8&autoplay=1&loop=1&muted=1&background=1&autopause=0"
-                className="absolute inset-0 w-full h-full"
-                frameBorder="0"
-                allow="autoplay; fullscreen; picture-in-picture"
-                title="Olivadis Olivenöl Unboxing"
-              />
+            <div className="relative h-[500px] md:h-[600px] lg:h-[700px] rounded-2xl shadow-2xl overflow-hidden bg-black">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <iframe
+                  src="https://player.vimeo.com/video/908381235?h=d9e1443ba8&autoplay=1&loop=1&muted=1&background=1&autopause=0"
+                  className="w-full h-[888px] md:h-[1066px] lg:h-[1244px]"
+                  frameBorder="0"
+                  allow="autoplay; fullscreen; picture-in-picture"
+                  title="Olivadis Olivenöl Unboxing"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -311,7 +304,14 @@ export default async function Home() {
       {/* Olivadis vs Conventional Comparison Section */}
       <section className="bg-[#faf1e5] py-12 md:py-20" aria-labelledby="comparison">
         <div className="container max-w-6xl">
-          <h2 id="comparison" className="sr-only">Vergleich: Olivadis vs Herkömmliches Olivenöl</h2>
+          <div className="text-center mb-12 md:mb-16">
+            <h2 id="categories" className="text-h2 md:text-h2-lg text-primary mb-2 font-serif">
+              Unser Öl - <span className="italic text-primary-light">im Vergleich</span>
+            </h2>
+            <p className="text-base md:text-body-lg text-primary-dark max-w-2xl mx-auto">
+              Entdecken Sie unsere vielfältige Auswahl an griechischen Bio-Produkten
+            </p>
+          </div>
 
           <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 mb-8">
             {/* VS Badge - Positioned Absolutely in Middle */}
@@ -390,7 +390,7 @@ export default async function Home() {
           <div className="text-center mt-8">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 bg-primary text-cream px-8 py-4 rounded-lg text-button font-bold hover:bg-primary/90 transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 bg-primary !text-white px-8 py-4 rounded-full text-button font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-lg"
             >
               Jetzt kaufen
               <ArrowRight className="w-5 h-5" aria-hidden="true" />

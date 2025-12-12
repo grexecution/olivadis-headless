@@ -21,7 +21,7 @@ export default async function RezeptePage({
   try {
     // Fetch recipes and categories
     const [recipesResponse, categoriesResponse] = await Promise.all([
-      getRecipes({ category: selectedCategory }),
+      getRecipes(selectedCategory ? { category: selectedCategory } : {}),
       getRecipeCategories(),
     ])
     recipes = recipesResponse.recipes

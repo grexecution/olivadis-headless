@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3002",
+    "prebuild": "node scripts/sync-shipping-rules.js",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
