@@ -155,26 +155,7 @@ export default async function Home() {
                         <h3 className="text-lg font-bold text-primary mb-1 line-clamp-2">
                           {decodeHtmlEntities(featuredProduct.name)}
                         </h3>
-                        {featuredProduct.short_description && (
-                          <div
-                            className="text-xs text-primary-dark/60 line-clamp-1"
-                            dangerouslySetInnerHTML={{
-                              __html: decodeHtmlEntities(featuredProduct.short_description)
-                            }}
-                          />
-                        )}
-                      </div>
 
-                      {/* Price - Compact */}
-                      <div className="flex items-baseline gap-2">
-                        <p className="text-2xl font-bold text-primary-light">
-                          {formatEUR(parseFloat(featuredProduct.price))}
-                        </p>
-                        {featuredProduct.regular_price && featuredProduct.regular_price !== featuredProduct.price && (
-                          <p className="text-sm text-primary-dark/40 line-through">
-                            {formatEUR(parseFloat(featuredProduct.regular_price))}
-                          </p>
-                        )}
                       </div>
 
                       {/* Single CTA */}
