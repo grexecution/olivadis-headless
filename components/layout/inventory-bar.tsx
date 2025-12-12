@@ -10,15 +10,15 @@ export default function InventoryBar() {
   const nextHarvestMonth = 'November' // Olive harvest is typically October-November
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 bg-primary text-cream shadow-md">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between py-2 text-sm">
+    <div className="fixed top-0 left-0 right-0 z-50 bg-cream text-primary border-b border-primary/10 shadow-sm">
+      <div className="container mx-auto">
+        <div className="flex items-center justify-center py-2 text-sm">
           {/* Left side - Inventory Status */}
           <div className="flex items-center gap-3">
-            <Package className="w-4 h-4 flex-shrink-0" />
+            <Package className="w-4 h-4 flex-shrink-0 text-primary" />
             <div className="flex items-center gap-2">
-              <span className="font-semibold hidden sm:inline">Ernte {currentYear}:</span>
-              <span className="text-cream/90">
+              <span className="font-semibold hidden sm:inline text-primary">Ernte {currentYear}:</span>
+              <span className="text-primary/80">
                 {inventoryPercentage}% verkauft
               </span>
             </div>
@@ -26,25 +26,25 @@ export default function InventoryBar() {
 
           {/* Center - Progress Bar */}
           <div className="flex-1 max-w-xs mx-4 hidden md:block">
-            <div className="w-full h-2 bg-cream/20 rounded-full overflow-hidden">
+            <div className="w-full h-2 bg-primary/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-cream transition-all duration-500 ease-out rounded-full"
+                className="h-full bg-primary transition-all duration-500 ease-out rounded-full"
                 style={{ width: `${inventoryPercentage}%` }}
               />
             </div>
           </div>
 
           {/* Right side - Next Harvest Info */}
-          <div className="text-right text-cream/90 text-xs sm:text-sm whitespace-nowrap">
-            Nächste Ernte: <span className="font-semibold text-cream">{nextHarvestMonth} {currentYear + 1}</span>
+          <div className="text-right text-primary/80 text-xs sm:text-sm whitespace-nowrap">
+            Nächste Ernte: <span className="font-semibold text-primary">{nextHarvestMonth} {currentYear + 1}</span>
           </div>
         </div>
 
         {/* Mobile Progress Bar */}
         <div className="pb-2 md:hidden">
-          <div className="w-full h-1.5 bg-cream/20 rounded-full overflow-hidden">
+          <div className="w-full h-1.5 bg-primary/10 rounded-full overflow-hidden">
             <div
-              className="h-full bg-cream transition-all duration-500 ease-out rounded-full"
+              className="h-full bg-primary transition-all duration-500 ease-out rounded-full"
               style={{ width: `${inventoryPercentage}%` }}
             />
           </div>
