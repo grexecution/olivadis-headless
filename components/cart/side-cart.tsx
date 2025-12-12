@@ -2,7 +2,7 @@
 
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react'
+import { X, Plus, Minus, ShoppingBag, Trash2, Truck, Sparkles } from 'lucide-react'
 import { useCart } from '@/lib/cart-context'
 import { useGeolocation } from '@/lib/hooks/use-geolocation'
 import Image from 'next/image'
@@ -29,13 +29,19 @@ export function SideCart() {
   const [estimatedShipping, setEstimatedShipping] = useState(0)
   const [taxRate, setTaxRate] = useState(0)
   const [estimatedCountry, setEstimatedCountry] = useState('Austria')
+  const [isCalculating, setIsCalculating] = useState(false)
 
   // Fetch estimated tax and shipping when cart changes or country is detected
   useEffect(() => {
     if (geoLoading || items.length === 0) return
 
-    // Fetch estimated costs from API
-    fetch('/api/cart/estimate', {
+    // Show calculating state immediately
+    setIsCalculating(true)
+
+    // Debounce API calls to avoid rapid-fire requests
+    const debounceTimer = setTimeout(() => {
+      // Fetch estimated costs from API
+      fetch('/api/cart/estimate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -66,6 +72,7 @@ export function SideCart() {
           setTaxRate(data.taxRate || 20)
           setEstimatedCountry(translatedCountry)
         }
+        setIsCalculating(false)
       })
       .catch((error) => {
         console.error('Failed to fetch cart estimates:', error)
@@ -76,10 +83,21 @@ export function SideCart() {
         setEstimatedShipping(5.90) // Default shipping
         setTaxRate(20)
         setEstimatedCountry(translatedCountry)
+        setIsCalculating(false)
       })
+    }, 300) // 300ms debounce delay
+
+    // Cleanup function to cancel pending API calls
+    return () => clearTimeout(debounceTimer)
   }, [countryCode, totalPrice, items, geoLoading, country])
 
   const estimatedTotal = totalPrice + estimatedTax + estimatedShipping
+
+  // Free shipping threshold and progress
+  const FREE_SHIPPING_THRESHOLD = 50
+  const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice)
+  const freeShippingProgress = Math.min(100, (totalPrice / FREE_SHIPPING_THRESHOLD) * 100)
+  const isFreeShippingUnlocked = totalPrice >= FREE_SHIPPING_THRESHOLD
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -129,6 +147,51 @@ export function SideCart() {
                         <X className="h-5 w-5" />
                       </button>
                     </div>
+
+                    {/* Free Shipping Progress - Only show if cart has items */}
+                    {items.length > 0 && (
+                      <div className={`mx-6 mt-4 mb-2 p-4 rounded-lg transition-all duration-500 ${
+                        isFreeShippingUnlocked
+                          ? 'bg-gradient-to-r from-primary/10 via-primary-light/10 to-primary/10 border-2 border-primary/20'
+                          : 'bg-cream/50 border border-primary/10'
+                      }`}>
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-2">
+                            {isFreeShippingUnlocked ? (
+                              <>
+                                <Sparkles className="w-5 h-5 text-primary animate-pulse" />
+                                <span className="text-sm font-bold text-primary">
+                                  Kostenloser Versand freigeschaltet!
+                                </span>
+                              </>
+                            ) : (
+                              <>
+                                <Truck className="w-5 h-5 text-primary" />
+                                <span className="text-sm font-medium text-primary-dark">
+                                  Noch <span className="font-bold text-primary">{formatEUR(remainingForFreeShipping)}</span> bis kostenloser Versand
+                                </span>
+                              </>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Progress Bar */}
+                        <div className="relative w-full h-2 bg-primary/10 rounded-full overflow-hidden">
+                          <div
+                            className={`absolute top-0 left-0 h-full rounded-full transition-all duration-700 ease-out ${
+                              isFreeShippingUnlocked
+                                ? 'bg-gradient-to-r from-primary via-primary-light to-primary animate-pulse'
+                                : 'bg-gradient-to-r from-primary to-primary-light'
+                            }`}
+                            style={{ width: `${freeShippingProgress}%` }}
+                          />
+                          {/* Shimmer effect when unlocked */}
+                          {isFreeShippingUnlocked && (
+                            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
+                          )}
+                        </div>
+                      </div>
+                    )}
 
                     {/* Cart Items */}
                     <div className="flex-1 overflow-y-auto px-6 py-6">
@@ -227,13 +290,15 @@ export function SideCart() {
                         </div>
 
                         {/* Estimated Shipping */}
-                        <div className="flex justify-between text-xs">
+                        <div className={`flex justify-between text-xs transition-all duration-300 ${isCalculating ? 'blur-sm opacity-50' : ''}`}>
                           <p className="text-primary/50">Geschätzter Versand ({estimatedCountry})</p>
-                          <p className="text-primary/70">{formatEUR(estimatedShipping)}</p>
+                          <p className={estimatedShipping === 0 ? 'text-primary font-bold' : 'text-primary/70'}>
+                            {estimatedShipping === 0 ? 'Kostenlos' : formatEUR(estimatedShipping)}
+                          </p>
                         </div>
 
                         {/* Estimated Tax */}
-                        <div className="flex justify-between text-xs">
+                        <div className={`flex justify-between text-xs transition-all duration-300 ${isCalculating ? 'blur-sm opacity-50' : ''}`}>
                           <p className="text-primary/50">Geschätzte MwSt. ({taxRate}%, {estimatedCountry})</p>
                           <p className="text-primary/70">{formatEUR(estimatedTax)}</p>
                         </div>
