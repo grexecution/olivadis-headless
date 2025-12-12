@@ -222,7 +222,7 @@ export default async function Home() {
                       <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
 
                       {/* Category Content */}
-                      <div className="absolute inset-0 p-6 flex flex-col justify-end">
+                      <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end">
                         <h3 className="text-h3 md:text-h3-lg font-serif text-white mb-2">
                           {decodeHtmlEntities(category.name)}
                         </h3>

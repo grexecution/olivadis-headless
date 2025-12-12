@@ -61,14 +61,14 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
       {/* Main Shop Content */}
       <section className="bg-background py-12">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            {/* Filter Sidebar - 1/4 width on large screens */}
-            <aside className="lg:col-span-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+            {/* Filter Sidebar - 1/3 width on tablets, 1/4 width on large screens */}
+            <aside className="md:col-span-1 lg:col-span-1">
               <ShopFilters categories={categories} />
             </aside>
 
-            {/* Products Area - 3/4 width on large screens */}
-            <div className="lg:col-span-3">
+            {/* Products Area - 2/3 width on tablets, 3/4 width on large screens */}
+            <div className="md:col-span-2 lg:col-span-3">
               {/* Product Count */}
               <div className="mb-8">
                 <p className="text-body text-primary-dark">
