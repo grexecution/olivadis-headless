@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check, X, ShoppingCart, ArrowRight } from 'lucide-react'
-import { getCategories, ProductCategory } from '@/lib/woocommerce/products'
+import { getCategories, ProductCategory, getAllProducts } from '@/lib/woocommerce/products'
 import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ScrollIndicator } from '@/components/ui/scroll-indicator'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
@@ -9,10 +9,12 @@ import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-se
 import TestimonialsSection from '@/components/sections/testimonials-section'
 import CTASection from '@/components/sections/cta-section'
 import { decodeHtmlEntities } from '@/lib/utils/html'
+import { formatEUR } from '@/lib/utils/currency'
 
 export default async function Home() {
   let categories: ProductCategory[] = []
   let testimonials: Testimonial[] = []
+  let featuredProduct = null
 
   try {
     categories = await getCategories()
@@ -28,10 +30,18 @@ export default async function Home() {
     // Continue with empty array
   }
 
+  try {
+    const products = await getAllProducts()
+    // Get first featured product or just first product
+    featuredProduct = products.find(p => p.featured) || products[0]
+  } catch (error) {
+    console.error('Failed to fetch featured product:', error)
+  }
+
   return (
     <main className="min-h-screen">
       {/* Hero Section with Video Background */}
-      <section className="relative min-h-[85vh] md:min-h-[90vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
@@ -68,12 +78,12 @@ export default async function Home() {
               </div>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight font-serif">
+            <h1 className="text-h2 md:text-h2-lg font-bold mb-6 leading-tight font-serif">
               Willkommen beim<br/>
-              <span className="text-cream-light italic">Olivadis Familienbetrieb</span>
+              <span className="italic" style={{ color: '#5DA81A' }}>Olivadis Familienbetrieb</span>
             </h1>
 
-            <p className="text-xl md:text-2xl text-cream/90 mb-8 leading-relaxed max-w-2xl">
+            <p className="text-base md:text-body-lg text-cream/90 mb-8 leading-relaxed max-w-2xl">
               Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
             </p>
 
@@ -96,32 +106,46 @@ export default async function Home() {
         </div>
 
         {/* Featured Product Mini Box - Sleek Version */}
-        <div className="absolute bottom-8 right-8 z-20 hidden lg:block">
-          <div className="bg-white/80 backdrop-blur-md rounded-xl shadow-2xl p-4 w-72 border border-primary/10 hover:shadow-3xl transition-all duration-300">
-            <div className="flex gap-3 items-center">
-              <div className="relative w-20 h-20 rounded-lg overflow-hidden bg-cream/50 flex-shrink-0 p-2">
-                <Image
-                  src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=200&auto=format&fit=crop&q=80"
-                  alt="Olivadis Premium Olivenöl 0,5L"
-                  fill
-                  className="object-contain"
-                />
+        {featuredProduct && (
+          <div className="absolute bottom-6 right-6 z-20 hidden lg:block">
+            <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl p-3 w-56 border border-primary/10 hover:shadow-2xl transition-all duration-300">
+              <div className="flex gap-2 items-center">
+                <div className="relative w-14 h-14 rounded-md overflow-hidden bg-cream/50 flex-shrink-0 p-1">
+                  {featuredProduct.images[0]?.src ? (
+                    <Image
+                      src={featuredProduct.images[0].src}
+                      alt={decodeHtmlEntities(featuredProduct.name)}
+                      fill
+                      className="object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-primary/30">
+                      <ShoppingCart className="w-6 h-6" />
+                    </div>
+                  )}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[9px] text-primary/50 font-bold tracking-wider uppercase mb-0.5">
+                    {featuredProduct.featured ? 'BESTSELLER' : 'NEU'}
+                  </p>
+                  <h3 className="text-xs font-bold text-primary mb-0.5 leading-tight line-clamp-2">
+                    {decodeHtmlEntities(featuredProduct.name)}
+                  </h3>
+                  <p className="text-base font-bold text-primary-light">
+                    {formatEUR(parseFloat(featuredProduct.price))}
+                  </p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-[10px] text-primary/50 font-bold tracking-wider uppercase mb-0.5">BESTSELLER</p>
-                <h3 className="text-sm font-bold text-primary mb-1 leading-tight">Olivenöl 0,5L</h3>
-                <p className="text-xl font-bold text-primary-light">€24.90</p>
-              </div>
+              <Link
+                href={`/product/${featuredProduct.slug}`}
+                className="mt-2 w-full inline-flex items-center justify-center gap-1.5 bg-primary text-cream px-3 py-2 rounded-md text-[10px] font-bold hover:bg-primary-light transition-all hover:scale-[1.02]"
+              >
+                <ShoppingCart className="w-3 h-3" aria-hidden="true" />
+                Jetzt ansehen
+              </Link>
             </div>
-            <Link
-              href="/shop"
-              className="mt-3 w-full inline-flex items-center justify-center gap-2 bg-primary text-cream px-4 py-2.5 rounded-lg text-xs font-bold hover:bg-primary-light transition-all hover:scale-[1.02]"
-            >
-              <ShoppingCart className="w-3.5 h-3.5" aria-hidden="true" />
-              In den Warenkorb
-            </Link>
           </div>
-        </div>
+        )}
 
         {/* Scroll Indicator */}
         <ScrollIndicator />
