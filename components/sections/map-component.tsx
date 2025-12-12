@@ -69,6 +69,7 @@ function MapContent() {
             padding: '16px 20px',
             fontFamily: 'Lora, serif',
             color: '#1C4220',
+            backgroundColor: '#fff',
             minWidth: '220px'
           }}>
             <h3 style={{

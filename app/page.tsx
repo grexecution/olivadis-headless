@@ -57,9 +57,9 @@ export default async function Home() {
         </div>
 
         <div className="container relative z-10 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr,0.65fr] gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 gap-8 items-center max-w-6xl mx-auto">
             {/* Left Column - Hero Content */}
-            <div className="text-cream">
+            <div className="text-cream lg:max-w-[66.666%]">
               {/* Trust Badges */}
               <div className="flex flex-wrap gap-2 md:gap-3 mb-6">
                 <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
@@ -117,48 +117,48 @@ export default async function Home() {
             </div>
 
             {/* Right Column - Compact Product Card */}
-            <div>
+            <div className="lg:hidden">
               {featuredProduct ? (
                 <Link href={`/product/${featuredProduct.slug}`} className="relative block group">
-                  {/* Product Card - Mobile: Horizontal, Desktop: Vertical */}
-                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 py-3 px-3 md:p-8 overflow-visible cursor-pointer">
+                  {/* Product Card - Mobile/Tablet: Horizontal Layout */}
+                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 py-3 px-3 overflow-visible cursor-pointer">
                     {/* Small Bestseller Badge */}
                     {featuredProduct.featured && (
-                      <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 z-10">
-                        <div className="bg-primary text-cream px-3 py-1 md:px-5 md:py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest shadow-lg">
+                      <div className="absolute -top-2 -right-2 z-10">
+                        <div className="bg-primary text-cream px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
                           Bestseller
                         </div>
                       </div>
                     )}
 
-                    {/* Mobile: Horizontal Layout, Desktop: Vertical Layout */}
-                    <div className="flex flex-row md:flex-col gap-3 md:gap-0">
-                      {/* Product Image - Small on mobile, large on desktop */}
-                      <div className="relative w-20 h-24 md:w-full md:h-72 md:mb-0 flex items-start md:items-center justify-center rounded-lg md:rounded-none flex-shrink-0 overflow-visible bg-gradient-to-br from-cream/30 to-transparent md:bg-none -mt-0 md:-mt-44">
+                    {/* Horizontal Layout for Mobile & Tablet */}
+                    <div className="flex flex-row gap-3">
+                      {/* Product Image - Small */}
+                      <div className="relative w-20 h-24 flex items-start justify-center rounded-lg flex-shrink-0 overflow-visible bg-gradient-to-br from-cream/30 to-transparent">
                         <Image
                           src="/olivadis-single.png"
                           alt={decodeHtmlEntities(featuredProduct.name)}
                           width={220}
                           height={300}
-                          className="object-contain drop-shadow-[0_10px_40px_rgba(93,168,26,0.2)] w-20 h-24 md:w-[220px] md:h-[300px] transition-transform duration-500 group-hover:scale-110"
+                          className="object-contain drop-shadow-[0_10px_40px_rgba(93,168,26,0.2)] w-20 h-24 transition-transform duration-500 group-hover:scale-110"
                           priority
                         />
                       </div>
 
-                      {/* Product Info - Minimal on mobile, full on desktop */}
-                      <div className="flex-1 flex flex-col justify-center md:space-y-6">
-                        <div className="space-y-1 md:space-y-3 md:text-center">
+                      {/* Product Info */}
+                      <div className="flex-1 flex flex-col justify-center">
+                        <div className="space-y-1">
                           {/* Featured Product Label */}
-                          <p className="text-[10px] md:text-xs font-medium text-primary/50 uppercase tracking-[0.2em]">
+                          <p className="text-[10px] font-medium text-primary/50 uppercase tracking-[0.2em]">
                             Unser Olivenöl
                           </p>
 
-                          <h3 className="text-sm md:text-2xl font-serif font-bold text-primary line-clamp-2 md:leading-tight md:tracking-tight italic">
+                          <h3 className="text-sm font-serif font-bold text-primary line-clamp-2 italic">
                             {decodeHtmlEntities(featuredProduct.name)}
                           </h3>
 
-                          {/* Price - Show on mobile only */}
-                          <p className="text-lg md:hidden font-bold text-primary">
+                          {/* Price */}
+                          <p className="text-lg font-bold text-primary">
                             {formatEUR(parseFloat(featuredProduct.price))}
                           </p>
                         </div>
@@ -191,14 +191,14 @@ export default async function Home() {
           </div>
 
           {categories.length > 0 ? (
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto mb-12">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 max-w-6xl mx-auto mb-12">
               {categories
                 .filter(cat => cat.slug !== 'uncategorized')
                 .map((category) => (
                   <Link
                     key={category.id}
                     href={`/shop?category=${category.slug}`}
-                    className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500"
+                    className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 w-[calc(50%-8px)] md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)]"
                   >
                     {/* Category Image */}
                     <div className="aspect-[4/3] relative bg-primary/5">
@@ -226,22 +226,23 @@ export default async function Home() {
 
                       {/* Category Content */}
                       <div className="absolute inset-0 p-3 md:p-6 flex flex-col justify-end">
-                        {/* Mobile: Name + Arrow in same line, Desktop: Stacked with description */}
-                        <div className="flex md:flex-col">
-                          <div className="flex items-center justify-between flex-1">
-                            <h3 className="text-base md:text-h3-lg font-serif text-white md:mb-2">
-                              {decodeHtmlEntities(category.name)}
-                            </h3>
+                        {/* Description - Desktop only, above the name/button row */}
+                        {category.description && (
+                          <p className="hidden md:block text-sm text-white/90 mb-3 line-clamp-2">
+                            {decodeHtmlEntities(category.description)}
+                          </p>
+                        )}
 
-                            <ArrowRight className="w-4 h-4 md:hidden text-white flex-shrink-0 ml-2" />
-                          </div>
+                        {/* Mobile: Name + Arrow, Desktop: Name + Entdecken with justify-between */}
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-base md:text-h3-lg font-serif text-white">
+                            {decodeHtmlEntities(category.name)}
+                          </h3>
 
-                          {category.description && (
-                            <p className="hidden md:block text-sm text-white/90 mb-3 line-clamp-2">
-                              {decodeHtmlEntities(category.description)}
-                            </p>
-                          )}
+                          {/* Mobile: Arrow only */}
+                          <ArrowRight className="w-4 h-4 md:hidden text-white flex-shrink-0" />
 
+                          {/* Desktop: Entdecken button */}
                           <div className="hidden md:flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all">
                             <span className="text-sm">Entdecken</span>
                             <ArrowRight className="w-5 h-5" />

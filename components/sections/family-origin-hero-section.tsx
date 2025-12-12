@@ -63,8 +63,8 @@ export default function FamilyOriginHeroSection() {
         {/* Bottom Content - Horizontal Family Tags */}
         <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {/* Miltiadis - First and slightly larger */}
-          <div className="group flex items-center gap-1.5 md:gap-3 bg-primary/95 backdrop-blur-md px-2.5 py-1.5 md:px-5 md:py-3 rounded-full border md:border-2 border-cream/60 shadow-xl md:shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
-            <div className="relative w-8 h-8 md:w-14 md:h-14 rounded-full overflow-hidden ring-1 md:ring-3 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
+          <div className="group flex items-center gap-1.5 md:gap-3 bg-primary/95 backdrop-blur-md px-2.5 py-1.5 md:px-5 md:py-2 rounded-full border md:border-2 border-cream/60 shadow-xl md:shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
+            <div className="relative w-8 h-8 md:w-11 md:h-11 rounded-full overflow-hidden ring-1 md:ring-3 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
               <Image
                 src={familyMembers[0].image}
                 alt={familyMembers[0].name}
@@ -86,9 +86,9 @@ export default function FamilyOriginHeroSection() {
           {familyMembers.slice(1).map((member, index) => (
             <div
               key={index}
-              className="group flex items-center gap-1.5 md:gap-2 bg-primary/90 backdrop-blur-md px-2 py-1.5 md:px-4 md:py-3 rounded-full border border-cream/40 shadow-lg md:shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
+              className="group flex items-center gap-1.5 md:gap-2 bg-primary/90 backdrop-blur-md px-2 py-1.5 md:px-4 md:py-2 rounded-full border border-cream/40 shadow-lg md:shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
             >
-              <div className="relative w-7 h-7 md:w-12 md:h-12 rounded-full overflow-hidden ring-1 md:ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
+              <div className="relative w-7 h-7 md:w-11 md:h-11 rounded-full overflow-hidden ring-1 md:ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
                 <Image
                   src={member.image}
                   alt={member.name}
