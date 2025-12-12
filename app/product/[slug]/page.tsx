@@ -7,6 +7,7 @@ import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-se
 import TestimonialsSection from '@/components/sections/testimonials-section'
 import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ProductTabs } from '@/components/product/product-tabs'
+import { PaymentIcons } from '@/components/ui/payment-icons'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 import { formatEUR } from '@/lib/utils/currency'
 
@@ -253,6 +254,11 @@ export default async function ProductPage({
 
               {/* Add to Cart */}
               <AddToCartButton product={product} />
+            </div>
+
+            {/* Payment Methods */}
+            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-primary/10">
+              <PaymentIcons />
             </div>
 
             <div className="mb-8"></div>

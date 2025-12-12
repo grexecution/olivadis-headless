@@ -1,14 +1,17 @@
 'use client'
 
-import { Fragment } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { X, Plus, Minus, ShoppingBag, Trash2 } from 'lucide-react'
 import { useCart } from '@/lib/cart-context'
+import { useGeolocation } from '@/lib/hooks/use-geolocation'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { PaymentIcons } from '@/components/ui/payment-icons'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 import { formatEUR } from '@/lib/utils/currency'
+import { translateCountryName } from '@/lib/utils/countries'
 
 export function SideCart() {
   const {
@@ -20,6 +23,63 @@ export function SideCart() {
     totalItems,
     totalPrice
   } = useCart()
+
+  const { countryCode, country, loading: geoLoading } = useGeolocation()
+  const [estimatedTax, setEstimatedTax] = useState(0)
+  const [estimatedShipping, setEstimatedShipping] = useState(0)
+  const [taxRate, setTaxRate] = useState(0)
+  const [estimatedCountry, setEstimatedCountry] = useState('Austria')
+
+  // Fetch estimated tax and shipping when cart changes or country is detected
+  useEffect(() => {
+    if (geoLoading || items.length === 0) return
+
+    // Fetch estimated costs from API
+    fetch('/api/cart/estimate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        country: countryCode,
+        subtotal: totalPrice,
+        items: items.map(item => ({
+          productId: item.productId,
+          quantity: item.quantity,
+        })),
+      }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log('Cart estimate response:', data)
+        if (data.success) {
+          const translatedCountry = translateCountryName(data.countryName || country)
+          console.log('Translating country:', data.countryName, '->', translatedCountry)
+          setEstimatedTax(data.tax || 0)
+          setEstimatedShipping(data.shipping || 0)
+          setTaxRate(data.taxRate || 0)
+          setEstimatedCountry(translatedCountry)
+        } else {
+          // API returned error but with data
+          const translatedCountry = translateCountryName(data.countryName || country)
+          console.log('API error, using fallback. Country:', data.countryName, '->', translatedCountry)
+          setEstimatedTax(data.tax || totalPrice * 0.20)
+          setEstimatedShipping(data.shipping || 5.90)
+          setTaxRate(data.taxRate || 20)
+          setEstimatedCountry(translatedCountry)
+        }
+      })
+      .catch((error) => {
+        console.error('Failed to fetch cart estimates:', error)
+        // Fallback to default estimates
+        const translatedCountry = translateCountryName(country)
+        console.log('Catch fallback. Country:', country, '->', translatedCountry)
+        setEstimatedTax(totalPrice * 0.20) // 20% VAT default
+        setEstimatedShipping(5.90) // Default shipping
+        setTaxRate(20)
+        setEstimatedCountry(translatedCountry)
+      })
+  }, [countryCode, totalPrice, items, geoLoading, country])
+
+  const estimatedTotal = totalPrice + estimatedTax + estimatedShipping
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -158,24 +218,36 @@ export function SideCart() {
 
                     {/* Checkout Section */}
                     {items.length > 0 && (
-                      <div className="border-t border-primary/10 px-6 py-6 bg-white">
+                      <div className="border-t border-primary/10 px-6 py-4 bg-white space-y-2">
                         {/* Subtotal */}
-                        <div className="flex justify-between text-body mb-4">
+                        <div className="flex justify-between text-sm">
                           <p className="text-primary/60">Zwischensumme</p>
                           <p className="text-primary font-bold">{formatEUR(totalPrice)}</p>
                         </div>
 
-                        <div className="border-b border-primary/10 mb-4" />
+                        {/* Estimated Shipping */}
+                        <div className="flex justify-between text-xs">
+                          <p className="text-primary/50">Geschätzter Versand ({estimatedCountry})</p>
+                          <p className="text-primary/70">{formatEUR(estimatedShipping)}</p>
+                        </div>
+
+                        {/* Estimated Tax */}
+                        <div className="flex justify-between text-xs">
+                          <p className="text-primary/50">Geschätzte MwSt. ({taxRate}%, {estimatedCountry})</p>
+                          <p className="text-primary/70">{formatEUR(estimatedTax)}</p>
+                        </div>
+
+                        <div className="border-b border-primary/10" />
 
                         {/* Total */}
-                        <div className="flex justify-between text-h4 font-bold mb-6">
-                          <p className="text-primary">Gesamt</p>
-                          <p className="text-primary">{formatEUR(totalPrice)}</p>
+                        <div className="flex justify-between text-lg font-bold pt-1">
+                          <p className="text-primary">Geschätzte Summe</p>
+                          <p className="text-primary">{formatEUR(estimatedTotal)}</p>
                         </div>
 
                         {/* Tax Notice */}
-                        <p className="text-body-sm text-primary/60 mb-4 text-center">
-                          Versand und Steuern werden an der Kasse berechnet
+                        <p className="text-[10px] text-primary/60 text-center pb-1">
+                          Endgültige Kosten werden an der Kasse berechnet
                         </p>
 
                         {/* Checkout Button */}
@@ -188,24 +260,14 @@ export function SideCart() {
                             size="lg"
                             className="w-full"
                           >
-                            Zur Kasse gehen
+                            Zur Kassa
                           </Button>
                         </Link>
 
-                        {/* Continue Shopping */}
-                        <Link
-                          href="/shop"
-                          onClick={closeCart}
-                          className="block text-center mt-4"
-                        >
-                          <Button
-                            variant="outline"
-                            size="md"
-                            className="w-full"
-                          >
-                            Weiter einkaufen
-                          </Button>
-                        </Link>
+                        {/* Payment Methods */}
+                        <div className="flex flex-col items-center gap-1.5 pt-2 border-t border-primary/10">
+                          <PaymentIcons className="justify-center" />
+                        </div>
                       </div>
                     )}
                   </div>
