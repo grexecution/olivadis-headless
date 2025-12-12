@@ -20,7 +20,7 @@ export default function CTASection({
 
   return (
     <section
-      className={`py-20 ${isPrimary ? 'bg-primary' : 'bg-cream'}`}
+      className={`py-12 md:py-20 ${isPrimary ? 'bg-primary' : 'bg-cream'}`}
       aria-labelledby="cta-heading"
     >
       <div className="container">

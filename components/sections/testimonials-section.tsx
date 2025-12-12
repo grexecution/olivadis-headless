@@ -31,7 +31,7 @@ export default function TestimonialsSection({ testimonials }: TestimonialsSectio
   const hasMore = testimonials.length > initialCount
 
   return (
-    <section className="bg-cream py-20" aria-labelledby="testimonials-heading">
+    <section className="bg-cream py-12 md:py-20" aria-labelledby="testimonials-heading">
       <div className="container">
         {/* Section Heading */}
         <div className="text-center mb-16 max-w-3xl mx-auto">

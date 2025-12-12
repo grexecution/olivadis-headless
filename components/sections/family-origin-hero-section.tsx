@@ -61,10 +61,10 @@ export default function FamilyOriginHeroSection() {
         <div></div>
 
         {/* Bottom Content - Horizontal Family Tags */}
-        <div className="flex flex-wrap justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-2 md:gap-4">
           {/* Miltiadis - First and slightly larger */}
-          <div className="group flex items-center gap-3 bg-primary/95 backdrop-blur-md px-5 py-3 rounded-full border-2 border-cream/60 shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
-            <div className="relative w-14 h-14 rounded-full overflow-hidden ring-3 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
+          <div className="group flex items-center gap-1.5 md:gap-3 bg-primary/95 backdrop-blur-md px-2.5 py-1.5 md:px-5 md:py-3 rounded-full border md:border-2 border-cream/60 shadow-xl md:shadow-2xl hover:border-cream hover:scale-105 transition-all duration-300">
+            <div className="relative w-8 h-8 md:w-14 md:h-14 rounded-full overflow-hidden ring-1 md:ring-3 ring-cream/70 group-hover:ring-cream flex-shrink-0 transition-all">
               <Image
                 src={familyMembers[0].image}
                 alt={familyMembers[0].name}
@@ -72,11 +72,11 @@ export default function FamilyOriginHeroSection() {
                 className="object-cover"
               />
             </div>
-            <div className="text-left pr-2">
-              <h3 className="text-base font-bold text-white font-serif leading-tight">
+            <div className="text-left pr-1 md:pr-2">
+              <h3 className="text-xs md:text-base font-bold text-white font-serif leading-tight">
                 {familyMembers[0].name}
               </h3>
-              <p className="text-xs text-cream/90">
+              <p className="text-[10px] md:text-xs text-cream/90">
                 {familyMembers[0].role}
               </p>
             </div>
@@ -86,9 +86,9 @@ export default function FamilyOriginHeroSection() {
           {familyMembers.slice(1).map((member, index) => (
             <div
               key={index}
-              className="group flex items-center gap-2 bg-primary/90 backdrop-blur-md px-4 py-3 rounded-full border border-cream/40 shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
+              className="group flex items-center gap-1.5 md:gap-2 bg-primary/90 backdrop-blur-md px-2 py-1.5 md:px-4 md:py-3 rounded-full border border-cream/40 shadow-lg md:shadow-xl hover:border-cream hover:scale-105 transition-all duration-300"
             >
-              <div className="relative w-12 h-12 rounded-full overflow-hidden ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
+              <div className="relative w-7 h-7 md:w-12 md:h-12 rounded-full overflow-hidden ring-1 md:ring-2 ring-cream/50 group-hover:ring-cream flex-shrink-0 transition-all">
                 <Image
                   src={member.image}
                   alt={member.name}
@@ -96,11 +96,11 @@ export default function FamilyOriginHeroSection() {
                   className="object-cover"
                 />
               </div>
-              <div className="text-left pr-2">
-                <h3 className="text-sm font-bold text-white font-serif leading-tight">
+              <div className="text-left pr-1 md:pr-2">
+                <h3 className="text-[11px] md:text-sm font-bold text-white font-serif leading-tight">
                   {member.name}
                 </h3>
-                <p className="text-xs text-cream/90">
+                <p className="text-[9px] md:text-xs text-cream/90">
                   {member.role}
                 </p>
               </div>

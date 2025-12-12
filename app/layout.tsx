@@ -25,7 +25,7 @@ export default function RootLayout({
         <Providers>
           <InventoryBar />
           <Navbar />
-          <div className="pt-24 md:pt-28">
+          <div className="pt-[120px] md:pt-28">
             {children}
           </div>
           <SideCart />

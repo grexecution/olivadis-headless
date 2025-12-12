@@ -38,7 +38,7 @@ export default function AboutPage() {
       </section>
 
       {/* Family Story Section */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div>
@@ -103,7 +103,7 @@ export default function AboutPage() {
       </section>
 
       {/* Timeline Section */}
-      <section className="py-20 bg-cream/30">
+      <section className="py-12 md:py-20 bg-cream/30">
         <div className="container">
           <div className="text-center mb-16">
             <h2 className="text-h2 text-primary mb-4">Unsere Reise</h2>
@@ -162,7 +162,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Philosophy Section */}
-      <section className="py-20">
+      <section className="py-12 md:py-20">
         <div className="container">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
@@ -205,7 +205,7 @@ export default function AboutPage() {
       </section>
 
       {/* Location Section */}
-      <section className="py-20 bg-primary-light/5">
+      <section className="py-12 md:py-20 bg-primary-light/5">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
             <MapPin className="w-16 h-16 text-primary-light mx-auto mb-6" />
@@ -234,7 +234,7 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-primary text-cream">
+      <section className="py-12 md:py-20 bg-primary text-cream">
         <div className="container text-center">
           <h2 className="text-h2 mb-6">Werden Sie Teil der Olivadis Familie</h2>
           <p className="text-body-lg mb-8 max-w-2xl mx-auto">

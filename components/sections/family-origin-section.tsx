@@ -54,7 +54,7 @@ export default function FamilyOriginSection() {
   }, [])
 
   return (
-    <section className="bg-background py-20" aria-labelledby="family-origin">
+    <section className="bg-background py-12 md:py-20" aria-labelledby="family-origin">
       <div className="container">
         {/* Main Section Heading */}
         <div className="text-center mb-16 max-w-3xl mx-auto">

@@ -117,7 +117,7 @@ export default async function RezeptePage({
               ))}
             </div>
           ) : (
-            <div className="text-center py-20">
+            <div className="text-center py-12 md:py-20">
               <div className="max-w-md mx-auto bg-cream p-8 rounded-lg">
                 <h3 className="text-h3 text-primary mb-4">Keine Rezepte gefunden</h3>
                 <p className="text-body text-primary-dark/70 mb-6">

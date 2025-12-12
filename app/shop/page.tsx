@@ -84,7 +84,7 @@ export default async function ShopPage({ searchParams }: ShopPageProps) {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-20">
+                <div className="text-center py-12 md:py-20">
                   <div className="max-w-md mx-auto bg-cream p-8 rounded-lg">
                     <p className="text-h3 md:text-h3-lg text-primary mb-4">Keine Produkte gefunden</p>
                     <p className="text-base md:text-body text-primary-dark/70">

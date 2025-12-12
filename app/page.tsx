@@ -40,7 +40,7 @@ export default async function Home() {
   return (
     <main className="min-h-screen">
       {/* Hero Section - Compact Product Hero */}
-      <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden border-t-4 border-primary/20">
+      <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
@@ -57,7 +57,7 @@ export default async function Home() {
         </div>
 
         <div className="container relative z-10 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.6fr,0.6fr] gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.35fr,0.65fr] gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
             {/* Left Column - Hero Content */}
             <div className="text-cream">
               {/* Trust Badges */}
@@ -66,7 +66,7 @@ export default async function Home() {
                   <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <span className="text-xs md:text-sm font-semibold">100% Bio & Familiengeführt</span>
+                  <span className="text-xs md:text-sm font-semibold">100% Familiengeführt</span>
                 </div>
 
                 <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
@@ -74,11 +74,11 @@ export default async function Home() {
                 </div>
 
                 <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
-                  <span className="text-xs md:text-sm font-semibold">⭐⭐⭐⭐⭐ Bewertungen</span>
+                  <span className="text-xs md:text-sm font-semibold">⭐⭐⭐⭐⭐ (4.9)</span>
                 </div>
               </div>
 
-              <h1 className="text-h2 md:text-[60px] md:leading-[66px] md:tracking-[-2.24px] font-bold mb-6 leading-tight font-serif">
+              <h1 className="text-h2 md:text-[60px] md:leading-[66px] md:tracking-[-2.24px] font-bold mb-3 leading-tight font-serif">
                 Willkommen beim<br/>
                 <span className="italic" style={{ color: '#5DA81A' }}>Olivadis Familienbetrieb</span>
               </h1>
@@ -87,31 +87,31 @@ export default async function Home() {
                 Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
               </p>
 
-              <div className="flex flex-wrap gap-4 mb-8">
+              <div className="flex flex-wrap gap-4 mb-3">
                 <Link
                   href="/shop"
-                  className="inline-flex items-center gap-2 bg-cream text-primary px-8 py-4 rounded-full text-button font-bold hover:bg-cream/90 transition-all hover:scale-105 shadow-lg"
+                  className="w-full md:w-auto inline-flex items-center justify-center gap-2 bg-cream text-primary px-8 py-4 rounded-full text-button font-bold hover:bg-cream/90 transition-all hover:scale-105 shadow-lg"
                 >
                   Jetzt einkaufen
                   <ArrowRight className="w-5 h-5" aria-hidden="true" />
                 </Link>
                 <Link
                   href="/ueber-uns"
-                  className="inline-flex items-center gap-2 bg-cream/10 backdrop-blur-sm text-cream px-8 py-4 rounded-full text-button font-bold hover:bg-cream/20 transition-all border-2 border-cream/30"
+                  className="hidden md:inline-flex items-center gap-2 bg-cream/10 backdrop-blur-sm text-cream px-8 py-4 rounded-full text-button font-bold hover:bg-cream/20 transition-all border-2 border-cream/30"
                 >
                   Unsere Geschichte
                 </Link>
               </div>
 
               {/* Quick Features */}
-              <div className="flex flex-wrap gap-4 text-sm text-cream/80">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-cream flex-shrink-0" />
-                  <span>Kostenloser Versand ab 50€</span>
+              <div className="flex justify-center md:justify-start gap-3 md:gap-4 text-xs md:text-sm text-cream/80">
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Check className="w-4 h-4 md:w-5 md:h-5 text-cream flex-shrink-0" />
+                  <span className="whitespace-nowrap">Kostenloser Versand ab 50€</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-cream flex-shrink-0" />
-                  <span>Frische Ernte {new Date().getFullYear()}</span>
+                <div className="flex items-center gap-1.5 md:gap-2">
+                  <Check className="w-4 h-4 md:w-5 md:h-5 text-cream flex-shrink-0" />
+                  <span className="whitespace-nowrap">Frische Ernte {new Date().getFullYear()}</span>
                 </div>
               </div>
             </div>
@@ -119,57 +119,55 @@ export default async function Home() {
             {/* Right Column - Compact Product Card */}
             <div>
               {featuredProduct ? (
-                <div className="relative">
-                  {/* Product Card - Compact Version */}
-                  <div className="relative bg-gradient-to-br from-white to-cream/15 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-primary/10 hover:shadow-2xl transition-all duration-300">
+                <Link href={`/product/${featuredProduct.slug}`} className="relative block group">
+                  {/* Product Card - Mobile: Horizontal, Desktop: Vertical */}
+                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 pt-6 pb-3 px-3 md:p-8 overflow-visible cursor-pointer">
                     {/* Small Bestseller Badge */}
                     {featuredProduct.featured && (
-                      <div className="absolute -top-3 -right-3 z-10">
-                        <div className="bg-primary text-cream px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg">
+                      <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 z-10">
+                        <div className="bg-primary text-cream px-3 py-1 md:px-5 md:py-2 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest shadow-lg">
                           Bestseller
                         </div>
                       </div>
                     )}
 
-                    {/* Compact Product Image */}
-                    <div className="relative h-54 mb-4 flex items-center justify-center bg-gradient-to-br from-cream/30 to-transparent rounded-xl">
-                      {featuredProduct.images[0]?.src ? (
+                    {/* Mobile: Horizontal Layout, Desktop: Vertical Layout */}
+                    <div className="flex flex-row md:flex-col gap-3 md:gap-0">
+                      {/* Product Image - Small on mobile, large on desktop */}
+                      <div className="relative w-20 h-24 md:w-full md:h-72 md:mb-0 flex items-start md:items-center justify-center rounded-lg md:rounded-none flex-shrink-0 overflow-visible bg-gradient-to-br from-cream/30 to-transparent md:bg-none -mt-8 md:-mt-44">
                         <Image
-                          src={featuredProduct.images[0].src}
+                          src="/olivadis-single.png"
                           alt={decodeHtmlEntities(featuredProduct.name)}
-                          width={180}
-                          height={240}
-                          className="object-contain drop-shadow-xl"
+                          width={220}
+                          height={300}
+                          className="object-contain drop-shadow-[0_10px_40px_rgba(93,168,26,0.2)] w-20 h-24 md:w-[220px] md:h-[300px] transition-transform duration-500 group-hover:scale-110"
                           priority
                         />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-primary/30">
-                          <ShoppingCart className="w-16 h-16" />
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Product Info - Compact */}
-                    <div className="space-y-3">
-                      <div>
-                        <h3 className="text-lg font-bold text-primary mb-1 line-clamp-2">
-                          {decodeHtmlEntities(featuredProduct.name)}
-                        </h3>
-
                       </div>
 
-                      {/* Single CTA */}
-                      <Link
-                        href={`/product/${featuredProduct.slug}`}
-                        className="w-full inline-flex items-center justify-center gap-2 bg-primary text-cream px-6 py-3 rounded-full text-sm font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-md"
-                      >
-                        <ShoppingCart className="w-4 h-4" aria-hidden="true" />
-                        Jetzt kaufen
-                      </Link>
+                      {/* Product Info - Minimal on mobile, full on desktop */}
+                      <div className="flex-1 flex flex-col justify-center md:space-y-6">
+                        <div className="space-y-1 md:space-y-3 md:text-center">
+                          {/* Featured Product Label */}
+                          <p className="text-[10px] md:text-xs font-medium text-primary/50 uppercase tracking-[0.2em]">
+                            Unser Olivenöl
+                          </p>
 
+                          <h3 className="text-sm md:text-2xl font-serif font-bold text-primary line-clamp-2 md:leading-tight md:tracking-tight italic">
+                            {decodeHtmlEntities(featuredProduct.name)}
+                          </h3>
+
+                          {/* Price - Show on mobile only */}
+                          <p className="text-lg md:hidden font-bold text-primary">
+                            {formatEUR(parseFloat(featuredProduct.price))}
+                          </p>
+                        </div>
+
+
+                      </div>
                     </div>
                   </div>
-                </div>
+                </Link>
               ) : (
                 <div className="bg-white/50 rounded-2xl p-8 text-center">
                   <p className="text-primary-dark/60 text-sm">Produkt wird geladen...</p>
@@ -181,9 +179,9 @@ export default async function Home() {
       </section>
 
       {/* Product Categories Section */}
-      <section className="bg-cream py-20" aria-labelledby="categories">
+      <section className="bg-cream py-12 md:py-20" aria-labelledby="categories">
         <div className="container">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12 md:mb-16">
             <h2 id="categories" className="text-h2 md:text-h2-lg text-primary mb-4 font-serif">
               Unsere <span className="italic text-primary-light">Produktkategorien</span>
             </h2>
@@ -193,14 +191,14 @@ export default async function Home() {
           </div>
 
           {categories.length > 0 ? (
-            <div className="flex flex-wrap justify-center gap-6 max-w-6xl mx-auto mb-12">
+            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-6xl mx-auto mb-12">
               {categories
                 .filter(cat => cat.slug !== 'uncategorized')
                 .map((category) => (
                   <Link
                     key={category.id}
                     href={`/shop?category=${category.slug}`}
-                    className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500"
+                    className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500"
                   >
                     {/* Category Image */}
                     <div className="aspect-[4/3] relative bg-primary/5">
@@ -221,24 +219,30 @@ export default async function Home() {
                       {/* Overlay Gradient */}
                       <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
 
+                      {/* Product Count Badge - Top Right */}
+                      <div className="absolute top-2 right-2 md:top-3 md:right-3 bg-white/95 backdrop-blur-sm text-primary px-2 py-1 md:px-2.5 md:py-1 rounded-full text-[10px] md:text-xs font-bold shadow-md">
+                        {category.count}
+                      </div>
+
                       {/* Category Content */}
-                      <div className="absolute inset-0 p-4 md:p-6 flex flex-col justify-end">
-                        <h3 className="text-h3 md:text-h3-lg font-serif text-white mb-2">
-                          {decodeHtmlEntities(category.name)}
-                        </h3>
+                      <div className="absolute inset-0 p-3 md:p-6 flex flex-col justify-end">
+                        {/* Mobile: Name + Arrow in same line, Desktop: Stacked with description */}
+                        <div className="flex md:flex-col">
+                          <div className="flex items-center justify-between flex-1">
+                            <h3 className="text-base md:text-h3-lg font-serif text-white md:mb-2">
+                              {decodeHtmlEntities(category.name)}
+                            </h3>
 
-                        {category.description && (
-                          <p className="text-sm text-white/90 mb-3 line-clamp-2">
-                            {decodeHtmlEntities(category.description)}
-                          </p>
-                        )}
+                            <ArrowRight className="w-4 h-4 md:hidden text-white flex-shrink-0 ml-2" />
+                          </div>
 
-                        <div className="flex items-center justify-between">
-                          <span className="text-white/80 text-sm font-medium">
-                            {category.count} {category.count === 1 ? 'Produkt' : 'Produkte'}
-                          </span>
+                          {category.description && (
+                            <p className="hidden md:block text-sm text-white/90 mb-3 line-clamp-2">
+                              {decodeHtmlEntities(category.description)}
+                            </p>
+                          )}
 
-                          <div className="flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all">
+                          <div className="hidden md:flex items-center gap-2 text-white font-semibold group-hover:gap-3 transition-all">
                             <span className="text-sm">Entdecken</span>
                             <ArrowRight className="w-5 h-5" />
                           </div>
@@ -272,7 +276,7 @@ export default async function Home() {
       <FamilyOriginHeroSection />
 
       {/* Product Delivery Section with Video */}
-      <section className="bg-cream/80 py-20" aria-labelledby="product-delivery">
+      <section className="bg-cream/80 py-12 md:py-20" aria-labelledby="product-delivery">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
             <div className="space-y-6">
@@ -304,7 +308,7 @@ export default async function Home() {
       </section>
 
       {/* Olivadis vs Conventional Comparison Section */}
-      <section className="bg-[#faf1e5] py-20" aria-labelledby="comparison">
+      <section className="bg-[#faf1e5] py-12 md:py-20" aria-labelledby="comparison">
         <div className="container max-w-6xl">
           <h2 id="comparison" className="sr-only">Vergleich: Olivadis vs Herkömmliches Olivenöl</h2>
 

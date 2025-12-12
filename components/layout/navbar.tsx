@@ -38,7 +38,7 @@ export function Navbar() {
 
   return (
     <nav className={`
-      fixed top-10 md:top-9 left-0 right-0 z-40 transition-all duration-300
+      fixed top-[41px] md:top-9 left-0 right-0 z-50 transition-all duration-300
       ${isScrolled ? 'md:px-4' : ''}
     `}>
       <div className={`
@@ -107,12 +107,12 @@ export function Navbar() {
               className="relative p-2.5 hover:bg-primary-light rounded-lg transition-all duration-300 hover:scale-105"
               aria-label="Warenkorb öffnen"
             >
-              <ShoppingCart className="w-6 h-6" />
+              <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
               {totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  className="absolute -top-1 -right-1 bg-cream text-primary text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                  className="absolute -top-1 -right-1 bg-cream text-primary text-[10px] md:text-xs font-bold rounded-full w-4 h-4 md:w-5 md:h-5 flex items-center justify-center"
                 >
                   {totalItems}
                 </motion.span>
@@ -144,7 +144,9 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-20 bg-primary/98 backdrop-blur-md md:hidden z-40"
+            className={`fixed inset-0 bg-primary/70 backdrop-blur-md md:hidden z-40 ${
+              isScrolled ? 'top-[105px]' : 'top-[120px]'
+            }`}
             onClick={() => setMobileMenuOpen(false)}
           >
             <motion.div
