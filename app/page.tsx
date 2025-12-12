@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Check, X, ShoppingCart, ArrowRight } from 'lucide-react'
-import { getCategories, ProductCategory, getAllProducts } from '@/lib/woocommerce/products'
+import { getCategories, ProductCategory, getProduct } from '@/lib/woocommerce/products'
 import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ScrollIndicator } from '@/components/ui/scroll-indicator'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
@@ -31,17 +31,16 @@ export default async function Home() {
   }
 
   try {
-    const products = await getAllProducts()
-    // Get first featured product or just first product
-    featuredProduct = products.find(p => p.featured) || products[0]
+    // Fetch the specific "olivenoel" product for the hero featured box
+    featuredProduct = await getProduct('olivenoel')
   } catch (error) {
     console.error('Failed to fetch featured product:', error)
   }
 
   return (
     <main className="min-h-screen">
-      {/* Hero Section with Video Background */}
-      <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden">
+      {/* Hero Section - Compact Product Hero */}
+      <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden border-t-4 border-primary/20">
         {/* Video Background */}
         <div className="absolute inset-0 w-full h-full">
           <video
@@ -54,101 +53,150 @@ export default async function Home() {
             <source src="/videos/banner-desktop-lo.mp4" type="video/mp4" />
           </video>
           {/* Lighter Green Overlay to See Video Better */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/75 via-primary/60 to-primary/50" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/75 via-primary/70 to-primary/75" />
         </div>
 
-        {/* Content */}
-        <div className="container relative z-10">
-          <div className="max-w-4xl text-cream">
-            {/* Trust Badges */}
-            <div className="flex flex-wrap gap-2 md:gap-3 mb-6">
-              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
-                <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                </svg>
-                <span className="text-xs md:text-sm font-semibold">100% Bio & Familiengeführt</span>
+        <div className="container relative z-10 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-[1.6fr,0.6fr] gap-8 lg:gap-10 items-center max-w-6xl mx-auto">
+            {/* Left Column - Hero Content */}
+            <div className="text-cream">
+              {/* Trust Badges */}
+              <div className="flex flex-wrap gap-2 md:gap-3 mb-6">
+                <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                  <svg className="w-4 h-4 md:w-5 md:h-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                  <span className="text-xs md:text-sm font-semibold">100% Bio & Familiengeführt</span>
+                </div>
+
+                <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                  <span className="text-xs md:text-sm font-semibold">🇬🇷 Aus Griechenland</span>
+                </div>
+
+                <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
+                  <span className="text-xs md:text-sm font-semibold">⭐⭐⭐⭐⭐ Bewertungen</span>
+                </div>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
-                <span className="text-xs md:text-sm font-semibold">🇬🇷 Aus Griechenland</span>
+              <h1 className="text-h2 md:text-[60px] md:leading-[66px] md:tracking-[-2.24px] font-bold mb-6 leading-tight font-serif">
+                Willkommen beim<br/>
+                <span className="italic" style={{ color: '#5DA81A' }}>Olivadis Familienbetrieb</span>
+              </h1>
+
+              <p className="text-base md:text-body-lg text-cream/90 mb-8 leading-relaxed">
+                Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
+              </p>
+
+              <div className="flex flex-wrap gap-4 mb-8">
+                <Link
+                  href="/shop"
+                  className="inline-flex items-center gap-2 bg-cream text-primary px-8 py-4 rounded-full text-button font-bold hover:bg-cream/90 transition-all hover:scale-105 shadow-lg"
+                >
+                  Jetzt einkaufen
+                  <ArrowRight className="w-5 h-5" aria-hidden="true" />
+                </Link>
+                <Link
+                  href="/ueber-uns"
+                  className="inline-flex items-center gap-2 bg-cream/10 backdrop-blur-sm text-cream px-8 py-4 rounded-full text-button font-bold hover:bg-cream/20 transition-all border-2 border-cream/30"
+                >
+                  Unsere Geschichte
+                </Link>
               </div>
 
-              <div className="inline-flex items-center gap-1.5 md:gap-2 bg-cream/20 backdrop-blur-sm text-cream px-3 md:px-4 py-1.5 md:py-2 rounded-full">
-                <span className="text-xs md:text-sm font-semibold">⭐⭐⭐⭐⭐ Bewertungen</span>
+              {/* Quick Features */}
+              <div className="flex flex-wrap gap-4 text-sm text-cream/80">
+                <div className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-cream flex-shrink-0" />
+                  <span>Kostenloser Versand ab 50€</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Check className="w-5 h-5 text-cream flex-shrink-0" />
+                  <span>Frische Ernte {new Date().getFullYear()}</span>
+                </div>
               </div>
             </div>
 
-            <h1 className="text-h2 md:text-h2-lg font-bold mb-6 leading-tight font-serif">
-              Willkommen beim<br/>
-              <span className="italic" style={{ color: '#5DA81A' }}>Olivadis Familienbetrieb</span>
-            </h1>
+            {/* Right Column - Compact Product Card */}
+            <div>
+              {featuredProduct ? (
+                <div className="relative">
+                  {/* Product Card - Compact Version */}
+                  <div className="relative bg-gradient-to-br from-white to-cream/15 backdrop-blur-sm rounded-2xl shadow-xl p-4 border border-primary/10 hover:shadow-2xl transition-all duration-300">
+                    {/* Small Bestseller Badge */}
+                    {featuredProduct.featured && (
+                      <div className="absolute -top-3 -right-3 z-10">
+                        <div className="bg-primary text-cream px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg">
+                          Bestseller
+                        </div>
+                      </div>
+                    )}
 
-            <p className="text-base md:text-body-lg text-cream/90 mb-8 leading-relaxed max-w-2xl">
-              Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
-            </p>
-
-            <div className="flex flex-wrap gap-4">
-              <Link
-                href="/shop"
-                className="inline-flex items-center gap-2 bg-cream text-primary px-8 py-4 rounded-full text-button font-bold hover:bg-cream/90 transition-all hover:scale-105"
-              >
-                Jetzt einkaufen
-                <ArrowRight className="w-5 h-5" aria-hidden="true" />
-              </Link>
-              <Link
-                href="/ueber-uns"
-                className="inline-flex items-center gap-2 bg-cream/10 backdrop-blur-sm text-cream px-8 py-4 rounded-full text-button font-bold hover:bg-cream/20 transition-all border-2 border-cream/30"
-              >
-                Unsere Geschichte
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Featured Product Mini Box - Sleek Version */}
-        {featuredProduct && (
-          <div className="absolute bottom-6 right-6 z-20 hidden lg:block">
-            <div className="bg-white/90 backdrop-blur-md rounded-lg shadow-xl p-3 w-56 border border-primary/10 hover:shadow-2xl transition-all duration-300">
-              <div className="flex gap-2 items-center">
-                <div className="relative w-14 h-14 rounded-md overflow-hidden bg-cream/50 flex-shrink-0 p-1">
-                  {featuredProduct.images[0]?.src ? (
-                    <Image
-                      src={featuredProduct.images[0].src}
-                      alt={decodeHtmlEntities(featuredProduct.name)}
-                      fill
-                      className="object-contain"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center text-primary/30">
-                      <ShoppingCart className="w-6 h-6" />
+                    {/* Compact Product Image */}
+                    <div className="relative h-54 mb-4 flex items-center justify-center bg-gradient-to-br from-cream/30 to-transparent rounded-xl">
+                      {featuredProduct.images[0]?.src ? (
+                        <Image
+                          src={featuredProduct.images[0].src}
+                          alt={decodeHtmlEntities(featuredProduct.name)}
+                          width={180}
+                          height={240}
+                          className="object-contain drop-shadow-xl"
+                          priority
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-primary/30">
+                          <ShoppingCart className="w-16 h-16" />
+                        </div>
+                      )}
                     </div>
-                  )}
+
+                    {/* Product Info - Compact */}
+                    <div className="space-y-3">
+                      <div>
+                        <h3 className="text-lg font-bold text-primary mb-1 line-clamp-2">
+                          {decodeHtmlEntities(featuredProduct.name)}
+                        </h3>
+                        {featuredProduct.short_description && (
+                          <div
+                            className="text-xs text-primary-dark/60 line-clamp-1"
+                            dangerouslySetInnerHTML={{
+                              __html: decodeHtmlEntities(featuredProduct.short_description)
+                            }}
+                          />
+                        )}
+                      </div>
+
+                      {/* Price - Compact */}
+                      <div className="flex items-baseline gap-2">
+                        <p className="text-2xl font-bold text-primary-light">
+                          {formatEUR(parseFloat(featuredProduct.price))}
+                        </p>
+                        {featuredProduct.regular_price && featuredProduct.regular_price !== featuredProduct.price && (
+                          <p className="text-sm text-primary-dark/40 line-through">
+                            {formatEUR(parseFloat(featuredProduct.regular_price))}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Single CTA */}
+                      <Link
+                        href={`/product/${featuredProduct.slug}`}
+                        className="w-full inline-flex items-center justify-center gap-2 bg-primary text-cream px-6 py-3 rounded-full text-sm font-bold hover:bg-primary-light transition-all hover:scale-105 shadow-md"
+                      >
+                        <ShoppingCart className="w-4 h-4" aria-hidden="true" />
+                        Jetzt kaufen
+                      </Link>
+
+                    </div>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[9px] text-primary/50 font-bold tracking-wider uppercase mb-0.5">
-                    {featuredProduct.featured ? 'BESTSELLER' : 'NEU'}
-                  </p>
-                  <h3 className="text-xs font-bold text-primary mb-0.5 leading-tight line-clamp-2">
-                    {decodeHtmlEntities(featuredProduct.name)}
-                  </h3>
-                  <p className="text-base font-bold text-primary-light">
-                    {formatEUR(parseFloat(featuredProduct.price))}
-                  </p>
+              ) : (
+                <div className="bg-white/50 rounded-2xl p-8 text-center">
+                  <p className="text-primary-dark/60 text-sm">Produkt wird geladen...</p>
                 </div>
-              </div>
-              <Link
-                href={`/product/${featuredProduct.slug}`}
-                className="mt-2 w-full inline-flex items-center justify-center gap-1.5 bg-primary text-cream px-3 py-2 rounded-md text-[10px] font-bold hover:bg-primary-light transition-all hover:scale-[1.02]"
-              >
-                <ShoppingCart className="w-3 h-3" aria-hidden="true" />
-                Jetzt ansehen
-              </Link>
+              )}
             </div>
           </div>
-        )}
-
-        {/* Scroll Indicator */}
-        <ScrollIndicator />
+        </div>
       </section>
 
       {/* Product Categories Section */}
@@ -291,9 +339,9 @@ export default async function Home() {
               <h3 className="text-h3 md:text-h3-lg text-center mb-6">
                 <span className="font-serif italic text-primary-light">Olivadis</span> natives Olivenöl extra
               </h3>
-              <div className="relative h-64 lg:h-80 mb-8 flex items-center justify-center">
+              <div className="relative h-54 lg:h-80 mb-8 flex items-center justify-center">
                 <Image
-                  src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&auto=format&fit=crop&q=80"
+                  src="/olivadis-single.png"
                   alt="Olivadis Premium Olivenölflasche"
                   width={200}
                   height={400}
@@ -324,9 +372,9 @@ export default async function Home() {
               <h3 className="text-h3 md:text-h3-lg text-center mb-6">
                 <span className="font-serif italic text-red-700">Herkömmliches</span> Supermarkt-Olivenöl
               </h3>
-              <div className="relative h-64 lg:h-80 mb-8 flex items-center justify-center">
+              <div className="relative h-54 lg:h-80 mb-8 flex items-center justify-center">
                 <Image
-                  src="https://images.unsplash.com/photo-1608181715190-1945b6a40b47?w=400&auto=format&fit=crop&q=80"
+                  src="/conventional-oil.png"
                   alt="Herkömmliche Supermarkt Olivenölflasche"
                   width={200}
                   height={400}
