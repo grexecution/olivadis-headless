@@ -1,6 +1,6 @@
 'use client'
 
-import { Fragment, useState, useEffect } from 'react'
+import { Fragment, useState, useEffect, useMemo } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { X, Plus, Minus, ShoppingBag, Trash2, Truck, Sparkles } from 'lucide-react'
 import { useCart } from '@/lib/cart-context'
@@ -12,6 +12,7 @@ import { PaymentIcons } from '@/components/ui/payment-icons'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 import { formatEUR } from '@/lib/utils/currency'
 import { translateCountryName } from '@/lib/utils/countries'
+import { calculateCartTotals, getFreeShippingThreshold } from '@/lib/utils/shipping-calculator'
 
 export function SideCart() {
   const {
@@ -25,76 +26,31 @@ export function SideCart() {
   } = useCart()
 
   const { countryCode, country, loading: geoLoading } = useGeolocation()
-  const [estimatedTax, setEstimatedTax] = useState(0)
-  const [estimatedShipping, setEstimatedShipping] = useState(0)
-  const [taxRate, setTaxRate] = useState(0)
-  const [estimatedCountry, setEstimatedCountry] = useState('Austria')
-  const [isCalculating, setIsCalculating] = useState(false)
 
-  // Fetch estimated tax and shipping when cart changes or country is detected
-  useEffect(() => {
-    if (geoLoading || items.length === 0) return
+  // Calculate cart totals INSTANTLY using client-side rules (<100ms)
+  // No API calls, no delays, no loading states needed
+  const cartCalculation = useMemo(() => {
+    if (items.length === 0) {
+      return {
+        subtotal: 0,
+        shipping: 0,
+        tax: 0,
+        total: 0,
+        country: countryCode || 'AT',
+        isFreeShipping: false,
+      }
+    }
 
-    // Show calculating state immediately
-    setIsCalculating(true)
+    return calculateCartTotals(items, countryCode || 'AT')
+  }, [items, countryCode])
 
-    // Debounce API calls to avoid rapid-fire requests
-    const debounceTimer = setTimeout(() => {
-      // Fetch estimated costs from API
-      fetch('/api/cart/estimate', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        country: countryCode,
-        subtotal: totalPrice,
-        items: items.map(item => ({
-          productId: item.productId,
-          quantity: item.quantity,
-        })),
-      }),
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log('Cart estimate response:', data)
-        if (data.success) {
-          const translatedCountry = translateCountryName(data.countryName || country)
-          console.log('Translating country:', data.countryName, '->', translatedCountry)
-          setEstimatedTax(data.tax || 0)
-          setEstimatedShipping(data.shipping || 0)
-          setTaxRate(data.taxRate || 0)
-          setEstimatedCountry(translatedCountry)
-        } else {
-          // API returned error but with data
-          const translatedCountry = translateCountryName(data.countryName || country)
-          console.log('API error, using fallback. Country:', data.countryName, '->', translatedCountry)
-          setEstimatedTax(data.tax || totalPrice * 0.20)
-          setEstimatedShipping(data.shipping || 5.90)
-          setTaxRate(data.taxRate || 20)
-          setEstimatedCountry(translatedCountry)
-        }
-        setIsCalculating(false)
-      })
-      .catch((error) => {
-        console.error('Failed to fetch cart estimates:', error)
-        // Fallback to default estimates
-        const translatedCountry = translateCountryName(country)
-        console.log('Catch fallback. Country:', country, '->', translatedCountry)
-        setEstimatedTax(totalPrice * 0.20) // 20% VAT default
-        setEstimatedShipping(5.90) // Default shipping
-        setTaxRate(20)
-        setEstimatedCountry(translatedCountry)
-        setIsCalculating(false)
-      })
-    }, 300) // 300ms debounce delay
+  const estimatedTax = cartCalculation.tax
+  const estimatedShipping = cartCalculation.shipping
+  const estimatedTotal = cartCalculation.total
+  const estimatedCountry = translateCountryName(country)
 
-    // Cleanup function to cancel pending API calls
-    return () => clearTimeout(debounceTimer)
-  }, [countryCode, totalPrice, items, geoLoading, country])
-
-  const estimatedTotal = totalPrice + estimatedTax + estimatedShipping
-
-  // Free shipping threshold and progress
-  const FREE_SHIPPING_THRESHOLD = 50
+  // Free shipping threshold and progress (from WooCommerce settings)
+  const FREE_SHIPPING_THRESHOLD = getFreeShippingThreshold(countryCode || 'AT')
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice)
   const freeShippingProgress = Math.min(100, (totalPrice / FREE_SHIPPING_THRESHOLD) * 100)
   const isFreeShippingUnlocked = totalPrice >= FREE_SHIPPING_THRESHOLD
@@ -128,33 +84,35 @@ export function SideCart() {
               >
                 <Dialog.Panel className="pointer-events-auto w-screen max-w-md">
                   <div className="flex h-full flex-col bg-cream text-primary">
-                    {/* Header */}
-                    <div className="flex items-center justify-between border-b border-primary/10 px-6 py-4 bg-white">
-                      <div className="flex items-center gap-2">
-                        <ShoppingBag className="h-5 w-5 text-primary" />
-                        <h2 className="text-h4 text-primary">Warenkorb</h2>
-                        {totalItems > 0 && (
-                          <span className="ml-1 rounded-full bg-primary text-cream px-2 py-0.5 text-body-sm font-bold">
-                            {totalItems}
-                          </span>
-                        )}
+                    {/* Header Section */}
+                    <div className="bg-white border-b border-primary/10">
+                      {/* Warenkorb Title */}
+                      <div className="flex items-center justify-between px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <ShoppingBag className="h-5 w-5 text-primary" />
+                          <h2 className="text-h4 text-primary">Warenkorb</h2>
+                          {totalItems > 0 && (
+                            <span className="ml-1 rounded-full bg-primary text-cream px-2 py-0.5 text-body-sm font-bold">
+                              {totalItems}
+                            </span>
+                          )}
+                        </div>
+                        <button
+                          type="button"
+                          className="rounded-md p-2 hover:bg-cream transition-colors text-primary"
+                          onClick={closeCart}
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
                       </div>
-                      <button
-                        type="button"
-                        className="rounded-md p-2 hover:bg-cream transition-colors text-primary"
-                        onClick={closeCart}
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
 
-                    {/* Free Shipping Progress - Only show if cart has items */}
-                    {items.length > 0 && (
-                      <div className={`mx-6 mt-4 mb-2 p-4 rounded-lg transition-all duration-500 ${
-                        isFreeShippingUnlocked
-                          ? 'bg-gradient-to-r from-primary/10 via-primary-light/10 to-primary/10 border-2 border-primary/20'
-                          : 'bg-cream/50 border border-primary/10'
-                      }`}>
+                      {/* Free Shipping Progress - Full Width */}
+                      {items.length > 0 && (
+                        <div className={`px-6 py-3 border-t transition-all duration-500 ${
+                          isFreeShippingUnlocked
+                            ? 'bg-gradient-to-r from-primary/5 via-primary-light/5 to-primary/5 border-primary/10'
+                            : 'bg-cream/30 border-primary/5'
+                        }`}>
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             {isFreeShippingUnlocked ? (
@@ -190,8 +148,9 @@ export function SideCart() {
                             <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent animate-shimmer" />
                           )}
                         </div>
-                      </div>
-                    )}
+                        </div>
+                      )}
+                    </div>
 
                     {/* Cart Items */}
                     <div className="flex-1 overflow-y-auto px-6 py-6">
@@ -290,7 +249,7 @@ export function SideCart() {
                         </div>
 
                         {/* Estimated Shipping */}
-                        <div className={`flex justify-between text-xs transition-all duration-300 ${isCalculating ? 'blur-sm opacity-50' : ''}`}>
+                        <div className="flex justify-between text-xs">
                           <p className="text-primary/50">Geschätzter Versand ({estimatedCountry})</p>
                           <p className={estimatedShipping === 0 ? 'text-primary font-bold' : 'text-primary/70'}>
                             {estimatedShipping === 0 ? 'Kostenlos' : formatEUR(estimatedShipping)}
@@ -298,8 +257,8 @@ export function SideCart() {
                         </div>
 
                         {/* Estimated Tax */}
-                        <div className={`flex justify-between text-xs transition-all duration-300 ${isCalculating ? 'blur-sm opacity-50' : ''}`}>
-                          <p className="text-primary/50">Geschätzte MwSt. ({taxRate}%, {estimatedCountry})</p>
+                        <div className="flex justify-between text-xs">
+                          <p className="text-primary/50">Geschätzte MwSt. ({estimatedCountry})</p>
                           <p className="text-primary/70">{formatEUR(estimatedTax)}</p>
                         </div>
 

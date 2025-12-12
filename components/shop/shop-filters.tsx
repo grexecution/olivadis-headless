@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ChevronDown, ChevronUp, X } from 'lucide-react'
+import { ChevronDown, ChevronUp, X, SlidersHorizontal } from 'lucide-react'
 import { ProductCategory } from '@/lib/woocommerce/products'
 
 interface ShopFiltersProps {
@@ -25,6 +25,21 @@ export default function ShopFilters({ categories }: ShopFiltersProps) {
   const [showCategories, setShowCategories] = useState(true)
   const [showPrice, setShowPrice] = useState(true)
   const [showSize, setShowSize] = useState(true)
+
+  // Mobile filter modal state
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
+
+  // Prevent body scroll when mobile filter is open
+  useEffect(() => {
+    if (isMobileFilterOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isMobileFilterOpen])
 
   const applyFilters = (category?: string, size?: string, minPrice?: number, maxPrice?: number) => {
     const params = new URLSearchParams()
@@ -64,8 +79,16 @@ export default function ShopFilters({ categories }: ShopFiltersProps) {
     router.push('/shop')
   }
 
-  return (
-    <div className="bg-background border border-primary/10 rounded-2xl p-6 space-y-6 sticky top-24">
+  // Count active filters
+  const activeFiltersCount = [
+    selectedCategory,
+    selectedSize,
+    priceRange[0] > 0 || priceRange[1] < 200
+  ].filter(Boolean).length
+
+  // Filter content component (reusable for mobile and desktop)
+  const FilterContent = () => (
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h2 className="text-h4 font-bold text-primary">Filter</h2>
@@ -216,5 +239,70 @@ export default function ShopFilters({ categories }: ShopFiltersProps) {
         Preis anwenden
       </button>
     </div>
+  )
+
+  return (
+    <>
+      {/* Mobile Filter Button - Only visible on mobile */}
+      <div className="md:hidden mb-6">
+        <button
+          onClick={() => setIsMobileFilterOpen(true)}
+          className="w-full bg-cream border-2 border-primary/20 text-primary py-3 px-6 rounded-lg font-bold hover:bg-primary hover:text-cream transition-all flex items-center justify-center gap-2 relative"
+        >
+          <SlidersHorizontal className="w-5 h-5" />
+          Filter & Sortieren
+          {activeFiltersCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-primary text-cream w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center">
+              {activeFiltersCount}
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* Mobile Filter Modal - Slide up from bottom */}
+      {isMobileFilterOpen && (
+        <div className="md:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-primary-dark/60 backdrop-blur-sm"
+            onClick={() => setIsMobileFilterOpen(false)}
+          />
+
+          {/* Modal */}
+          <div className="absolute bottom-0 left-0 right-0 bg-background rounded-t-3xl shadow-2xl max-h-[85vh] overflow-y-auto animate-slide-up">
+            {/* Modal Header */}
+            <div className="sticky top-0 bg-background border-b border-primary/10 p-4 flex items-center justify-between z-10">
+              <h2 className="text-h4 font-bold text-primary">Filter & Sortieren</h2>
+              <button
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="p-2 hover:bg-cream/50 rounded-full transition-colors"
+              >
+                <X className="w-6 h-6 text-primary" />
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6">
+              <FilterContent />
+            </div>
+
+            {/* Modal Footer - Apply Button */}
+            <div className="sticky bottom-0 bg-background border-t border-primary/10 p-4">
+              <button
+                onClick={() => setIsMobileFilterOpen(false)}
+                className="w-full bg-primary text-cream py-4 px-6 rounded-lg font-bold hover:bg-primary-dark transition-colors"
+              >
+                Ergebnisse anzeigen
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Desktop Filter Sidebar - Hidden on mobile */}
+      <div className="hidden md:block bg-background border border-primary/10 rounded-2xl p-6 sticky top-24">
+        <FilterContent />
+      </div>
+    </>
   )
 }

@@ -2,17 +2,17 @@
 
 import { useState } from 'react'
 import Image from 'next/image'
-import { WooCommerceVariation, WooCommerceProduct } from '@/types/woocommerce'
+import { Product, ProductVariation } from '@/lib/woocommerce/products'
 import { formatEUR } from '@/lib/utils/currency'
 import { AddToCartButton } from './add-to-cart'
 
 interface VariationSelectorProps {
-  variations: WooCommerceVariation[]
-  product: WooCommerceProduct
+  variations: ProductVariation[]
+  product: Product
 }
 
 export function VariationSelector({ variations, product }: VariationSelectorProps) {
-  const [selectedVariation, setSelectedVariation] = useState<WooCommerceVariation | null>(
+  const [selectedVariation, setSelectedVariation] = useState<ProductVariation | null>(
     variations[0] || null
   )
 

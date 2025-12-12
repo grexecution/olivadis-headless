@@ -98,6 +98,8 @@ export interface Product {
   price_html?: string
   currency_prices?: CurrencyPrices
   reseller_pricing?: ResellerPricing
+  average_rating?: string
+  rating_count?: number
   acf?: {
     product_detail_description?: string
     scope_of_delivery?: string
