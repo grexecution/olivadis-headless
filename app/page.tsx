@@ -121,7 +121,7 @@ export default async function Home() {
               {featuredProduct ? (
                 <Link href={`/product/${featuredProduct.slug}`} className="relative block group">
                   {/* Product Card - Mobile: Horizontal, Desktop: Vertical */}
-                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 pt-6 pb-3 px-3 md:p-8 overflow-visible cursor-pointer">
+                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 py-3 px-3 md:p-8 overflow-visible cursor-pointer">
                     {/* Small Bestseller Badge */}
                     {featuredProduct.featured && (
                       <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 z-10">
@@ -134,7 +134,7 @@ export default async function Home() {
                     {/* Mobile: Horizontal Layout, Desktop: Vertical Layout */}
                     <div className="flex flex-row md:flex-col gap-3 md:gap-0">
                       {/* Product Image - Small on mobile, large on desktop */}
-                      <div className="relative w-20 h-24 md:w-full md:h-72 md:mb-0 flex items-start md:items-center justify-center rounded-lg md:rounded-none flex-shrink-0 overflow-visible bg-gradient-to-br from-cream/30 to-transparent md:bg-none -mt-8 md:-mt-44">
+                      <div className="relative w-20 h-24 md:w-full md:h-72 md:mb-0 flex items-start md:items-center justify-center rounded-lg md:rounded-none flex-shrink-0 overflow-visible bg-gradient-to-br from-cream/30 to-transparent md:bg-none -mt-0 md:-mt-44">
                         <Image
                           src="/olivadis-single.png"
                           alt={decodeHtmlEntities(featuredProduct.name)}

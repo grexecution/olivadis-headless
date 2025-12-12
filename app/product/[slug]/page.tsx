@@ -3,6 +3,7 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { getProduct, getAllProducts, getProductVariations, getStockStatus } from '@/lib/woocommerce/products'
 import { AddToCartButton } from '@/components/product/add-to-cart'
+import { VariationSelector } from '@/components/product/variation-selector'
 import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-section'
 import TestimonialsSection from '@/components/sections/testimonials-section'
 import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
@@ -72,7 +73,7 @@ export default async function ProductPage({
         </nav>
 
         {/* Product Details */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white rounded-lg p-8 shadow">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 bg-white rounded-lg p-4 md:p-8 shadow">
           {/* Product Images */}
           <div>
             <div className="aspect-square overflow-hidden rounded-lg bg-cream mb-4 relative">
@@ -90,6 +91,13 @@ export default async function ProductPage({
                   <span className="text-primary/30 text-h3">No Image</span>
                 </div>
               )}
+
+              {/* Origin Badge - Top Left */}
+              <div className="absolute top-4 left-4">
+                <div className="inline-flex items-center gap-2 bg-primary/90 text-cream px-3 py-1.5 rounded-full shadow-lg">
+                  <span className="text-sm font-semibold">🇬🇷 Aus Griechenland</span>
+                </div>
+              </div>
 
               {/* Sale Badge */}
               {isOnSale && (
@@ -122,33 +130,39 @@ export default async function ProductPage({
 
           {/* Product Info */}
           <div>
-            {/* 5 Star Rating */}
-            <div className="flex items-center gap-2 mb-3">
-              <div className="flex gap-0.5" aria-label="5 von 5 Sternen">
-                {[...Array(5)].map((_, i) => (
-                  <svg
-                    key={i}
-                    className="w-5 h-5 fill-primary"
-                    viewBox="0 0 20 20"
-                    aria-hidden="true"
-                  >
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                ))}
+            {/* 5 Star Rating & Stock Status */}
+            <div className="flex items-start justify-between gap-4 mb-3">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+                <div className="flex gap-0.5" aria-label="5 von 5 Sternen">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className="w-5 h-5 fill-primary"
+                      viewBox="0 0 20 20"
+                      aria-hidden="true"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <span className="text-sm text-primary-dark/70">({product.rating_count || 119} Bewertungen)</span>
               </div>
-              <span className="text-sm text-primary-dark/70">(Ausgezeichnet)</span>
+
+              {/* Stock Status */}
+              <span
+                className={`inline-block px-4 py-2 rounded-md text-body-sm font-bold whitespace-nowrap ${
+                  stockInfo.inStock
+                    ? 'bg-primary/10 text-primary'
+                    : 'bg-primary-dark/10 text-primary-dark'
+                }`}
+              >
+                {stockInfo.stockText}
+              </span>
             </div>
 
             <h1 className="text-h3 md:text-h3-lg text-primary mb-4 font-serif">
               {decodeHtmlEntities(product.name)}
             </h1>
-
-            {/* Origin Badge */}
-            <div className="mb-4">
-              <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-3 py-1.5 rounded-full">
-                <span className="text-sm font-semibold">🇬🇷 Aus Griechenland</span>
-              </div>
-            </div>
 
             {/* Short Description */}
             {product.short_description && (
@@ -204,87 +218,43 @@ export default async function ProductPage({
               </div>
             </div>
 
-            {/* Stock Status */}
-            <div className="mb-6">
-              <span
-                className={`inline-block px-4 py-2 rounded-md text-body-sm font-bold ${
-                  stockInfo.inStock
-                    ? 'bg-primary/10 text-primary'
-                    : 'bg-primary-dark/10 text-primary-dark'
-                }`}
-              >
-                {stockInfo.stockText}
-              </span>
-            </div>
-
-            {/* Variations Info */}
-            {variations.length > 0 && (
-              <div className="mb-6 p-4 bg-cream rounded-md">
-                <p className="text-body-sm text-primary-dark mb-2 font-bold">
-                  Verfügbare Optionen:
-                </p>
-                <p className="text-body-sm text-primary-dark/70">
-                  Dieses Produkt hat {variations.length} Variation{variations.length > 1 ? 'en' : ''}
-                </p>
-              </div>
-            )}
-
-            {/* Price & Add to Cart */}
-            <div className="space-y-4">
-              {/* Price */}
-              <div>
-                {isOnSale ? (
-                  <div className="flex items-baseline gap-4">
+            {/* Variations Selector - If product has variations */}
+            {variations.length > 0 ? (
+              <VariationSelector variations={variations} product={product} />
+            ) : (
+              /* Price & Add to Cart - For simple products only */
+              <div className="space-y-4 mb-3">
+                {/* Price */}
+                <div>
+                  {isOnSale ? (
+                    <div className="flex items-start gap-4">
+                      <div className="flex flex-col gap:0 md:gap-1">
+                        <span className="text-price text-primary font-bold">
+                          {formatEUR(price)}
+                        </span>
+                        <span className="text-body-lg text-primary-dark/40 line-through">
+                          {formatEUR(regularPrice)}
+                        </span>
+                      </div>
+                      <span className="bg-primary text-cream px-3 py-1 rounded-md text-body-sm font-bold whitespace-nowrap">
+                        Sparen Sie {formatEUR(regularPrice - price)}
+                      </span>
+                    </div>
+                  ) : (
                     <span className="text-price text-primary font-bold">
                       {formatEUR(price)}
                     </span>
-                    <span className="text-body-lg text-primary-dark/40 line-through">
-                      {formatEUR(regularPrice)}
-                    </span>
-                    <span className="bg-primary text-cream px-3 py-1 rounded-md text-body-sm font-bold">
-                      Sparen Sie {formatEUR(regularPrice - price)}
-                    </span>
-                  </div>
-                ) : (
-                  <span className="text-price text-primary font-bold">
-                    €{price.toFixed(2)}
-                  </span>
-                )}
-              </div>
+                  )}
+                </div>
 
-              {/* Add to Cart */}
-              <AddToCartButton product={product} />
-            </div>
+                {/* Add to Cart */}
+                <AddToCartButton product={product} />
+              </div>
+            )}
 
             {/* Payment Methods */}
-            <div className="flex flex-col gap-2 mt-4 pt-4 border-t border-primary/10">
+            <div className="flex flex-col gap-2 items-center">
               <PaymentIcons />
-            </div>
-
-            <div className="mb-8"></div>
-
-            {/* Product Meta */}
-            <div className="border-t border-primary-dark/10 pt-6 space-y-3">
-              {product.sku && (
-                <div className="flex gap-3">
-                  <span className="text-body font-bold text-primary-dark">Art.-Nr.:</span>
-                  <span className="text-body text-primary-dark/70">{product.sku}</span>
-                </div>
-              )}
-              {product.categories.length > 0 && (
-                <div className="flex gap-3">
-                  <span className="text-body font-bold text-primary-dark">Kategorien:</span>
-                  <span className="text-body text-primary-dark/70">
-                    {product.categories.map((cat) => cat.name).join(', ')}
-                  </span>
-                </div>
-              )}
-              {product.weight && (
-                <div className="flex gap-3">
-                  <span className="text-body font-bold text-primary-dark">Gewicht:</span>
-                  <span className="text-body text-primary-dark/70">{product.weight}</span>
-                </div>
-              )}
             </div>
           </div>
         </div>

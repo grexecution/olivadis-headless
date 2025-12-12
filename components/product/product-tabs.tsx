@@ -99,20 +99,28 @@ export function ProductTabs({ product }: ProductTabsProps) {
             )}
 
             {/* Weight and Dimensions */}
-            {(product.weight || product.sku) && (
+            {(product.weight || product.sku || product.categories.length > 0) && (
               <div>
                 <h3 className="text-h4 text-primary mb-3 font-serif">Spezifikationen</h3>
                 <div className="space-y-2">
+                  {product.sku && (
+                    <div className="flex gap-3">
+                      <span className="text-body font-semibold text-primary-dark">Art.-Nr.:</span>
+                      <span className="text-body text-primary-dark/70">{product.sku}</span>
+                    </div>
+                  )}
+                  {product.categories.length > 0 && (
+                    <div className="flex gap-3">
+                      <span className="text-body font-semibold text-primary-dark">Kategorien:</span>
+                      <span className="text-body text-primary-dark/70">
+                        {product.categories.map((cat) => cat.name).join(', ')}
+                      </span>
+                    </div>
+                  )}
                   {product.weight && (
                     <div className="flex gap-3">
                       <span className="text-body font-semibold text-primary-dark">Gewicht:</span>
                       <span className="text-body text-primary-dark/70">{product.weight}</span>
-                    </div>
-                  )}
-                  {product.sku && (
-                    <div className="flex gap-3">
-                      <span className="text-body font-semibold text-primary-dark">Artikelnummer:</span>
-                      <span className="text-body text-primary-dark/70">{product.sku}</span>
                     </div>
                   )}
                 </div>
@@ -124,7 +132,8 @@ export function ProductTabs({ product }: ProductTabsProps) {
              !product.acf?.additional_information &&
              !product.acf?.scope_of_delivery &&
              !product.weight &&
-             !product.sku && (
+             !product.sku &&
+             product.categories.length === 0 && (
               <p className="text-body text-primary-dark/70">
                 Keine zusätzlichen Details verfügbar.
               </p>

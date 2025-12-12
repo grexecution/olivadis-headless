@@ -150,12 +150,13 @@ export function SideCart() {
                           {items.map((item) => (
                             <div key={item.id} className="flex gap-4 bg-white p-4 rounded-md border border-primary/10">
                               {/* Product Image */}
-                              <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-md border border-primary/10">
+                              <div className="relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md border border-primary/10">
                                 {item.image ? (
                                   <Image
                                     src={item.image}
                                     alt={item.name}
                                     fill
+                                    sizes="80px"
                                     className="object-cover"
                                   />
                                 ) : (
@@ -205,7 +206,7 @@ export function SideCart() {
                                       <Plus className="h-3 w-3" />
                                     </button>
                                   </div>
-                                  <p className="text-price text-primary font-bold">
+                                  <p className="text-lg text-primary font-bold">
                                     {formatEUR(item.price * item.quantity)}
                                   </p>
                                 </div>

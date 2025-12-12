@@ -82,7 +82,7 @@ export function OrderSummary({
                 <span className="text-body-sm text-primary/60">
                   Qty: {item.quantity}
                 </span>
-                <span className="text-body font-semibold text-primary">
+                <span className="text-body-sm font-semibold text-primary">
                   {formatEUR(item.price * item.quantity)}
                 </span>
               </div>
