@@ -6,7 +6,6 @@ import { SlidersHorizontal } from 'lucide-react'
 import { Product, ProductCategory } from '@/lib/woocommerce/products'
 import { ProductCard } from '@/components/product/product-card'
 import ShopFilters from '@/components/shop/shop-filters'
-import { SocialProofPopup } from '@/components/social-proof-popup'
 
 interface ShopClientProps {
   products: Product[]
@@ -78,9 +77,6 @@ export function ShopClient({ products, categories }: ShopClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Social Proof Popup */}
-      <SocialProofPopup />
-
       {/* Shop Hero - Always shown */}
       <section className="bg-gradient-to-b from-cream to-cream/50 border-b border-primary/10 py-8 md:py-10">
         <div className="container">

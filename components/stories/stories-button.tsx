@@ -2,8 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { StoriesViewer } from './stories-viewer'
-
-const STORY_COUNT = 3 // Total number of stories
+import { STORIES, PROFILE_VIDEO, PROFILE_IMAGE } from './stories-config'
 
 export function StoriesButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -71,9 +70,9 @@ export function StoriesButton() {
               loop
               muted
               playsInline
-              poster="/placeholder-stories.jpg"
+              poster={PROFILE_IMAGE}
             >
-              <source src="https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4" type="video/mp4" />
+              <source src={PROFILE_VIDEO} type="video/mp4" />
             </video>
             {/* Overlay gradient on hover */}
             <div className="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
@@ -81,13 +80,13 @@ export function StoriesButton() {
 
           {/* Story Count Badge */}
           <div className="absolute -top-1 -right-1 w-6 h-6 bg-primary text-white text-xs font-bold rounded-full border-2 border-background flex items-center justify-center shadow-lg">
-            {STORY_COUNT}
+            {STORIES.length}
           </div>
         </div>
 
         {/* Tooltip */}
         <div className="absolute bottom-full right-0 mb-2 px-3 py-1.5 bg-primary text-white text-sm font-medium rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
-          {STORY_COUNT} neue Stories
+          {STORIES.length} neue Stories
           <div className="absolute top-full right-6 -mt-1 w-2 h-2 bg-primary rotate-45"></div>
         </div>
       </button>

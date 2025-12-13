@@ -3,43 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
-
-interface Story {
-  id: number
-  type: 'image' | 'video' | 'text'
-  content: string
-  duration: number
-  title?: string
-  description?: string
-}
-
-// Sample stories data
-const STORIES: Story[] = [
-  {
-    id: 1,
-    type: 'image',
-    content: '/placeholder-story-1.jpg',
-    duration: 5000,
-    title: 'Frische Ernte 🫒',
-    description: 'Direkt aus Pteleos, Griechenland'
-  },
-  {
-    id: 2,
-    type: 'video',
-    content: 'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4',
-    duration: 10000,
-    title: 'Vom Baum zur Flasche',
-    description: 'So wird unser Olivenöl hergestellt'
-  },
-  {
-    id: 3,
-    type: 'text',
-    content: 'Neu im Shop! Premium Bio-Olivenöl jetzt verfügbar. Entdecke unsere limitierte Ernte 2024. 🌿',
-    duration: 6000,
-    title: 'Neue Produkte',
-    description: ''
-  }
-]
+import { STORIES, PROFILE_IMAGE } from './stories-config'
 
 interface StoriesViewerProps {
   onClose: () => void
@@ -156,7 +120,7 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden">
               <Image
-                src="/placeholder-stories.jpg"
+                src={PROFILE_IMAGE}
                 alt="Olivadis"
                 width={40}
                 height={40}
@@ -186,8 +150,8 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
         >
           {currentStory.type === 'image' && (
             <Image
-              src={currentStory.content}
-              alt={currentStory.title || 'Story'}
+              src={currentStory.media}
+              alt={currentStory.caption || 'Story'}
               fill
               className="object-cover"
               priority
@@ -197,7 +161,7 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
           {currentStory.type === 'video' && (
             <video
               ref={videoRef}
-              src={currentStory.content}
+              src={currentStory.media}
               className="w-full h-full object-cover"
               loop
               muted
@@ -205,25 +169,12 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
             />
           )}
 
-          {currentStory.type === 'text' && (
-            <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary via-primary-light to-primary-dark p-8">
-              <div className="text-center text-white space-y-4">
-                <p className="text-2xl md:text-3xl font-bold leading-relaxed">
-                  {currentStory.content}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* Story Title/Description Overlay */}
-          {(currentStory.title || currentStory.description) && currentStory.type !== 'text' && (
-            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
-              {currentStory.title && (
-                <h3 className="text-white font-bold text-lg mb-1">{currentStory.title}</h3>
-              )}
-              {currentStory.description && (
-                <p className="text-white/90 text-sm">{currentStory.description}</p>
-              )}
+          {/* Caption Overlay - Shows on all story types */}
+          {currentStory.caption && (
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+              <p className="text-white text-base md:text-lg font-medium leading-relaxed">
+                {currentStory.caption}
+              </p>
             </div>
           )}
         </div>
