@@ -7,11 +7,12 @@ import { ProductCategory } from '@/lib/woocommerce/products'
 
 interface ShopFiltersProps {
   categories: ProductCategory[]
+  onOpenMobileFilter?: () => void
 }
 
 const SIZES = ['100ml', '200ml', '300ml', '400ml', '500ml', '600ml', '1L', '3L']
 
-export default function ShopFilters({ categories }: ShopFiltersProps) {
+export default function ShopFilters({ categories, onOpenMobileFilter }: ShopFiltersProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -28,6 +29,14 @@ export default function ShopFilters({ categories }: ShopFiltersProps) {
 
   // Mobile filter modal state
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false)
+
+  // Expose open function to parent via callback
+  useEffect(() => {
+    if (onOpenMobileFilter) {
+      // Store the function reference for parent to call
+      (window as any).__openMobileFilter = () => setIsMobileFilterOpen(true)
+    }
+  }, [onOpenMobileFilter])
 
   // Prevent body scroll when mobile filter is open
   useEffect(() => {
@@ -243,22 +252,6 @@ export default function ShopFilters({ categories }: ShopFiltersProps) {
 
   return (
     <>
-      {/* Mobile Filter Button - Only visible on mobile */}
-      <div className="md:hidden mb-6">
-        <button
-          onClick={() => setIsMobileFilterOpen(true)}
-          className="w-full bg-cream border-2 border-primary/20 text-primary py-3 px-6 rounded-lg font-bold hover:bg-primary hover:text-cream transition-all flex items-center justify-center gap-2 relative"
-        >
-          <SlidersHorizontal className="w-5 h-5" />
-          Filter & Sortieren
-          {activeFiltersCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-primary text-cream w-6 h-6 rounded-full text-sm font-bold flex items-center justify-center">
-              {activeFiltersCount}
-            </span>
-          )}
-        </button>
-      </div>
-
       {/* Mobile Filter Modal - Slide up from bottom */}
       {isMobileFilterOpen && (
         <div className="md:hidden fixed inset-0 z-50">

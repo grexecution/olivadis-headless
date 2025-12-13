@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
+import { SlidersHorizontal } from 'lucide-react'
 import { Product, ProductCategory } from '@/lib/woocommerce/products'
 import { ProductCard } from '@/components/product/product-card'
 import ShopFilters from '@/components/shop/shop-filters'
@@ -14,6 +15,7 @@ interface ShopClientProps {
 export function ShopClient({ products, categories }: ShopClientProps) {
   const searchParams = useSearchParams()
   const [filteredProducts, setFilteredProducts] = useState(products)
+  const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null)
 
   useEffect(() => {
     // Get filter parameters from URL
@@ -30,6 +32,11 @@ export function ShopClient({ products, categories }: ShopClientProps) {
       filtered = filtered.filter(product =>
         product.categories.some(cat => cat.slug === category)
       )
+      // Find the selected category object for the hero
+      const categoryObj = categories.find(cat => cat.slug === category)
+      setSelectedCategory(categoryObj || null)
+    } else {
+      setSelectedCategory(null)
     }
 
     // Filter by price range
@@ -53,28 +60,92 @@ export function ShopClient({ products, categories }: ShopClientProps) {
       })
     }
 
+    // Sort: In-stock products first, then out-of-stock
+    filtered.sort((a, b) => {
+      const aInStock = a.stock_status === 'instock' || a.in_stock
+      const bInStock = b.stock_status === 'instock' || b.in_stock
+
+      // In-stock products (true) come before out-of-stock (false)
+      if (aInStock && !bInStock) return -1
+      if (!aInStock && bInStock) return 1
+      return 0
+    })
+
     setFilteredProducts(filtered)
-  }, [searchParams, products])
+  }, [searchParams, products, categories])
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Shop Hero - Always shown */}
+      <section className="bg-gradient-to-b from-cream to-cream/50 border-b border-primary/10 py-8 md:py-10">
+        <div className="container">
+          <div className="max-w-3xl">
+            {/* Mobile Hero Card */}
+            <div className="flex items-center justify-between gap-4">
+              {/* Left Column: Title & Metadata */}
+              <div className="flex-1 min-w-0">
+                {/* Shop Title */}
+                <h1 className="text-h2 md:text-h1 text-primary font-serif mb-3 tracking-tight">
+                  Shop
+                </h1>
+
+                {/* Metadata Row with enhanced styling */}
+                <div className="flex flex-wrap items-center gap-2">
+                  {/* Category Badge - Enhanced */}
+                  {selectedCategory && (
+                    <span className="inline-flex items-center gap-1.5 bg-primary text-white px-3.5 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide shadow-sm">
+                      {selectedCategory.name}
+                    </span>
+                  )}
+
+                  {/* Product Count - Enhanced Typography */}
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm font-medium text-primary-dark/70">
+                      {filteredProducts.length}
+                    </span>
+                    <span className="text-sm text-primary-dark/50">
+                      {filteredProducts.length === 1 ? 'Produkt' : 'Produkte'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column: Filter Button (Mobile Only) - Enhanced */}
+              <button
+                onClick={() => {
+                  if ((window as any).__openMobileFilter) {
+                    (window as any).__openMobileFilter()
+                  }
+                }}
+                className="md:hidden group bg-primary text-white py-3 px-4 rounded-xl font-semibold text-sm shadow-md hover:shadow-lg hover:bg-primary-dark transition-all duration-200 flex items-center gap-2 flex-shrink-0 active:scale-95"
+              >
+                <SlidersHorizontal className="w-4 h-4 group-hover:rotate-180 transition-transform duration-300" />
+                <span className="hidden sm:inline">Filtern</span>
+              </button>
+            </div>
+
+            {/* Category Description - Enhanced */}
+            {selectedCategory?.description && (
+              <div className="mt-4 pt-4 border-t border-primary/10">
+                <p className="text-sm md:text-base text-primary-dark/70 leading-relaxed italic">
+                  {selectedCategory.description}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
       <section className="bg-background py-12">
         <div className="container">
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-8">
             {/* Filter Sidebar */}
             <aside className="col-span-1 md:col-span-1 lg:col-span-1">
-              <ShopFilters categories={categories} />
+              <ShopFilters categories={categories} onOpenMobileFilter={() => {}} />
             </aside>
 
             {/* Products Area */}
             <div className="col-span-1 md:col-span-2 lg:col-span-3">
-              {/* Product Count */}
-              <div className="mb-8">
-                <p className="text-body text-primary-dark">
-                  {filteredProducts.length} {filteredProducts.length === 1 ? 'Produkt' : 'Produkte'} angezeigt
-                </p>
-              </div>
-
               {/* Products Grid */}
               {filteredProducts.length > 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
