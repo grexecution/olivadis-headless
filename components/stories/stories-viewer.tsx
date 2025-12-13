@@ -22,30 +22,69 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
   useEffect(() => {
     if (isPaused) return
 
-    const duration = currentStory.duration
-    const intervalTime = 50
-    const increment = (intervalTime / duration) * 100
+    // For images, use interval-based progress
+    if (currentStory.type === 'image') {
+      const duration = currentStory.duration
+      const intervalTime = 50
+      const increment = (intervalTime / duration) * 100
 
-    progressInterval.current = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          handleNext()
-          return 0
+      progressInterval.current = setInterval(() => {
+        setProgress((prev) => {
+          if (prev >= 100) {
+            // Move to next story
+            if (currentIndex < STORIES.length - 1) {
+              setCurrentIndex(currentIndex + 1)
+            } else {
+              onClose()
+            }
+            return 0
+          }
+          return prev + increment
+        })
+      }, intervalTime)
+    }
+
+    // For videos, sync with video playback
+    if (currentStory.type === 'video' && videoRef.current) {
+      const video = videoRef.current
+
+      const updateProgress = () => {
+        if (video.duration) {
+          const videoProgress = (video.currentTime / video.duration) * 100
+          setProgress(videoProgress)
         }
-        return prev + increment
-      })
-    }, intervalTime)
+      }
+
+      const handleVideoEnd = () => {
+        // Move to next story
+        if (currentIndex < STORIES.length - 1) {
+          setCurrentIndex(currentIndex + 1)
+          setProgress(0)
+        } else {
+          onClose()
+        }
+      }
+
+      video.addEventListener('timeupdate', updateProgress)
+      video.addEventListener('ended', handleVideoEnd)
+
+      return () => {
+        video.removeEventListener('timeupdate', updateProgress)
+        video.removeEventListener('ended', handleVideoEnd)
+      }
+    }
 
     return () => {
       if (progressInterval.current) {
         clearInterval(progressInterval.current)
       }
     }
-  }, [currentIndex, isPaused, currentStory.duration])
+  }, [currentIndex, isPaused, currentStory.type, currentStory.duration, onClose])
 
   // Play video when it's the current story
   useEffect(() => {
     if (currentStory.type === 'video' && videoRef.current) {
+      videoRef.current.currentTime = 0
       videoRef.current.play()
     }
   }, [currentIndex, currentStory.type])

@@ -41,7 +41,7 @@ export const STORIES: Story[] = [
     type: 'image',
     media: '/insta/story-1.jpg',
     caption: 'Frische Ernte direkt aus Pteleos 🫒',
-    duration: 5000
+    duration: 4000
   },
   {
     id: 2,
@@ -53,10 +53,17 @@ export const STORIES: Story[] = [
   {
     id: 3,
     type: 'image',
-    media: '/insta/story-3.jpg',
+    media: '/insta/story-3.mp4',
     caption: 'Premium Bio-Olivenöl - limitierte Ernte 2024 🌿',
     duration: 5000
   },
+  {
+    id: 4,
+    type: 'image',
+    media: '/insta/story-4.jpg',
+    caption: 'Your caption here',
+    duration: 4000
+    },
   // Add more stories here...
   // {
   //   id: 4,
