@@ -42,7 +42,7 @@ export function OrderSummary({
   const countryName = countries.find(c => c.code === selectedCountry)?.name || selectedCountry
 
   return (
-    <div className="bg-cream-light rounded-md p-6 border border-primary/10">
+    <div className="bg-white rounded-md p-6 border border-primary/10">
       <h3 className="text-h3 text-primary mb-6">Bestellübersicht</h3>
 
       {/* Cart Items */}

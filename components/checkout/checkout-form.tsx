@@ -56,7 +56,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
       <div>
         <h3 className="text-h3 text-primary mb-6">Rechnungsinformationen</h3>
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="billing_first_name" className="block text-body text-primary mb-2">
                 Vorname *
@@ -85,7 +85,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="billing_email" className="block text-body text-primary mb-2">
                 E-Mail *
@@ -144,7 +144,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div>
               <label htmlFor="billing_city" className="block text-body text-primary mb-2">
                 Stadt *
@@ -171,25 +171,24 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
                 placeholder="1010"
               />
             </div>
-          </div>
-
-          <div>
-            <label htmlFor="billing_country" className="block text-body text-primary mb-2">
-              Land *
-            </label>
-            <select
-              id="billing_country"
-              required
-              value={formData.billing.country}
-              onChange={(e) => handleInputChange('billing', 'country', e.target.value)}
-              className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-            >
-              {availableCountries.map(country => (
-                <option key={country.code} value={country.code}>
-                  {country.name}
-                </option>
-              ))}
-            </select>
+            <div className="col-span-2 md:col-span-1">
+              <label htmlFor="billing_country" className="block text-body text-primary mb-2">
+                Land *
+              </label>
+              <select
+                id="billing_country"
+                required
+                value={formData.billing.country}
+                onChange={(e) => handleInputChange('billing', 'country', e.target.value)}
+                className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+              >
+                {availableCountries.map(country => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -214,7 +213,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
         <div>
           <h3 className="text-h3 text-primary mb-6">Versandinformationen</h3>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <div>
                 <label htmlFor="shipping_first_name" className="block text-body text-primary mb-2">
                   Vorname *
@@ -283,7 +282,7 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div>
                 <label htmlFor="shipping_city" className="block text-body text-primary mb-2">
                   Stadt *
@@ -310,25 +309,24 @@ export function CheckoutForm({ formData, onFormDataChange, isLoading = false, sh
                   placeholder="1010"
                 />
               </div>
-            </div>
-
-            <div>
-              <label htmlFor="shipping_country" className="block text-body text-primary mb-2">
-                Land *
-              </label>
-              <select
-                id="shipping_country"
-                required
-                value={formData.shipping.country}
-                onChange={(e) => handleInputChange('shipping', 'country', e.target.value)}
-                className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              >
-                {availableCountries.map(country => (
-                  <option key={country.code} value={country.code}>
-                    {country.name}
-                  </option>
-                ))}
-              </select>
+              <div className="col-span-2 md:col-span-1">
+                <label htmlFor="shipping_country" className="block text-body text-primary mb-2">
+                  Land *
+                </label>
+                <select
+                  id="shipping_country"
+                  required
+                  value={formData.shipping.country}
+                  onChange={(e) => handleInputChange('shipping', 'country', e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-body text-primary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
+                >
+                  {availableCountries.map(country => (
+                    <option key={country.code} value={country.code}>
+                      {country.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
           </div>
         </div>

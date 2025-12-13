@@ -12,7 +12,7 @@ import { WooCommerceAddress } from '@/types/woocommerce'
 import { Country, TaxRate, calculateTax } from '@/lib/woocommerce/countries-taxes'
 import { ShippingZoneWithMethods, findShippingZoneForCountry, calculateShippingCost, calculateCartWeight } from '@/lib/woocommerce/shipping'
 import Link from 'next/link'
-import { ArrowLeft, CreditCard } from 'lucide-react'
+import { ArrowLeft, CreditCard, ShoppingCart, ChevronDown } from 'lucide-react'
 
 interface CouponData {
   id: number
@@ -79,6 +79,9 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
 
   // Customer note state
   const [customerNote, setCustomerNote] = useState('')
+
+  // Mobile order summary expandable state
+  const [isMobileOrderSummaryOpen, setIsMobileOrderSummaryOpen] = useState(false)
 
   // Update form country when geolocation completes
   useEffect(() => {
@@ -221,7 +224,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
       <div className="mb-8">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors mb-4"
+          className="inline-flex items-center gap-2 text-primary hover:text-primary-light transition-colors mb-2"
         >
           <ArrowLeft className="h-5 w-5" />
           Zurück zum Shop
@@ -235,6 +238,48 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
           <p className="text-body text-red-800">{error}</p>
         </div>
       )}
+
+      {/* Mobile Order Summary - Expandable */}
+      <div className="lg:hidden mb-6 bg-white rounded-md border border-primary/10 overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setIsMobileOrderSummaryOpen(!isMobileOrderSummaryOpen)}
+          className="w-full px-4 py-4 flex items-center justify-between text-left"
+        >
+          <div className="flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5 text-primary-dark/60" aria-hidden="true" />
+            <span className="font-semibold text-primary">
+              Bestellübersicht ({items.length} {items.length === 1 ? 'Artikel' : 'Artikel'})
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="font-bold text-lg text-primary">
+              €{(totalPrice + shippingCost + taxAmount - couponDiscount).toFixed(2)}
+            </span>
+            <ChevronDown
+              className={`h-5 w-5 text-primary-dark/60 transition-transform ${isMobileOrderSummaryOpen ? 'rotate-180' : ''}`}
+              aria-hidden="true"
+            />
+          </div>
+        </button>
+        {isMobileOrderSummaryOpen && (
+          <div className="px-4 pb-4 border-t border-primary/10">
+            <OrderSummary
+              items={items}
+              subtotal={totalPrice}
+              shipping={shippingCost}
+              shippingMethodTitle={shippingMethodTitle}
+              tax={taxAmount}
+              taxRate={taxRate}
+              couponDiscount={couponDiscount}
+              appliedCoupon={appliedCoupon}
+              isLoading={isLoading}
+              selectedCountry={formData.billing.country}
+              countries={countries}
+            />
+          </div>
+        )}
+      </div>
 
       {/* Checkout Grid */}
       <form onSubmit={handleSubmit}>
@@ -354,7 +399,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
         </div>
 
         {/* Order Summary - 1/3 width on large screens */}
-        <div className="lg:col-span-1">
+        <div className="hidden lg:block lg:col-span-1">
           <div className="sticky top-4">
             <OrderSummary
               items={items}
