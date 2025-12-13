@@ -127,7 +127,7 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black"
+      className="fixed inset-0 z-[100] bg-black md:flex md:items-center md:justify-center"
       onClick={(e) => {
         // Close when clicking the backdrop (only on desktop)
         if (e.target === e.currentTarget && window.innerWidth >= 768) {
@@ -135,8 +135,8 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
         }
       }}
     >
-      {/* Container - Fullscreen on mobile, centered lightbox on desktop */}
-      <div className="relative h-full max-w-screen-sm mx-auto md:my-auto md:h-[90vh] md:rounded-xl overflow-hidden">
+      {/* Container - Fullscreen on mobile, 9:16 centered on desktop */}
+      <div className="relative h-full w-full md:h-[90vh] md:w-auto md:aspect-[9/16] md:max-h-[90vh] md:rounded-xl overflow-hidden md:shadow-2xl">
         {/* Progress bars */}
         <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-2">
           {STORIES.map((story, index) => (
