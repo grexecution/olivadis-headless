@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { SlidersHorizontal } from 'lucide-react'
 import { Product, ProductCategory } from '@/lib/woocommerce/products'
 import { ProductCard } from '@/components/product/product-card'
 import ShopFilters from '@/components/shop/shop-filters'
+import { SocialProofPopup } from '@/components/social-proof-popup'
 
 interface ShopClientProps {
   products: Product[]
@@ -14,6 +15,7 @@ interface ShopClientProps {
 
 export function ShopClient({ products, categories }: ShopClientProps) {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const [filteredProducts, setFilteredProducts] = useState(products)
   const [selectedCategory, setSelectedCategory] = useState<ProductCategory | null>(null)
 
@@ -76,6 +78,9 @@ export function ShopClient({ products, categories }: ShopClientProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Social Proof Popup */}
+      <SocialProofPopup />
+
       {/* Shop Hero - Always shown */}
       <section className="bg-gradient-to-b from-cream to-cream/50 border-b border-primary/10 py-8 md:py-10">
         <div className="container">
@@ -141,8 +146,8 @@ export function ShopClient({ products, categories }: ShopClientProps) {
         <div className="container">
           <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
             {/* All Products Button */}
-            <a
-              href="/shop"
+            <button
+              onClick={() => router.push('/shop')}
               className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-semibold transition-all ${
                 !searchParams.get('category')
                   ? 'bg-primary text-white shadow-md'
@@ -150,15 +155,15 @@ export function ShopClient({ products, categories }: ShopClientProps) {
               }`}
             >
               Alle
-            </a>
+            </button>
 
             {/* Category Pills */}
             {categories
               .filter(cat => cat.slug !== 'uncategorized')
               .map((category) => (
-                <a
+                <button
                   key={category.id}
-                  href={`/shop?category=${category.slug}`}
+                  onClick={() => router.push(`/shop?category=${category.slug}`)}
                   className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
                     searchParams.get('category') === category.slug
                       ? 'bg-primary text-white shadow-md'
@@ -167,7 +172,7 @@ export function ShopClient({ products, categories }: ShopClientProps) {
                 >
                   {category.name}
                   <span className="ml-1.5 text-xs opacity-70">({category.count})</span>
-                </a>
+                </button>
               ))}
           </div>
         </div>

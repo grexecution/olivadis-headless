@@ -39,7 +39,9 @@
       "Bash(python3:*)",
       "Bash(node scripts/sync-shipping-rules.js:*)",
       "Bash(pkill:*)",
-      "Bash(sips:*)"
+      "Bash(sips:*)",
+      "Bash(/Users/gregorwallner/WebstormProjects/olivadis-headless/public/placeholder-stories.jpg <<'EOF'\n<svg width=\"200\" height=\"200\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <radialGradient id=\"grad1\" cx=\"50%\" cy=\"50%\" r=\"50%\">\n      <stop offset=\"0%\" style=\"stop-color:#1C4220;stop-opacity:1\" />\n      <stop offset=\"100%\" style=\"stop-color:#3B6912;stop-opacity:1\" />\n    </radialGradient>\n  </defs>\n  <rect width=\"200\" height=\"200\" fill=\"url(#grad1)\"/>\n  <text x=\"100\" y=\"100\" font-family=\"Arial\" font-size=\"60\" fill=\"#F2E9DB\" text-anchor=\"middle\" dominant-baseline=\"middle\">🫒</text>\n</svg>\nEOF)",
+      "Bash(/Users/gregorwallner/WebstormProjects/olivadis-headless/public/placeholder-story-1.jpg <<'EOF'\n<svg width=\"1080\" height=\"1920\" xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <linearGradient id=\"bg1\" x1=\"0%\" y1=\"0%\" x2=\"0%\" y2=\"100%\">\n      <stop offset=\"0%\" style=\"stop-color:#F2E9DB;stop-opacity:1\" />\n      <stop offset=\"100%\" style=\"stop-color:#1C4220;stop-opacity:1\" />\n    </linearGradient>\n  </defs>\n  <rect width=\"1080\" height=\"1920\" fill=\"url(#bg1)\"/>\n  <text x=\"540\" y=\"960\" font-family=\"Arial\" font-size=\"200\" fill=\"#fff\" text-anchor=\"middle\" dominant-baseline=\"middle\">🫒</text>\n  <text x=\"540\" y=\"1200\" font-family=\"Arial\" font-size=\"60\" fill=\"#fff\" text-anchor=\"middle\" dominant-baseline=\"middle\">Frische Ernte</text>\n</svg>\nEOF)"
     ]
   }
 }

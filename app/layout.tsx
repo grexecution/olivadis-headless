@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SideCart } from "@/components/cart";
 import { Navbar, Footer, InventoryBar } from "@/components/layout";
+import { StoriesButton } from "@/components/stories/stories-button";
 
 // Self-hosted Lora font (GDPR-compliant, faster)
 const lora = Lora({
@@ -36,6 +37,7 @@ export default function RootLayout({
             {children}
           </div>
           <SideCart />
+          <StoriesButton />
           <Footer />
         </Providers>
       </body>

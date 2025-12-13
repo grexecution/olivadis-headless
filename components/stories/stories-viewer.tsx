@@ -1,0 +1,266 @@
+'use client'
+
+import { useState, useEffect, useRef } from 'react'
+import Image from 'next/image'
+import { X, ChevronLeft, ChevronRight } from 'lucide-react'
+
+interface Story {
+  id: number
+  type: 'image' | 'video' | 'text'
+  content: string
+  duration: number
+  title?: string
+  description?: string
+}
+
+// Sample stories data
+const STORIES: Story[] = [
+  {
+    id: 1,
+    type: 'image',
+    content: '/placeholder-story-1.jpg',
+    duration: 5000,
+    title: 'Frische Ernte 🫒',
+    description: 'Direkt aus Pteleos, Griechenland'
+  },
+  {
+    id: 2,
+    type: 'video',
+    content: 'https://assets.mixkit.co/videos/preview/mixkit-tree-with-yellow-flowers-1173-large.mp4',
+    duration: 10000,
+    title: 'Vom Baum zur Flasche',
+    description: 'So wird unser Olivenöl hergestellt'
+  },
+  {
+    id: 3,
+    type: 'text',
+    content: 'Neu im Shop! Premium Bio-Olivenöl jetzt verfügbar. Entdecke unsere limitierte Ernte 2024. 🌿',
+    duration: 6000,
+    title: 'Neue Produkte',
+    description: ''
+  }
+]
+
+interface StoriesViewerProps {
+  onClose: () => void
+}
+
+export function StoriesViewer({ onClose }: StoriesViewerProps) {
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [progress, setProgress] = useState(0)
+  const [isPaused, setIsPaused] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const progressInterval = useRef<NodeJS.Timeout | undefined>(undefined)
+
+  const currentStory = STORIES[currentIndex]
+
+  // Handle story progression
+  useEffect(() => {
+    if (isPaused) return
+
+    const duration = currentStory.duration
+    const intervalTime = 50
+    const increment = (intervalTime / duration) * 100
+
+    progressInterval.current = setInterval(() => {
+      setProgress((prev) => {
+        if (prev >= 100) {
+          handleNext()
+          return 0
+        }
+        return prev + increment
+      })
+    }, intervalTime)
+
+    return () => {
+      if (progressInterval.current) {
+        clearInterval(progressInterval.current)
+      }
+    }
+  }, [currentIndex, isPaused, currentStory.duration])
+
+  // Play video when it's the current story
+  useEffect(() => {
+    if (currentStory.type === 'video' && videoRef.current) {
+      videoRef.current.play()
+    }
+  }, [currentIndex, currentStory.type])
+
+  const handleNext = () => {
+    if (currentIndex < STORIES.length - 1) {
+      setCurrentIndex(currentIndex + 1)
+      setProgress(0)
+    } else {
+      onClose()
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(currentIndex - 1)
+      setProgress(0)
+    }
+  }
+
+  const handleTap = (e: React.MouseEvent<HTMLDivElement>) => {
+    const clickX = e.clientX
+    const screenWidth = window.innerWidth
+
+    if (clickX < screenWidth / 2) {
+      handlePrevious()
+    } else {
+      handleNext()
+    }
+  }
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+      if (e.key === 'ArrowLeft') handlePrevious()
+      if (e.key === 'ArrowRight') handleNext()
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [currentIndex])
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] bg-black"
+      onClick={(e) => {
+        // Close when clicking the backdrop (only on desktop)
+        if (e.target === e.currentTarget && window.innerWidth >= 768) {
+          onClose()
+        }
+      }}
+    >
+      {/* Container - Fullscreen on mobile, centered lightbox on desktop */}
+      <div className="relative h-full max-w-screen-sm mx-auto md:my-auto md:h-[90vh] md:rounded-xl overflow-hidden">
+        {/* Progress bars */}
+        <div className="absolute top-0 left-0 right-0 z-20 flex gap-1 p-2">
+          {STORIES.map((story, index) => (
+            <div key={story.id} className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-white transition-all duration-100"
+                style={{
+                  width: index < currentIndex ? '100%' : index === currentIndex ? `${progress}%` : '0%'
+                }}
+              ></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Header */}
+        <div className="absolute top-4 left-4 right-4 z-20 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full border-2 border-white overflow-hidden">
+              <Image
+                src="/placeholder-stories.jpg"
+                alt="Olivadis"
+                width={40}
+                height={40}
+                className="object-cover"
+              />
+            </div>
+            <div className="text-white">
+              <p className="font-semibold text-sm">Olivadis</p>
+              <p className="text-xs opacity-75">Vor 2 Stunden</p>
+            </div>
+          </div>
+
+          <button
+            onClick={onClose}
+            className="w-10 h-10 flex items-center justify-center rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+
+        {/* Story Content */}
+        <div
+          className="relative h-full w-full cursor-pointer"
+          onClick={handleTap}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
+          {currentStory.type === 'image' && (
+            <Image
+              src={currentStory.content}
+              alt={currentStory.title || 'Story'}
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
+
+          {currentStory.type === 'video' && (
+            <video
+              ref={videoRef}
+              src={currentStory.content}
+              className="w-full h-full object-cover"
+              loop
+              muted
+              playsInline
+            />
+          )}
+
+          {currentStory.type === 'text' && (
+            <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary via-primary-light to-primary-dark p-8">
+              <div className="text-center text-white space-y-4">
+                <p className="text-2xl md:text-3xl font-bold leading-relaxed">
+                  {currentStory.content}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Story Title/Description Overlay */}
+          {(currentStory.title || currentStory.description) && currentStory.type !== 'text' && (
+            <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/70 to-transparent">
+              {currentStory.title && (
+                <h3 className="text-white font-bold text-lg mb-1">{currentStory.title}</h3>
+              )}
+              {currentStory.description && (
+                <p className="text-white/90 text-sm">{currentStory.description}</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Desktop Navigation Arrows */}
+        <div className="hidden md:block">
+          {currentIndex > 0 && (
+            <button
+              onClick={handlePrevious}
+              className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+            >
+              <ChevronLeft className="w-6 h-6" />
+            </button>
+          )}
+
+          {currentIndex < STORIES.length - 1 && (
+            <button
+              onClick={handleNext}
+              className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-black/50 hover:bg-black/70 text-white transition-colors"
+            >
+              <ChevronRight className="w-6 h-6" />
+            </button>
+          )}
+        </div>
+
+        {/* Pause indicator */}
+        {isPaused && (
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-black/50">
+              <div className="flex gap-2">
+                <div className="w-1.5 h-8 bg-white rounded-full"></div>
+                <div className="w-1.5 h-8 bg-white rounded-full"></div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
