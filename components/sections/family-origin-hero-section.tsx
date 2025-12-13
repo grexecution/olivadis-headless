@@ -73,7 +73,7 @@ export default function FamilyOriginHeroSection() {
   }, [isVisible])
 
   return (
-    <section className="relative h-[500px] md:h-[600px] overflow-hidden" aria-labelledby="family-origin-hero">
+    <section id="family-origin-hero" className="relative h-[500px] md:h-[600px] overflow-hidden" aria-labelledby="family-origin-hero">
       {/* Full-screen Map Background */}
       <div className="absolute inset-0 z-0">
         {mounted && <MapComponent />}
