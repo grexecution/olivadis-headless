@@ -115,7 +115,7 @@ export function VariationSelector({ variations, product }: VariationSelectorProp
           {/* Price Display */}
           <div className="bg-cream/30 rounded-lg p-4 border border-primary/10">
             {selectedVariation.on_sale && selectedVariation.regular_price ? (
-              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+              <div className="flex items-center sm:items-start gap-2 sm:gap-3">
                 {/* Price Info */}
                 <div className="flex items-baseline gap-3 flex-1">
                   <span className="text-price text-primary font-bold">
@@ -127,11 +127,9 @@ export function VariationSelector({ variations, product }: VariationSelectorProp
                 </div>
 
                 {/* Savings Badge */}
-                <div className="flex sm:inline-flex items-center justify-center gap-2 bg-primary text-cream px-4 py-2.5 rounded-md shadow-sm w-full sm:w-auto">
-                  <span className="text-sm font-bold whitespace-nowrap">
-                    Sparen Sie {formatEUR(parseFloat(selectedVariation.regular_price) - parseFloat(selectedVariation.price))}
-                  </span>
-                </div>
+                <span className="bg-primary text-cream px-3 py-1 sm:px-4 sm:py-2.5 rounded-md text-sm font-bold whitespace-nowrap">
+                  -{Math.round(((parseFloat(selectedVariation.regular_price) - parseFloat(selectedVariation.price)) / parseFloat(selectedVariation.regular_price)) * 100)}%
+                </span>
               </div>
             ) : (
               <span className="text-price text-primary font-bold">

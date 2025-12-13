@@ -241,7 +241,7 @@ export default async function ProductPage({
                 {/* Price */}
                 <div>
                   {isOnSale ? (
-                    <div className="flex items-start gap-4">
+                    <div className="flex items-center gap-2 md:gap-4">
                       <div className="flex flex-col gap:0 md:gap-1">
                         <span className="text-price text-primary font-bold">
                           {formatEUR(price)}
@@ -250,8 +250,8 @@ export default async function ProductPage({
                           {formatEUR(regularPrice)}
                         </span>
                       </div>
-                      <span className="bg-primary text-cream px-3 py-1 rounded-md text-body-sm font-bold whitespace-nowrap">
-                        Sparen Sie {formatEUR(regularPrice - price)}
+                      <span className="bg-primary text-cream px-3 py-1 rounded-md text-sm font-bold whitespace-nowrap">
+                        -{Math.round(((regularPrice - price) / regularPrice) * 100)}%
                       </span>
                     </div>
                   ) : (
