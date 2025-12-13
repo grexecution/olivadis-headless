@@ -165,7 +165,7 @@ export function SideCart() {
                     </div>
 
                     {/* Cart Items */}
-                    <div className="flex-1 overflow-y-auto px-4 py-4 bg-gray-5L0">
+                    <div className="flex-1 overflow-y-auto px-4 py-4 bg-gray-50">
                       {items.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center">
                           <ShoppingBag className="h-16 w-16 text-primary/20 mb-4" />

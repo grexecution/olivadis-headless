@@ -41,10 +41,36 @@ const familyMembers: FamilyMember[] = [
 
 export default function FamilyOriginHeroSection() {
   const [mounted, setMounted] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    setMounted(true)
-  }, [])
+    // Use Intersection Observer to only load map when section is visible
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !isVisible) {
+            setIsVisible(true)
+            setMounted(true)
+          }
+        })
+      },
+      {
+        rootMargin: '200px', // Start loading 200px before section is visible
+        threshold: 0.1,
+      }
+    )
+
+    const section = document.getElementById('family-origin-hero')
+    if (section) {
+      observer.observe(section)
+    }
+
+    return () => {
+      if (section) {
+        observer.unobserve(section)
+      }
+    }
+  }, [isVisible])
 
   return (
     <section className="relative h-[500px] md:h-[600px] overflow-hidden" aria-labelledby="family-origin-hero">
