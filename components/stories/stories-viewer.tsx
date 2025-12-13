@@ -124,7 +124,7 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
           {STORIES.map((story, index) => (
             <div key={story.id} className="flex-1 h-1 bg-white/30 rounded-full overflow-hidden">
               <div
-                className="h-full bg-white transition-all duration-100"
+                className="h-full bg-white transition-all duration-100 ease-linear"
                 style={{
                   width: index < currentIndex ? '100%' : index === currentIndex ? `${progress}%` : '0%'
                 }}
@@ -163,8 +163,6 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
         <div
           className="relative h-full w-full cursor-pointer"
           onClick={handleTap}
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
         >
           {currentStory.type === 'image' && (
             <Image
@@ -218,17 +216,6 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
           )}
         </div>
 
-        {/* Pause indicator */}
-        {isPaused && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-black/50">
-              <div className="flex gap-2">
-                <div className="w-1.5 h-8 bg-white rounded-full"></div>
-                <div className="w-1.5 h-8 bg-white rounded-full"></div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   )
