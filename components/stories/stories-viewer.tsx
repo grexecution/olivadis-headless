@@ -50,6 +50,24 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
     }
   }, [currentIndex, currentStory.type])
 
+  // Preload next story (images and videos)
+  useEffect(() => {
+    if (currentIndex < STORIES.length - 1) {
+      const nextStory = STORIES[currentIndex + 1]
+
+      if (nextStory.type === 'image') {
+        // Preload next image
+        const img = new window.Image()
+        img.src = nextStory.media
+      } else if (nextStory.type === 'video') {
+        // Preload next video
+        const video = document.createElement('video')
+        video.src = nextStory.media
+        video.preload = 'auto'
+      }
+    }
+  }, [currentIndex])
+
   const handleNext = () => {
     if (currentIndex < STORIES.length - 1) {
       setCurrentIndex(currentIndex + 1)
