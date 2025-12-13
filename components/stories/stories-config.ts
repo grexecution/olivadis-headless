@@ -52,26 +52,19 @@ export const STORIES: Story[] = [
   },
   {
     id: 3,
-    type: 'image',
+    type: 'video',
     media: '/insta/story-3.mp4',
     caption: 'Premium Bio-Olivenöl - limitierte Ernte 2024 🌿',
-    duration: 5000
+    duration: 10000
   },
   {
     id: 4,
     type: 'image',
     media: '/insta/story-4.jpg',
     caption: 'Your caption here',
-    duration: 4000
-    },
+    duration: 5000
+  },
   // Add more stories here...
-  // {
-  //   id: 4,
-  //   type: 'image',
-  //   media: '/insta/story-4.jpg',
-  //   caption: 'Your caption here',
-  //   duration: 5000
-  // },
 ]
 
 /**
