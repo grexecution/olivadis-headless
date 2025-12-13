@@ -32,7 +32,7 @@ export function HeroVideo() {
         className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
         style={{ opacity: isVideoLoaded ? 1 : 0 }}
       >
-        <source src="/videos/banner-desktop-lo.mp4" type="video/mp4" />
+        <source src="/videos/banner-desktop-compressed.mp4" type="video/mp4" />
       </video>
 
       {/* Lighter Green Overlay to See Video Better */}
