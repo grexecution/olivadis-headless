@@ -2,13 +2,17 @@
 
 import { useState } from 'react'
 import { Product } from '@/lib/woocommerce/products'
+import TasteProfileChart from '@/components/product/taste-profile-chart'
 
 interface ProductTabsProps {
   product: Product
 }
 
 export function ProductTabs({ product }: ProductTabsProps) {
-  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'shipping'>('description')
+  // Check if product is olive oil
+  const isOliveOil = product.categories.some(cat => cat.slug === 'olivenoel' || cat.slug === 'olivenole')
+
+  const [activeTab, setActiveTab] = useState<'description' | 'details' | 'shipping' | 'taste'>('description')
 
   return (
     <div className="mt-12 bg-white rounded-lg shadow overflow-hidden">
@@ -24,6 +28,18 @@ export function ProductTabs({ product }: ProductTabsProps) {
         >
           Beschreibung
         </button>
+        {isOliveOil && (
+          <button
+            onClick={() => setActiveTab('taste')}
+            className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
+              activeTab === 'taste'
+                ? 'bg-primary text-cream'
+                : 'bg-cream/50 text-primary hover:bg-cream'
+            }`}
+          >
+            Geschmacksprofil
+          </button>
+        )}
         <button
           onClick={() => setActiveTab('details')}
           className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
@@ -182,6 +198,13 @@ export function ProductTabs({ product }: ProductTabsProps) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {activeTab === 'taste' && isOliveOil && (
+          <div>
+
+            <TasteProfileChart />
           </div>
         )}
       </div>

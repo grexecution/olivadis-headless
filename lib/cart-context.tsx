@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { Product, ProductVariation } from '@/lib/woocommerce/products'
+import { haptic } from '@/lib/haptic-feedback'
 
 export interface CartItem {
   id: string
@@ -116,11 +117,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...currentItems, newItem]
     })
 
+    // Haptic feedback for adding to cart
+    haptic('addToCart')
     openCart()
   }
 
   const removeItem = (id: string) => {
     setItems(currentItems => currentItems.filter(item => item.id !== id))
+    // Haptic feedback for removing item
+    haptic('removeItem')
   }
 
   const updateQuantity = (id: string, quantity: number) => {

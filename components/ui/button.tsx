@@ -2,24 +2,36 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { haptic } from '@/lib/haptic-feedback'
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost'
   size?: 'sm' | 'md' | 'lg'
+  disableHaptic?: boolean
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', disableHaptic = false, onClick, ...props }, ref) => {
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      // Trigger haptic feedback on button tap
+      if (!disableHaptic && !props.disabled) {
+        haptic('buttonTap')
+      }
+      // Call original onClick handler
+      onClick?.(e)
+    }
+
     return (
       <button
         className={cn(
-          'inline-flex items-center justify-center gap-2 rounded-md font-bold transition-colors duration-200',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'inline-flex items-center justify-center gap-2 rounded-md font-bold transition-all duration-150',
+          'shadow-md active:shadow-inner active:scale-[0.97]',
+          'disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100',
           {
             'bg-primary !text-white hover:bg-primary-light hover:!text-white active:bg-primary-dark active:!text-white': variant === 'primary',
             'bg-cream text-primary hover:bg-cream-light': variant === 'secondary',
             'border-2 border-primary text-primary bg-transparent hover:bg-primary hover:!text-white': variant === 'outline',
-            'bg-transparent text-primary hover:bg-cream': variant === 'ghost',
+            'bg-transparent text-primary hover:bg-cream shadow-none active:shadow-none': variant === 'ghost',
           },
           {
             'px-2 py-1.5 text-body-sm': size === 'sm',
@@ -28,6 +40,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           },
           className
         )}
+        onClick={handleClick}
         ref={ref}
         {...props}
       />

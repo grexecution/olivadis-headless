@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation"
 import { ShoppingCart, Menu, X } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useCart } from "@/lib/cart-context"
+import OliveSeasonBadge from "@/components/ui/olive-season-badge"
 
 const navLinks = [
   { href: "/", label: "Startseite" },
@@ -103,6 +104,9 @@ export function Navbar() {
 
           {/* Right Actions */}
           <div className="flex items-center gap-2">
+            {/* Seasonal Badge */}
+            <OliveSeasonBadge variant="navbar" />
+
             {/* Cart Button */}
             <button
               onClick={openCart}

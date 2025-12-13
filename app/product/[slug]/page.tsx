@@ -50,6 +50,20 @@ export default async function ProductPage({
   const regularPrice = parseFloat(product.regular_price)
   const isOnSale = product.on_sale && regularPrice > price
 
+  // Get unique additional images (excluding the main/featured image)
+  // Filter out duplicates and images without src
+  const mainImageSrc = product.images[0]?.src
+  const additionalImages = product.images
+    .slice(1)
+    .filter((img, index, arr) => {
+      // Filter out images without src
+      if (!img.src) return false
+      // Filter out duplicates (including main image)
+      if (img.src === mainImageSrc) return false
+      // Filter out duplicate additional images
+      return arr.findIndex(i => i.src === img.src) === index
+    })
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container py-8">
@@ -107,10 +121,10 @@ export default async function ProductPage({
               )}
             </div>
 
-            {/* Thumbnail Gallery */}
-            {product.images.length > 1 && (
+            {/* Thumbnail Gallery - Only show if there are additional images beyond the main one */}
+            {additionalImages.length > 0 && (
               <div className="grid grid-cols-4 gap-4">
-                {product.images.slice(1, 5).map((image) => (
+                {additionalImages.slice(0, 4).map((image) => (
                   <div
                     key={image.id}
                     className="aspect-square overflow-hidden rounded-md bg-cream cursor-pointer hover:opacity-75 transition-opacity relative"

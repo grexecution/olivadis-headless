@@ -8,6 +8,7 @@ import { CheckoutForm, type CheckoutFormData } from '@/components/checkout/check
 import { OrderSummary } from '@/components/checkout/order-summary'
 import CheckoutTestimonials from '@/components/sections/checkout-testimonials'
 import CouponInput from '@/components/checkout/coupon-input'
+import DeliveryCountdown from '@/components/checkout/delivery-countdown'
 import { WooCommerceAddress } from '@/types/woocommerce'
 import { Country, TaxRate, calculateTax } from '@/lib/woocommerce/countries-taxes'
 import { ShippingZoneWithMethods, findShippingZoneForCountry, calculateShippingCost, calculateCartWeight } from '@/lib/woocommerce/shipping'
@@ -410,6 +411,11 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
             cartItems={items}
           />
 
+          {/* Delivery Countdown - Mobile only, above payment */}
+          <div className="lg:hidden mb-4">
+            <DeliveryCountdown selectedCountry={formData.billing.country} />
+          </div>
+
           {/* Payment Methods */}
           <div className="bg-white rounded-md p-6 border border-primary/10">
             <h3 className="text-h3 text-primary mb-6">Zahlungsmethode</h3>
@@ -507,6 +513,12 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
               selectedCountry={formData.billing.country}
               countries={countries}
             />
+
+            {/* Delivery Countdown - Desktop only, in sidebar */}
+            <div className="hidden lg:block mt-4">
+              <DeliveryCountdown selectedCountry={formData.billing.country} />
+            </div>
+
             <CheckoutTestimonials />
           </div>
         </div>
