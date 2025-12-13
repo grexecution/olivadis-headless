@@ -278,7 +278,7 @@ export default async function Home() {
             <div className="relative h-[500px] md:h-[600px] lg:h-[700px] rounded-2xl shadow-2xl overflow-hidden bg-black">
               <div className="absolute inset-0 flex items-center justify-center">
                 <iframe
-                  src="https://player.vimeo.com/video/908381235?h=d9e1443ba8&autoplay=1&loop=1&muted=1&background=1&autopause=0"
+                  src="https://player.vimeo.com/video/908381235?h=d9e1443ba8&autoplay=1&loop=1&muted=1&background=1&autopause=0&dnt=1"
                   className="w-full h-[888px] md:h-[1066px] lg:h-[1244px]"
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture"

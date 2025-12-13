@@ -187,7 +187,7 @@ export function getVideoEmbedUrl(videoUrl: string): string | null {
   const vimeoRegex = /(?:vimeo\.com\/)([0-9]+)/
   const vimeoMatch = videoUrl.match(vimeoRegex)
   if (vimeoMatch && vimeoMatch[1]) {
-    return `https://player.vimeo.com/video/${vimeoMatch[1]}`
+    return `https://player.vimeo.com/video/${vimeoMatch[1]}?dnt=1`
   }
 
   return null
