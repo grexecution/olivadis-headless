@@ -305,7 +305,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
                     )}
                     <div className="mt-1 flex justify-between items-center">
                       <span className="text-xs text-primary/60">
-                        Qty: {item.quantity}
+                        Menge: {item.quantity}
                       </span>
                       <span className="text-xs font-semibold text-primary">
                         {formatEUR(item.price * item.quantity)}

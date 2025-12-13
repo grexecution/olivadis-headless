@@ -17,7 +17,7 @@ const navLinks = [
 ]
 
 export function Navbar() {
-  const { openCart, totalItems } = useCart()
+  const { openCart, totalItems, isInitialized } = useCart()
   const pathname = usePathname()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
@@ -110,7 +110,7 @@ export function Navbar() {
               aria-label="Warenkorb öffnen"
             >
               <ShoppingCart className="w-5 h-5 md:w-6 md:h-6" />
-              {totalItems > 0 && (
+              {isInitialized && totalItems > 0 && (
                 <motion.span
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}

@@ -28,12 +28,12 @@ const familyMembers: FamilyMember[] = [
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
   },
   {
-    name: 'Niki',
+    name: 'Nikoletta Militsi',
     role: 'Tochter & Geschäftsführerin',
     image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80',
   },
   {
-    name: 'Cris',
+    name: 'Christianos Militsi',
     role: 'Sohn',
     image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
   },

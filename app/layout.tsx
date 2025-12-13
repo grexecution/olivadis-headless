@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body className={`antialiased bg-background text-foreground font-sans ${lora.variable}`} suppressHydrationWarning>
+      <body className={`antialiased bg-background text-foreground font-sans ${lora.variable}`}>
         <Providers>
           <InventoryBar />
           <Navbar />

@@ -80,7 +80,7 @@ export function OrderSummary({
               )}
               <div className="mt-2 flex justify-between items-center">
                 <span className="text-body-sm text-primary/60">
-                  Qty: {item.quantity}
+                  Menge: {item.quantity}
                 </span>
                 <span className="text-body-sm font-semibold text-primary">
                   {formatEUR(item.price * item.quantity)}
