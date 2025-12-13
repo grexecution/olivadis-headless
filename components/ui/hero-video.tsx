@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 
 export function HeroVideo() {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
@@ -8,13 +9,17 @@ export function HeroVideo() {
   return (
     <div className="absolute inset-0 w-full h-full">
       {/* Poster Image - Fades out when video loads */}
-      <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-500"
+      <Image
+        src="/video-thumbnail.jpg"
+        alt="Olivadis olive oil production"
+        fill
+        priority
+        className="object-cover transition-opacity duration-500"
         style={{
-          backgroundImage: 'url(/video-thumbnail.jpg)',
           opacity: isVideoLoaded ? 0 : 1,
           pointerEvents: 'none',
         }}
+        sizes="100vw"
       />
 
       {/* Video - Fades in when loaded */}

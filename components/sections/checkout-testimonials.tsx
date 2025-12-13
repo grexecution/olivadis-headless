@@ -7,6 +7,7 @@ import { Heart, X } from 'lucide-react'
 interface Testimonial {
   id: number
   featured_image_url?: string
+  slug: string
 }
 
 export default function CheckoutTestimonials() {
@@ -24,7 +25,8 @@ export default function CheckoutTestimonials() {
             .filter((post: any) => post.featured_media > 0)
             .map((post: any) => ({
               id: post.id,
-              featured_image_url: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || ''
+              featured_image_url: post._embedded?.['wp:featuredmedia']?.[0]?.source_url || '',
+              slug: post.slug
             }))
             .filter((t: Testimonial) => t.featured_image_url)
             .slice(0, 6)

@@ -9,7 +9,7 @@
     "freeShippingThreshold": 79,
     "flatRate": 5.99,
     "taxRate": 0.07,
-    "zoneName": "Deutschland"
+    "zoneName": "Germany"
   },
   "DEFAULT": {
     "freeShippingThreshold": 100,
