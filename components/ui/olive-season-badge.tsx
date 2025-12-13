@@ -31,7 +31,7 @@ export default function OliveSeasonBadge({ variant = 'navbar', className = '' }:
   if (variant === 'navbar') {
     return (
       <div
-        className={`hidden md:flex relative items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${className}`}
+        className={`flex relative items-center gap-1 md:gap-2 px-2 md:px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-300 hover:scale-105 ${className}`}
         style={{
           backgroundColor: season.bgColor,
           color: season.color,
@@ -39,9 +39,9 @@ export default function OliveSeasonBadge({ variant = 'navbar', className = '' }:
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
       >
-        <span className="text-[10px] font-normal opacity-80">Status:</span>
-        <span className="text-base">{season.icon}</span>
-        <span className="font-semibold">{season.name}</span>
+        <span className="hidden md:inline text-[10px] font-normal opacity-80">Status:</span>
+        <span className="text-sm md:text-base">{season.icon}</span>
+        <span className="font-semibold text-[10px] md:text-xs">{season.name}</span>
 
         {/* Visible Tooltip */}
         {showTooltip && (

@@ -136,7 +136,44 @@ export function ShopClient({ products, categories }: ShopClientProps) {
         </div>
       </section>
 
-      <section className="bg-background py-12">
+      {/* Quick Category Selector - Mobile Only */}
+      <section className="bg-background border-b border-primary/10 py-4 md:hidden">
+        <div className="container">
+          <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory">
+            {/* All Products Button */}
+            <a
+              href="/shop"
+              className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-semibold transition-all ${
+                !searchParams.get('category')
+                  ? 'bg-primary text-white shadow-md'
+                  : 'bg-white text-primary border border-primary/20 hover:border-primary'
+              }`}
+            >
+              Alle
+            </a>
+
+            {/* Category Pills */}
+            {categories
+              .filter(cat => cat.slug !== 'uncategorized')
+              .map((category) => (
+                <a
+                  key={category.id}
+                  href={`/shop?category=${category.slug}`}
+                  className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-sm font-semibold transition-all whitespace-nowrap ${
+                    searchParams.get('category') === category.slug
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-white text-primary border border-primary/20 hover:border-primary'
+                  }`}
+                >
+                  {category.name}
+                  <span className="ml-1.5 text-xs opacity-70">({category.count})</span>
+                </a>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-background py-6 md:py-12">
         <div className="container">
           <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-2 md:gap-8">
             {/* Filter Sidebar */}

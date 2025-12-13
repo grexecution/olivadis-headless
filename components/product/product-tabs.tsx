@@ -17,49 +17,57 @@ export function ProductTabs({ product }: ProductTabsProps) {
   return (
     <div className="mt-12 bg-white rounded-lg shadow overflow-hidden">
       {/* Tab Navigation */}
-      <div className="flex border-b border-primary-dark/10">
-        <button
-          onClick={() => setActiveTab('description')}
-          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
-            activeTab === 'description'
-              ? 'bg-primary text-cream'
-              : 'bg-cream/50 text-primary hover:bg-cream'
-          }`}
-        >
-          Beschreibung
-        </button>
-        {isOliveOil && (
+      <div className="relative border-b border-primary-dark/10">
+        {/* Scrollable tab container */}
+        <div className="flex overflow-x-auto overflow-y-hidden scrollbar-hide md:overflow-x-visible snap-x snap-mandatory scroll-smooth">
           <button
-            onClick={() => setActiveTab('taste')}
-            className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
-              activeTab === 'taste'
+            onClick={() => setActiveTab('description')}
+            className={`flex-shrink-0 md:flex-1 px-4 sm:px-6 md:px-6 py-3 md:py-4 text-sm md:text-button font-bold transition-colors snap-start ${
+              activeTab === 'description'
                 ? 'bg-primary text-cream'
                 : 'bg-cream/50 text-primary hover:bg-cream'
             }`}
           >
-            Geschmacksprofil
+            <span className="hidden sm:inline">Beschreibung</span>
+            <span className="sm:hidden">Info</span>
           </button>
-        )}
-        <button
-          onClick={() => setActiveTab('details')}
-          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
-            activeTab === 'details'
-              ? 'bg-primary text-cream'
-              : 'bg-cream/50 text-primary hover:bg-cream'
-          }`}
-        >
-          Details
-        </button>
-        <button
-          onClick={() => setActiveTab('shipping')}
-          className={`flex-1 px-6 py-4 text-button font-bold transition-colors ${
-            activeTab === 'shipping'
-              ? 'bg-primary text-cream'
-              : 'bg-cream/50 text-primary hover:bg-cream'
-          }`}
-        >
-          Versand
-        </button>
+          {isOliveOil && (
+            <button
+              onClick={() => setActiveTab('taste')}
+              className={`flex-shrink-0 md:flex-1 px-4 sm:px-6 md:px-6 py-3 md:py-4 text-sm md:text-button font-bold transition-colors snap-start whitespace-nowrap ${
+                activeTab === 'taste'
+                  ? 'bg-primary text-cream'
+                  : 'bg-cream/50 text-primary hover:bg-cream'
+              }`}
+            >
+              <span className="hidden sm:inline">Geschmacksprofil</span>
+              <span className="sm:hidden">🫒 Profil</span>
+            </button>
+          )}
+          <button
+            onClick={() => setActiveTab('details')}
+            className={`flex-shrink-0 md:flex-1 px-4 sm:px-6 md:px-6 py-3 md:py-4 text-sm md:text-button font-bold transition-colors snap-start ${
+              activeTab === 'details'
+                ? 'bg-primary text-cream'
+                : 'bg-cream/50 text-primary hover:bg-cream'
+            }`}
+          >
+            Details
+          </button>
+          <button
+            onClick={() => setActiveTab('shipping')}
+            className={`flex-shrink-0 md:flex-1 px-4 sm:px-6 md:px-6 py-3 md:py-4 text-sm md:text-button font-bold transition-colors snap-start ${
+              activeTab === 'shipping'
+                ? 'bg-primary text-cream'
+                : 'bg-cream/50 text-primary hover:bg-cream'
+            }`}
+          >
+            Versand
+          </button>
+        </div>
+
+        {/* Scroll indicator gradient - mobile only */}
+        <div className="absolute top-0 right-0 bottom-0 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden" />
       </div>
 
       {/* Tab Content */}
