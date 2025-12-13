@@ -227,7 +227,7 @@ export function StoriesViewer({ onClose }: StoriesViewerProps) {
           {/* Caption Overlay - Shows on all story types */}
           {currentStory.caption && (
             <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-              <p className="text-white text-base md:text-lg font-medium leading-relaxed">
+              <p className="text-white text-base md:text-lg font-medium leading-relaxed whitespace-pre-line">
                 {currentStory.caption}
               </p>
             </div>
