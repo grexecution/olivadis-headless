@@ -7,23 +7,53 @@ const STORY_COUNT = 3 // Total number of stories
 
 export function StoriesButton() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isLoaded, setIsLoaded] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
   const videoRef = useRef<HTMLVideoElement>(null)
 
-  // Auto-play video on mount
+  // Load component after first user interaction
   useEffect(() => {
-    if (videoRef.current) {
+    const handleInteraction = () => {
+      setIsLoaded(true)
+      // Fade in after a brief delay
+      setTimeout(() => setIsVisible(true), 100)
+    }
+
+    // Listen for any user interaction
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart']
+    events.forEach(event => {
+      window.addEventListener(event, handleInteraction, { once: true, passive: true })
+    })
+
+    return () => {
+      events.forEach(event => {
+        window.removeEventListener(event, handleInteraction)
+      })
+    }
+  }, [])
+
+  // Auto-play video when loaded
+  useEffect(() => {
+    if (isLoaded && videoRef.current) {
       videoRef.current.play().catch(() => {
         // Video autoplay might be blocked, that's okay
       })
     }
-  }, [])
+  }, [isLoaded])
+
+  // Don't render until user interacts
+  if (!isLoaded) {
+    return null
+  }
 
   return (
     <>
       {/* Sticky Button - Bottom Right */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 group"
+        className={`fixed bottom-6 right-6 z-40 group transition-opacity duration-700 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
+        }`}
         aria-label="Olivadis Stories ansehen"
       >
         {/* Gradient Border Ring - Instagram Style */}
