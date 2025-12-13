@@ -91,6 +91,7 @@ export default function FamilyOriginSection() {
                       alt={member.name}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-300"
+                      sizes="64px"
                     />
                   </div>
                   <div className="flex-1 min-w-0">

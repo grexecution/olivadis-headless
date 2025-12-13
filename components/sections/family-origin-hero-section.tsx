@@ -70,6 +70,7 @@ export default function FamilyOriginHeroSection() {
                 alt={familyMembers[0].name}
                 fill
                 className="object-cover"
+                sizes="(max-width: 768px) 32px, 44px"
               />
             </div>
             <div className="text-left pr-1 md:pr-2">
@@ -94,6 +95,7 @@ export default function FamilyOriginHeroSection() {
                   alt={member.name}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 768px) 28px, 44px"
                 />
               </div>
               <div className="text-left pr-1 md:pr-2">

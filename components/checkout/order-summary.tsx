@@ -113,7 +113,7 @@ export function OrderSummary({
         {/* Tax */}
         {tax > 0 && (
           <div className="flex justify-between text-body-sm">
-            <span className="text-primary/60">MwSt. (20%)</span>
+            <span className="text-primary/60">MwSt. ({taxRate.toFixed(0)}%)</span>
             <span className="text-primary font-medium">{formatEUR(tax)}</span>
           </div>
         )}
@@ -135,12 +135,6 @@ export function OrderSummary({
           <span className="text-primary">{formatEUR(total)}</span>
         </div>
 
-        {/* Tax Notice */}
-        {taxRate > 0 && (
-          <p className="text-xs text-primary/60 pt-2">
-            Alle Preise inkl. {taxRate.toFixed(0)}% MwSt. ({countryName})
-          </p>
-        )}
       </div>
 
       {/* Place Order Button */}

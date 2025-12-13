@@ -93,3 +93,11 @@ export function getFreeShippingThreshold(countryCode: string = 'AT'): number {
   const rules = SHIPPING_RULES[countryCode as keyof typeof SHIPPING_RULES] || SHIPPING_RULES.DEFAULT
   return rules.freeShippingThreshold
 }
+
+/**
+ * Get tax rate for a country as a percentage (e.g., 0.20 returns 20)
+ */
+export function getTaxRatePercentage(countryCode: string = 'AT'): number {
+  const rules = SHIPPING_RULES[countryCode as keyof typeof SHIPPING_RULES] || SHIPPING_RULES.DEFAULT
+  return Math.round(rules.taxRate * 100)
+}

@@ -710,6 +710,151 @@ Runs on every push and PR:
    - Performance monitoring
    - Analytics integration
 
+## Performance Optimization Best Practices
+
+**Target: PageSpeed Score 95-100** - All optimizations implemented to ensure fast loading and excellent Core Web Vitals.
+
+### Font Loading (✅ Optimized)
+
+```typescript
+// ✅ CORRECT: Self-hosted fonts with Next.js
+import { Lora } from 'next/font/google'
+
+const lora = Lora({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',              // Prevent FOIT (Flash of Invisible Text)
+  adjustFontFallback: true,     // Prevent layout shift during font load
+  variable: '--font-lora',
+})
+
+// ❌ WRONG: Loading fonts from Google CDN
+// <link href="https://fonts.googleapis.com/css2?family=Lora" />
+```
+
+**Why:** Self-hosted fonts are GDPR-compliant (no data sent to Google), faster (no DNS lookup), and prevent FOUT.
+
+### CSS Loading (✅ Optimized)
+
+```css
+/* ✅ CORRECT: Load library CSS only where needed */
+// In components/sections/map-component.tsx
+import 'leaflet/dist/leaflet.css'
+
+/* ❌ WRONG: Loading library CSS globally */
+// @import 'leaflet/dist/leaflet.css' in globals.css
+```
+
+**Why:** Loading 10KB Leaflet CSS on every page when map only appears on 2 pages wastes bandwidth.
+
+### Icon Optimization (✅ Optimized)
+
+```typescript
+// next.config.ts
+experimental: {
+  optimizePackageImports: ['lucide-react'], // Tree-shake icons
+}
+
+// ✅ CORRECT: Import individual icons
+import { ShoppingCart, User, Menu } from 'lucide-react'
+
+// ❌ WRONG: Import entire library
+// import * as Icons from 'lucide-react'
+```
+
+**Why:** Reduces bundle size by ~30%, only includes used icons in build.
+
+### Image Optimization (✅ Optimized)
+
+```typescript
+// next.config.ts
+images: {
+  formats: ['image/avif', 'image/webp'], // Modern formats first
+  remotePatterns: [/* olivadis.com, etc */],
+}
+
+// ✅ CORRECT: Next.js Image with priority for LCP
+<Image
+  src="/hero-image.jpg"
+  alt="Hero"
+  priority  // For above-the-fold images only
+  sizes="100vw"
+/>
+
+// ❌ WRONG: Standard img tag
+// <img src="/hero-image.jpg" />
+```
+
+**Why:** Next.js automatically converts to WebP/AVIF (50-80% smaller), lazy loads, and generates responsive sizes.
+
+### Video Optimization (✅ Optimized)
+
+```typescript
+// ✅ CORRECT: Poster image with fade-in video
+<video poster="/video-thumbnail.jpg" onCanPlay={...}>
+  <source src="/video.mp4" type="video/mp4" />
+</video>
+
+// Target: Hero video <2MB compressed with H.264
+```
+
+**Why:** Poster prevents layout shift, instant visual feedback, video loads progressively.
+
+### Heavy Libraries (✅ Optimized)
+
+```typescript
+// ✅ CORRECT: Dynamic import for heavy components
+import dynamic from 'next/dynamic'
+
+const MapComponent = dynamic(() => import('./map-component'), {
+  ssr: false,  // Skip server-side rendering (Leaflet needs browser)
+  loading: () => <MapLoadingSkeleton />,
+})
+```
+
+**Why:** Map library (Leaflet) is ~150KB - only loads when needed, prevents blocking initial page load.
+
+### Third-Party Embeds
+
+```typescript
+// ✅ CORRECT: Lazy load Vimeo iframes
+<iframe loading="lazy" src="https://player.vimeo.com/..." />
+
+// ⚠️ BETTER: Click-to-load facade (saves ~500KB)
+// <VimeoFacade videoId="..." /> // Shows thumbnail, loads on click
+```
+
+**Why:** Vimeo player loads ~500KB JavaScript - lazy loading defers until scroll, facade loads only on interaction.
+
+### Core Rules
+
+1. **CSS**: Only load what's needed per page (no global library CSS)
+2. **Fonts**: Self-host with `display: 'swap'` + `adjustFontFallback: true`
+3. **Icons**: Tree-shake with `optimizePackageImports`
+4. **Images**: Use Next.js `<Image>` with AVIF/WebP formats
+5. **Videos**: Compress to <2MB, add poster images
+6. **Heavy libraries**: Dynamic import with `ssr: false`
+7. **Third-party**: Lazy load or use facades
+
+### Monitoring
+
+```bash
+# Build and check bundle sizes
+npm run build
+
+# Look for warnings:
+# - "First Load JS exceeds 200 kB" → optimize imports
+# - Large page sizes → check for unnecessary libraries
+```
+
+**Expected Production Metrics:**
+- LCP (Largest Contentful Paint): <2.5s
+- FID/INP (Interactivity): <100ms
+- CLS (Cumulative Layout Shift): <0.1
+- Mobile PageSpeed: 95-100
+- Desktop PageSpeed: 98-100
+
 ## Notes
 
 - The project uses Next.js App Router (not Pages Router)

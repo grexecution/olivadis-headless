@@ -38,7 +38,8 @@
       "Bash(curl:*)",
       "Bash(python3:*)",
       "Bash(node scripts/sync-shipping-rules.js:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(sips:*)"
     ]
   }
 }

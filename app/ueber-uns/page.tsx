@@ -20,6 +20,7 @@ export default function AboutPage() {
             alt="Greek olive grove"
             fill
             className="object-cover"
+            sizes="100vw"
             priority
           />
           {/* Green Overlay for Brand Consistency */}

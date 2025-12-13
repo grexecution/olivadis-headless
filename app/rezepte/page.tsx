@@ -41,6 +41,7 @@ export default async function RezeptePage({
             alt="Mediterranean cooking"
             fill
             className="object-cover"
+            sizes="100vw"
             priority
           />
           {/* Green Overlay */}

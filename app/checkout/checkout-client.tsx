@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCart } from '@/lib/cart-context'
+import { useGeolocation } from '@/lib/hooks/use-geolocation'
 import { CheckoutForm, type CheckoutFormData } from '@/components/checkout/checkout-form'
 import { OrderSummary } from '@/components/checkout/order-summary'
 import CheckoutTestimonials from '@/components/sections/checkout-testimonials'
@@ -34,10 +35,14 @@ interface CheckoutClientProps {
 export default function CheckoutClient({ countries, taxRates, shippingZones, shippableCountries }: CheckoutClientProps) {
   const router = useRouter()
   const { items, totalPrice, clearCart } = useCart()
+  const { countryCode } = useGeolocation() // Detect country from IP
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Form data state with default country DE (Germany)
+  // Use detected country code, fallback to AT (Austria)
+  const defaultCountry = countryCode || 'AT'
+
+  // Form data state with IP-detected country
   const [formData, setFormData] = useState<CheckoutFormData>({
     billing: {
       first_name: '',
@@ -48,7 +53,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
       address_2: '',
       city: '',
       postcode: '',
-      country: 'DE', // Default to Germany
+      country: defaultCountry,
       state: '',
       company: '',
     },
@@ -59,7 +64,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
       address_2: '',
       city: '',
       postcode: '',
-      country: 'DE',
+      country: defaultCountry,
       state: '',
       company: '',
     },
@@ -74,6 +79,17 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
 
   // Customer note state
   const [customerNote, setCustomerNote] = useState('')
+
+  // Update form country when geolocation completes
+  useEffect(() => {
+    if (countryCode && countryCode !== formData.billing.country) {
+      setFormData(prev => ({
+        ...prev,
+        billing: { ...prev.billing, country: countryCode },
+        shipping: { ...prev.shipping, country: countryCode },
+      }))
+    }
+  }, [countryCode]) // Only run when countryCode changes
 
   // Calculate tax based on selected country
   const { taxAmount, taxRate } = useMemo(() => {

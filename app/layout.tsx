@@ -1,8 +1,19 @@
 import type { Metadata } from "next";
+import { Lora } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
 import { SideCart } from "@/components/cart";
 import { Navbar, Footer, InventoryBar } from "@/components/layout";
+
+// Self-hosted Lora font (GDPR-compliant, faster)
+const lora = Lora({
+  weight: ['400', '700'],
+  style: ['normal', 'italic'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-lora',
+  adjustFontFallback: true, // Prevent layout shift during font load
+});
 
 export const metadata: Metadata = {
   title: "Olivadis - Premium Bio-Olivenöl",
@@ -16,12 +27,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet" />
-      </head>
-      <body className="antialiased bg-background text-foreground font-sans">
+      <head />
+      <body className={`antialiased bg-background text-foreground font-sans ${lora.variable}`} suppressHydrationWarning>
         <Providers>
           <InventoryBar />
           <Navbar />

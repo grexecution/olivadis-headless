@@ -36,9 +36,10 @@ export default function StoryNumbersSection() {
       <div className="absolute inset-0 z-0">
         <Image
           src="https://images.unsplash.com/photo-1474440692490-2e83ae13ba29?w=1920&auto=format&fit=crop&q=80"
-          alt=""
+          alt="Olive grove landscape in Greece"
           fill
           className="object-cover"
+          sizes="100vw"
           priority={false}
         />
         {/* Dark Gradient Overlay */}

@@ -4,6 +4,7 @@ import { Check, X, ShoppingCart, ArrowRight } from 'lucide-react'
 import { getCategories, ProductCategory, getProduct } from '@/lib/woocommerce/products'
 import { getTestimonials, Testimonial } from '@/lib/woocommerce/testimonials'
 import { ScrollIndicator } from '@/components/ui/scroll-indicator'
+import { HeroVideo } from '@/components/ui/hero-video'
 import FamilyOriginSection from '@/components/sections/family-origin-section'
 import FamilyOriginHeroSection from '@/components/sections/family-origin-hero-section'
 import TestimonialsSection from '@/components/sections/testimonials-section'
@@ -42,19 +43,7 @@ export default async function Home() {
       {/* Hero Section - Compact Product Hero */}
       <section className="relative min-h-[75vh] md:min-h-[80vh] flex items-center overflow-hidden">
         {/* Video Background */}
-        <div className="absolute inset-0 w-full h-full">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 w-full h-full object-cover"
-          >
-            <source src="/videos/banner-desktop-lo.mp4" type="video/mp4" />
-          </video>
-          {/* Lighter Green Overlay to See Video Better */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/75 via-primary/70 to-primary/75" />
-        </div>
+        <HeroVideo />
 
         <div className="container relative z-10 py-12">
           <div className="grid grid-cols-1 gap-8 items-center max-w-6xl mx-auto">
@@ -293,6 +282,7 @@ export default async function Home() {
                   className="w-full h-[888px] md:h-[1066px] lg:h-[1244px]"
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture"
+                  loading="lazy"
                   title="Olivadis Olivenöl Unboxing"
                 />
               </div>
@@ -332,6 +322,7 @@ export default async function Home() {
                   width={200}
                   height={400}
                   className="object-contain"
+                  sizes="(max-width: 1024px) 200px, 200px"
                 />
               </div>
               <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 lg:p-8 space-y-4">
@@ -365,6 +356,7 @@ export default async function Home() {
                   width={200}
                   height={400}
                   className="object-contain"
+                  sizes="(max-width: 1024px) 200px, 200px"
                 />
               </div>
               <div className="bg-[rgba(250,241,229,0.5)] border-2 border-gray-200 rounded-2xl p-6 lg:p-8 space-y-4">

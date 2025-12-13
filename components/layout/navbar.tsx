@@ -61,10 +61,12 @@ export function Navbar() {
               ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'}
             `}>
               <Image
-                src="https://olivadis.com/wp-content/uploads/2022/07/olivadis_footerart_w.svg"
+                src="/olivadis-logo.svg"
                 alt="Olivadis Logo"
                 fill
                 className="object-contain"
+                sizes="(max-width: 768px) 32px, 40px"
+                priority
               />
             </div>
             <span className={`

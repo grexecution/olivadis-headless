@@ -26,7 +26,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Helvetica Neue', 'Helvetica', 'Arial', 'sans-serif'],
-        serif: ['Lora', 'Georgia', 'serif'],
+        serif: ['var(--font-lora)', 'Georgia', 'serif'],
       },
       fontSize: {
         // Display & Headings - Responsive for mobile

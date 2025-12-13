@@ -2,7 +2,7 @@
 
 import { Fragment, useState, useEffect, useMemo } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { X, Plus, Minus, ShoppingBag, Trash2, Truck, Sparkles } from 'lucide-react'
+import { X, Plus, Minus, ShoppingBag, Truck, Sparkles } from 'lucide-react'
 import { useCart } from '@/lib/cart-context'
 import { useGeolocation } from '@/lib/hooks/use-geolocation'
 import Image from 'next/image'
@@ -12,7 +12,7 @@ import { PaymentIcons } from '@/components/ui/payment-icons'
 import { decodeHtmlEntities } from '@/lib/utils/html'
 import { formatEUR } from '@/lib/utils/currency'
 import { translateCountryName } from '@/lib/utils/countries'
-import { calculateCartTotals, getFreeShippingThreshold } from '@/lib/utils/shipping-calculator'
+import { calculateCartTotals, getFreeShippingThreshold, getTaxRatePercentage, SHIPPING_RULES } from '@/lib/utils/shipping-calculator'
 
 export function SideCart() {
   const {
@@ -27,6 +27,16 @@ export function SideCart() {
 
   const { countryCode, country, loading: geoLoading } = useGeolocation()
   const [expandedItemId, setExpandedItemId] = useState<string | null>(null)
+  const [selectedCountryCode, setSelectedCountryCode] = useState<string | null>(null)
+
+  // Use selected country if set, otherwise fall back to geolocation
+  const activeCountryCode = selectedCountryCode || countryCode || 'AT'
+
+  // Get country display name
+  const getCountryDisplayName = (code: string) => {
+    const rule = SHIPPING_RULES[code as keyof typeof SHIPPING_RULES]
+    return rule ? rule.zoneName : code
+  }
 
   // Calculate cart totals INSTANTLY using client-side rules (<100ms)
   // No API calls, no delays, no loading states needed
@@ -37,21 +47,22 @@ export function SideCart() {
         shipping: 0,
         tax: 0,
         total: 0,
-        country: countryCode || 'AT',
+        country: activeCountryCode,
         isFreeShipping: false,
       }
     }
 
-    return calculateCartTotals(items, countryCode || 'AT')
-  }, [items, countryCode])
+    return calculateCartTotals(items, activeCountryCode)
+  }, [items, activeCountryCode])
 
   const estimatedTax = cartCalculation.tax
   const estimatedShipping = cartCalculation.shipping
   const estimatedTotal = cartCalculation.total
-  const estimatedCountry = translateCountryName(country)
+  const estimatedCountry = getCountryDisplayName(activeCountryCode)
+  const taxRatePercentage = getTaxRatePercentage(activeCountryCode)
 
   // Free shipping threshold and progress (from WooCommerce settings)
-  const FREE_SHIPPING_THRESHOLD = getFreeShippingThreshold(countryCode || 'AT')
+  const FREE_SHIPPING_THRESHOLD = getFreeShippingThreshold(activeCountryCode)
   const remainingForFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - totalPrice)
   const freeShippingProgress = Math.min(100, (totalPrice / FREE_SHIPPING_THRESHOLD) * 100)
   const isFreeShippingUnlocked = totalPrice >= FREE_SHIPPING_THRESHOLD
@@ -109,7 +120,7 @@ export function SideCart() {
 
                       {/* Free Shipping Progress - Full Width */}
                       {items.length > 0 && (
-                        <div className={`px-6 py-3 border-t transition-all duration-500 ${
+                        <div className={`px-6 py-3 border-t transition-all duration-500 bg-gray-200 ${
                           isFreeShippingUnlocked
                             ? 'bg-gradient-to-r from-primary/5 via-primary-light/5 to-primary/5 border-primary/10'
                             : 'bg-cream/30 border-primary/5'
@@ -154,7 +165,7 @@ export function SideCart() {
                     </div>
 
                     {/* Cart Items */}
-                    <div className="flex-1 overflow-y-auto px-6 py-6">
+                    <div className="flex-1 overflow-y-auto px-4 py-4 bg-gray-5L0">
                       {items.length === 0 ? (
                         <div className="flex flex-col items-center justify-center h-full text-center">
                           <ShoppingBag className="h-16 w-16 text-primary/20 mb-4" />
@@ -169,7 +180,7 @@ export function SideCart() {
                           </Link>
                         </div>
                       ) : (
-                        <div className="space-y-6">
+                        <div className="space-y-3">
                           {items.map((item) => (
                             <div key={item.id} className="flex gap-4 bg-white p-4 rounded-md border border-primary/10">
                               {/* Product Image */}
@@ -189,10 +200,10 @@ export function SideCart() {
                                 )}
                               </div>
 
-                              <div className="flex flex-1 flex-col">
-                                <div className="flex justify-between">
-                                  <div className="flex-1">
-                                    <h3 className="text-body font-bold text-primary">
+                              <div className="flex flex-1 flex-col justify-between">
+                                <div className="flex justify-between gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <h3 className="text-body text-primary line-clamp-2">
                                       {decodeHtmlEntities(item.name)}
                                     </h3>
                                     {item.variation?.attributes && (
@@ -205,13 +216,13 @@ export function SideCart() {
                                   </div>
                                   <button
                                     onClick={() => removeItem(item.id)}
-                                    className="text-primary/40 hover:text-primary transition-colors ml-2 h-fit"
+                                    className="text-primary/40 hover:text-primary transition-colors h-fit flex-shrink-0"
                                     aria-label="Remove item"
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <X className="h-4 w-4" />
                                   </button>
                                 </div>
-                                <div className="mt-2 flex items-end justify-between">
+                                <div className="flex items-end justify-between">
                                   {/* Compact Quantity Selector - Click to expand */}
                                   {expandedItemId === item.id ? (
                                     // Expanded: Show full controls
@@ -223,7 +234,7 @@ export function SideCart() {
                                       >
                                         <Minus className="h-3 w-3" />
                                       </button>
-                                      <span className="w-8 text-center text-sm font-bold text-primary">{item.quantity}</span>
+                                      <span className="w-4 text-center text-sm font-bold text-primary">{item.quantity}</span>
                                       <button
                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
                                         className="w-6 h-6 flex items-center justify-center rounded border border-primary/20 hover:bg-primary hover:text-cream transition-colors text-primary"
@@ -233,7 +244,7 @@ export function SideCart() {
                                       </button>
                                       <button
                                         onClick={() => setExpandedItemId(null)}
-                                        className="ml-1 text-xs text-primary/50 hover:text-primary"
+                                        className="ml-1 text-md text-primary/50 hover:text-primary"
                                         aria-label="Close"
                                       >
                                         ✓
@@ -262,24 +273,53 @@ export function SideCart() {
 
                     {/* Checkout Section */}
                     {items.length > 0 && (
-                      <div className="border-t border-primary/10 px-6 py-4 bg-white space-y-2">
+                      <div className="border-t border-primary/10 px-4 py-4 bg-white space-y-2">
+                        {/* Shipping and Tax Notice Box */}
+                        <div className="mb-2 p-3 bg-cream/50 rounded-md border border-primary/10">
+                          <div className="flex items-start gap-2">
+                            <Truck className="h-4 w-4 text-primary mt-0.5 flex-shrink-0" aria-hidden="true" />
+                            <div className="text-xs flex-1">
+                              <p className="text-primary/70">
+                                Versand und MwSt basierend auf{' '}
+                                <span className="relative inline-block">
+                                  <select
+                                    value={activeCountryCode}
+                                    onChange={(e) => setSelectedCountryCode(e.target.value)}
+                                    className="appearance-none bg-transparent text-primary font-medium underline cursor-pointer hover:text-primary/80 transition-colors border-0 focus:outline-none focus:ring-0 p-0"
+                                  >
+                                    {Object.keys(SHIPPING_RULES)
+                                      .filter((code) => code !== 'DEFAULT')
+                                      .map((code) => (
+                                        <option key={code} value={code}>
+                                          {getCountryDisplayName(code)}
+                                        </option>
+                                      ))}
+                                  </select>
+                                </span>.
+                              </p>
+                              <p className="text-primary/50 mt-1 hidden md:block">
+                                Endgültige Kosten werden an der Kasse berechnet.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
                         {/* Subtotal */}
                         <div className="flex justify-between text-sm">
                           <p className="text-primary/60">Zwischensumme</p>
                           <p className="text-primary font-bold">{formatEUR(totalPrice)}</p>
                         </div>
 
-                        {/* Estimated Shipping */}
+                        {/* Shipping */}
                         <div className="flex justify-between text-xs">
-                          <p className="text-primary/50">Geschätzter Versand ({estimatedCountry})</p>
+                          <p className="text-primary/50">Versandkosten</p>
                           <p className={estimatedShipping === 0 ? 'text-primary font-bold' : 'text-primary/70'}>
                             {estimatedShipping === 0 ? 'Kostenlos' : formatEUR(estimatedShipping)}
                           </p>
                         </div>
 
-                        {/* Estimated Tax */}
+                        {/* Tax */}
                         <div className="flex justify-between text-xs">
-                          <p className="text-primary/50">Geschätzte MwSt. ({estimatedCountry})</p>
+                          <p className="text-primary/50">MwSt. ({taxRatePercentage}%)</p>
                           <p className="text-primary/70">{formatEUR(estimatedTax)}</p>
                         </div>
 
@@ -287,14 +327,9 @@ export function SideCart() {
 
                         {/* Total */}
                         <div className="flex justify-between text-lg font-bold pt-1">
-                          <p className="text-primary">Geschätzte Summe</p>
+                          <p className="text-primary">Summe</p>
                           <p className="text-primary">{formatEUR(estimatedTotal)}</p>
                         </div>
-
-                        {/* Tax Notice */}
-                        <p className="text-[10px] text-primary/60 text-center pb-1">
-                          Endgültige Kosten werden an der Kasse berechnet
-                        </p>
 
                         {/* Checkout Button */}
                         <Link

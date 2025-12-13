@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
+    formats: ['image/avif', 'image/webp'], // Modern formats for better compression
     remotePatterns: [
       {
         protocol: 'https',
@@ -20,6 +21,9 @@ const nextConfig: NextConfig = {
         hostname: '*.basemaps.cartocdn.com',
       },
     ],
+  },
+  experimental: {
+    optimizePackageImports: ['lucide-react'], // Tree-shake Lucide icons (only bundle used icons)
   },
 };
 

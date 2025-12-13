@@ -76,7 +76,7 @@ export default function CheckoutTestimonials() {
               <div className="relative w-full">
                 <Image
                   src={testimonial.featured_image_url || ''}
-                  alt="Kundenbewertung"
+                  alt={`Kundenbewertung - ${testimonial.slug}`}
                   width={400}
                   height={600}
                   className="w-full h-auto object-contain"
@@ -117,10 +117,11 @@ export default function CheckoutTestimonials() {
           >
             <Image
               src={selectedImage}
-              alt="Kundenbewertung vergrößert"
+              alt="Kundenbewertung vergrößerte Ansicht"
               width={1200}
               height={1800}
               className="w-full h-auto object-contain rounded-lg"
+              sizes="(max-width: 768px) 100vw, 1200px"
               priority
             />
           </div>
