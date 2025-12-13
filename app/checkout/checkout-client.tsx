@@ -12,7 +12,10 @@ import { WooCommerceAddress } from '@/types/woocommerce'
 import { Country, TaxRate, calculateTax } from '@/lib/woocommerce/countries-taxes'
 import { ShippingZoneWithMethods, findShippingZoneForCountry, calculateShippingCost, calculateCartWeight } from '@/lib/woocommerce/shipping'
 import Link from 'next/link'
-import { ArrowLeft, CreditCard, ShoppingCart, ChevronDown } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowLeft, CreditCard, ShoppingCart, ChevronDown, ShoppingBag, FileText } from 'lucide-react'
+import { formatEUR } from '@/lib/utils/currency'
+import { decodeHtmlEntities } from '@/lib/utils/html'
 
 interface CouponData {
   id: number
@@ -82,6 +85,9 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
 
   // Mobile order summary expandable state
   const [isMobileOrderSummaryOpen, setIsMobileOrderSummaryOpen] = useState(false)
+
+  // Mobile order notes expandable state
+  const [isMobileOrderNotesOpen, setIsMobileOrderNotesOpen] = useState(false)
 
   // Update form country when geolocation completes
   useEffect(() => {
@@ -201,7 +207,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
   if (items.length === 0) {
     return (
       <div className="container mx-auto py-12">
-        <div className="max-w-2xl mx-auto text-center">
+        <div className="min-h-[calc(100vh-120px)] flex flex-col items-center justify-center max-w-2xl mx-auto text-center">
           <h1 className="text-h2 text-primary mb-4">Ihr Warenkorb ist leer</h1>
           <p className="text-body text-primary/60 mb-8">
             Fügen Sie Produkte zu Ihrem Warenkorb hinzu, um fortzufahren.
@@ -239,7 +245,7 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
         </div>
       )}
 
-      {/* Mobile Order Summary - Expandable */}
+      {/* Mobile Order Summary - Expandable (Compact) */}
       <div className="lg:hidden mb-6 bg-white rounded-md border border-primary/10 overflow-hidden">
         <button
           type="button"
@@ -248,13 +254,13 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
         >
           <div className="flex items-center gap-2">
             <ShoppingCart className="h-5 w-5 text-primary-dark/60" aria-hidden="true" />
-            <span className="font-semibold text-primary">
+            <span className="font-medium text-sm text-primary">
               Bestellübersicht ({items.length} {items.length === 1 ? 'Artikel' : 'Artikel'})
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <span className="font-bold text-lg text-primary">
-              €{(totalPrice + shippingCost + taxAmount - couponDiscount).toFixed(2)}
+            <span className="font-bold text-base text-primary">
+              {formatEUR(totalPrice + shippingCost + taxAmount - couponDiscount)}
             </span>
             <ChevronDown
               className={`h-5 w-5 text-primary-dark/60 transition-transform ${isMobileOrderSummaryOpen ? 'rotate-180' : ''}`}
@@ -263,20 +269,85 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
           </div>
         </button>
         {isMobileOrderSummaryOpen && (
-          <div className="px-4 pb-4 border-t border-primary/10">
-            <OrderSummary
-              items={items}
-              subtotal={totalPrice}
-              shipping={shippingCost}
-              shippingMethodTitle={shippingMethodTitle}
-              tax={taxAmount}
-              taxRate={taxRate}
-              couponDiscount={couponDiscount}
-              appliedCoupon={appliedCoupon}
-              isLoading={isLoading}
-              selectedCountry={formData.billing.country}
-              countries={countries}
-            />
+          <div className="px-4 pb-4 pt-4 border-t border-primary/10 space-y-4">
+            {/* Compact Cart Items */}
+            <div className="space-y-3">
+              {items.map((item) => (
+                <div key={item.id} className="flex gap-3">
+                  {/* Mini Product Image */}
+                  <div className="relative h-14 w-14 flex-shrink-0 overflow-hidden rounded border border-primary/10 bg-white">
+                    {item.image ? (
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        fill
+                        sizes="56px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-cream">
+                        <ShoppingBag className="h-6 w-6 text-primary/30" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Compact Product Details */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs font-semibold text-primary truncate">
+                      {decodeHtmlEntities(item.name)}
+                    </h4>
+                    {item.variation?.attributes && (
+                      <p className="text-xs text-primary/50 truncate">
+                        {item.variation.attributes.map((attr) => (
+                          <span key={attr.name}>{decodeHtmlEntities(attr.value)} </span>
+                        ))}
+                      </p>
+                    )}
+                    <div className="mt-1 flex justify-between items-center">
+                      <span className="text-xs text-primary/60">
+                        Qty: {item.quantity}
+                      </span>
+                      <span className="text-xs font-semibold text-primary">
+                        {formatEUR(item.price * item.quantity)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Divider */}
+            <div className="border-t border-primary/10" />
+
+            {/* Compact Order Summary Totals */}
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-primary/60">Zwischensumme</span>
+                <span className="text-primary font-medium">{formatEUR(totalPrice)}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-primary/60">{shippingMethodTitle}</span>
+                <span className="text-primary font-medium">
+                  {shippingCost === 0 ? 'Kostenlos' : formatEUR(shippingCost)}
+                </span>
+              </div>
+              {taxAmount > 0 && (
+                <div className="flex justify-between">
+                  <span className="text-primary/60">MwSt. ({taxRate.toFixed(0)}%)</span>
+                  <span className="text-primary font-medium">{formatEUR(taxAmount)}</span>
+                </div>
+              )}
+              {couponDiscount > 0 && appliedCoupon && (
+                <div className="flex justify-between">
+                  <span className="text-primary-light font-medium">Gutschein ({appliedCoupon.code})</span>
+                  <span className="text-primary-light font-medium">-{formatEUR(couponDiscount)}</span>
+                </div>
+              )}
+              <div className="border-t border-primary/10 pt-2 mt-2 flex justify-between font-bold">
+                <span className="text-primary">Gesamt</span>
+                <span className="text-primary">{formatEUR(totalPrice + shippingCost + taxAmount - couponDiscount)}</span>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -296,6 +367,40 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
                 countries={countries}
               />
             </div>
+
+          {/* Order Notes - Collapsible on All Screen Sizes */}
+          <div className="bg-white rounded-md border border-primary/10 overflow-hidden">
+            {/* Collapsible Header */}
+            <button
+              type="button"
+              onClick={() => setIsMobileOrderNotesOpen(!isMobileOrderNotesOpen)}
+              className="w-full px-4 py-4 flex items-center justify-between text-left"
+            >
+              <div className="flex items-center gap-2">
+                <FileText className="h-5 w-5 text-primary-dark/60" aria-hidden="true" />
+                <span className="font-medium text-sm text-primary">
+                  Bestellnotizen (optional)
+                </span>
+              </div>
+              <ChevronDown
+                className={`h-5 w-5 text-primary-dark/60 transition-transform ${isMobileOrderNotesOpen ? 'rotate-180' : ''}`}
+                aria-hidden="true"
+              />
+            </button>
+
+            {/* Conditional Content - All Screen Sizes */}
+            {isMobileOrderNotesOpen && (
+              <div className="px-4 pb-4 pt-4 border-t border-primary/10">
+                <textarea
+                  value={customerNote}
+                  onChange={(e) => setCustomerNote(e.target.value)}
+                  placeholder="Hinweise zu Ihrer Bestellung, z.B. besondere Hinweise zur Lieferung"
+                  rows={4}
+                  className="w-full px-3 py-2 border border-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none text-body text-primary bg-cream/50"
+                />
+              </div>
+            )}
+          </div>
 
           {/* Coupon Code */}
           <CouponInput
@@ -384,23 +489,11 @@ export default function CheckoutClient({ countries, taxRates, shippingZones, shi
               </label>
             </div>
           </div>
-
-          {/* Order Notes */}
-          <div className="bg-white rounded-md p-6 border border-primary/10">
-            <h3 className="text-h3 text-primary mb-4">Bestellnotizen (optional)</h3>
-            <textarea
-              value={customerNote}
-              onChange={(e) => setCustomerNote(e.target.value)}
-              placeholder="Hinweise zu Ihrer Bestellung, z.B. besondere Hinweise zur Lieferung"
-              rows={4}
-              className="w-full px-3 py-2 border border-primary/20 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary resize-none text-body text-primary bg-cream/50"
-            />
-          </div>
         </div>
 
-        {/* Order Summary - 1/3 width on large screens */}
-        <div className="hidden lg:block lg:col-span-1">
-          <div className="sticky top-4">
+        {/* Order Summary - 1/3 width on large screens, bottom on mobile */}
+        <div className="lg:col-span-1">
+          <div className="lg:sticky lg:top-4">
             <OrderSummary
               items={items}
               subtotal={totalPrice}

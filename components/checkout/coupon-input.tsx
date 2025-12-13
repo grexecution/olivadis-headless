@@ -93,7 +93,7 @@ export default function CouponInput({
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-primary/10 p-6">
+    <div className="bg-white rounded-lg shadow-sm border border-primary/10 p-4">
       {/* Applied Coupon Display */}
       {appliedCoupon && (
         <div className="bg-primary-light/10 border border-primary-light rounded-lg p-4 mb-4">
@@ -143,7 +143,7 @@ export default function CouponInput({
           {!showInput ? (
             <button
               onClick={() => setShowInput(true)}
-              className="flex items-center gap-2 text-primary hover:text-primary-light font-medium transition"
+              className="flex items-center gap-2 text-sm text-primary hover:text-primary-light font-medium transition"
               type="button"
             >
               <Tag className="h-5 w-5" />

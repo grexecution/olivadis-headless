@@ -17,8 +17,16 @@ export default async function Home() {
   let testimonials: Testimonial[] = []
   let featuredProduct = null
 
+  // Allowed category IDs in specific order
+  const allowedCategoryIds = [31, 44, 49, 65, 74]
+
   try {
-    categories = await getCategories()
+    const allCategories = await getCategories()
+
+    // Filter and sort categories by allowed IDs in specified order
+    categories = allowedCategoryIds
+      .map(id => allCategories.find(cat => cat.id === id))
+      .filter((cat): cat is ProductCategory => cat !== undefined)
   } catch (error) {
     console.error('Failed to fetch categories:', error)
     // Continue with empty array - show empty state
@@ -72,7 +80,7 @@ export default async function Home() {
                 <span className="italic" style={{ color: '#5DA81A' }}>Olivadis Familienbetrieb</span>
               </h1>
 
-              <p className="text-base md:text-body-lg text-cream/90 mb-8 leading-relaxed">
+              <p className="text-base md:text-body-lg text-cream/90 mb-6 leading-relaxed">
                 Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
               </p>
 
@@ -110,7 +118,7 @@ export default async function Home() {
               {featuredProduct ? (
                 <Link href={`/product/${featuredProduct.slug}`} className="relative block group">
                   {/* Product Card - Mobile/Tablet: Horizontal Layout */}
-                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 py-3 px-3 overflow-visible cursor-pointer">
+                  <div className="relative bg-white/40 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/60 hover:shadow-[0_20px_60px_rgba(93,168,26,0.15)] hover:border-white/80 transition-all duration-500 py-2 px-3 overflow-visible cursor-pointer">
                     {/* Small Bestseller Badge */}
                     {featuredProduct.featured && (
                       <div className="absolute -top-2 -right-2 z-10">
@@ -142,12 +150,12 @@ export default async function Home() {
                             Unser Olivenöl
                           </p>
 
-                          <h3 className="text-sm font-serif font-bold text-primary line-clamp-2 italic">
+                          <h3 className="text-lg font-serif font-bold text-primary line-clamp-2 italic">
                             {decodeHtmlEntities(featuredProduct.name)}
                           </h3>
 
                           {/* Price */}
-                          <p className="text-lg font-bold text-primary">
+                          <p className="text-sm font-bold text-primary">
                             {formatEUR(parseFloat(featuredProduct.price))}
                           </p>
                         </div>
