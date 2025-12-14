@@ -47,7 +47,7 @@ export default function OliveSeasonBadge({ variant = 'navbar', className = '' }:
         {showTooltip && (
           <div className="absolute top-full mt-2 left-1/2 -translate-x-1/2 z-50 w-64 p-3 bg-white rounded-lg shadow-xl border border-primary/20 animate-in fade-in slide-in-from-top-2 duration-200">
             <div className="text-xs text-primary-dark space-y-1.5">
-              <p className="font-bold text-primary">Griechischer Olivenkalender</p>
+              <p className="font-bold text-primary">Status vom Olivenhain:</p>
               <p className="text-[11px]">{season.description}</p>
               {nextSeason && (
                 <p className="text-[10px] text-primary/60 pt-1 border-t border-primary/10">

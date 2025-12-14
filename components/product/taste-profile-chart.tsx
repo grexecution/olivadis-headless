@@ -85,7 +85,7 @@ export default function TasteProfileChart({ profile = DEFAULT_PROFILE, className
   const polygonPoints = calculatePoints(values, size)
 
   return (
-    <div className={`bg-cream/30 rounded-xl p-6 ${className}`}>
+    <div>
       <h3 className="text-h4 md:text-h4-lg text-primary mb-4">Geschmacksprofil</h3>
 
       <div className="flex flex-col md:flex-row items-center gap-6">

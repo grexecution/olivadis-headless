@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { getRecipes, getRecipeCategories, getDifficultyColor } from '@/lib/woocommerce/recipes'
 import { Recipe, RecipeCategoryResponse } from '@/types/recipe'
+import RecipeStoriesPreview from '@/components/stories/recipe-stories-preview'
 
 export const metadata: Metadata = {
   title: 'Rezepte | Olivadis',
@@ -56,6 +57,9 @@ export default async function RezeptePage({
           </p>
         </div>
       </section>
+
+      {/* Recipe Stories */}
+      <RecipeStoriesPreview />
 
       {/* Categories Filter */}
       {categories.length > 0 && (
