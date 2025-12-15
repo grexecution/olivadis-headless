@@ -207,7 +207,7 @@ export function Navbar() {
                 className="mt-12 pt-8 border-t border-cream/20"
               >
                 <p className="text-body text-cream/60 text-center">
-                  Premium Bio-Olivenöl aus Griechenland
+                  Premium Natives Olivenöl Extra aus Griechenland
                 </p>
               </motion.div>
             </motion.div>

@@ -42,7 +42,7 @@ const familyMembers: FamilyMember[] = [
     name: 'Familie',
     role: 'Die nächste Generation',
     image: 'https://images.unsplash.com/photo-1511895426328-dc8714191300?w=400&auto=format&fit=crop&q=80',
-    description: 'Gemeinsam für authentisches Bio-Olivenöl',
+    description: 'Gemeinsam für authentisches Olivenöl',
   },
 ]
 
@@ -114,7 +114,7 @@ export default function FamilyOriginSection() {
             {/* Elegant bottom text */}
             <div className="text-center">
               <p className="text-body text-primary-dark/70 leading-relaxed italic">
-                Seit 1970 kultivieren wir <span className="font-semibold text-primary">100% Bio</span> Oliven unter der griechischen Sonne
+                Seit 1970 kultivieren wir <span className="font-semibold text-primary">100% natürlich</span> Oliven unter der griechischen Sonne
               </p>
             </div>
           </div>

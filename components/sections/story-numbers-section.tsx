@@ -19,8 +19,8 @@ const stats: Stat[] = [
   },
   {
     number: '100%',
-    label: 'Bio',
-    description: 'Zertifiziert & nachhaltig',
+    label: 'Premium',
+    description: 'Natürlich & nachhaltig',
   },
   {
     number: '2000+',
@@ -57,7 +57,7 @@ export default function StoryNumbersSection() {
               Tradition trifft <span className="italic text-cream">Leidenschaft</span>
             </h2>
             <p className="text-base md:text-body-lg text-white/90 max-w-2xl mx-auto">
-              Seit über einem halben Jahrhundert produzieren wir mit Hingabe das feinste Bio-Olivenöl Griechenlands
+              Seit über einem halben Jahrhundert produzieren wir mit Hingabe das feinste Premium-Olivenöl Griechenlands
             </p>
           </div>
 

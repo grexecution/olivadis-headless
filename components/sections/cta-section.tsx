@@ -10,7 +10,7 @@ interface CTASectionProps {
 }
 
 export default function CTASection({
-  heading = 'Entdecken Sie griechisches Bio-Olivenöl',
+  heading = 'Entdecken Sie Premium griechisches Olivenöl',
   subheading = 'Direkt vom Erzeuger zu Ihnen nach Hause',
   buttonText = 'Zum Shop',
   buttonHref = '/shop',

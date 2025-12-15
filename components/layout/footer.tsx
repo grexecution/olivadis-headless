@@ -9,7 +9,7 @@ export function Footer() {
             <h3 className="text-h4 font-serif italic text-cream mb-4">Olivadis</h3>
             <p className="text-body-sm">
               Premium-Olivenöl von unserer Familie zu Ihrer.
-              100% griechisch, biologisch und nachhaltig produziert.
+              100% griechisch, nachhaltig produziert.
             </p>
           </div>
 

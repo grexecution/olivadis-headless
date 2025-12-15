@@ -81,7 +81,7 @@ export default async function Home() {
               </h1>
 
               <p className="text-base md:text-body-lg text-cream/90 mb-6 leading-relaxed">
-                Erleben Sie das feinste Bio-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
+                Erleben Sie das feinste Premium-Olivenöl, mit Leidenschaft und Tradition aus unseren Familienhainen in Griechenland hergestellt.
               </p>
 
               <div className="flex flex-wrap gap-4 mb-3">
@@ -183,7 +183,7 @@ export default async function Home() {
               Unsere <span className="italic text-primary-light">Produktkategorien</span>
             </h2>
             <p className="text-base md:text-body-lg text-primary-dark max-w-2xl mx-auto">
-              Entdecken Sie unsere vielfältige Auswahl an griechischen Bio-Produkten
+              Entdecken Sie unsere vielfältige Auswahl an griechischen Premium-Produkten
             </p>
           </div>
 
@@ -307,7 +307,7 @@ export default async function Home() {
               Unser Öl - <span className="italic text-primary-light">im Vergleich</span>
             </h2>
             <p className="text-base md:text-body-lg text-primary-dark max-w-2xl mx-auto">
-              Entdecken Sie unsere vielfältige Auswahl an griechischen Bio-Produkten
+              Entdecken Sie unsere vielfältige Auswahl an griechischen Premium-Produkten
             </p>
           </div>
 
@@ -404,7 +404,7 @@ export default async function Home() {
 
       {/* Final CTA Section */}
       <CTASection
-        heading="Bereit für echtes griechisches Bio-Olivenöl?"
+        heading="Bereit für echtes griechisches Premium-Olivenöl?"
         subheading="Entdecken Sie den Unterschied, den authentisches Olivenöl aus Griechenland macht."
         buttonText="Jetzt entdecken"
         variant="primary"

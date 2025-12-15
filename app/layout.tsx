@@ -17,8 +17,8 @@ const lora = Lora({
 });
 
 export const metadata: Metadata = {
-  title: "Olivadis - Premium Bio-Olivenöl",
-  description: "Entdecken Sie Premium Bio-Olivenöl aus dem Olivadis Familienbetrieb - 100% griechisch, biologisch und nachhaltig produziert",
+  title: "Olivadis - Premium Natives Olivenöl Extra",
+  description: "Entdecken Sie Premium Natives Olivenöl Extra aus dem Olivadis Familienbetrieb - 100% griechisch und nachhaltig produziert",
 };
 
 export default function RootLayout({

@@ -194,7 +194,7 @@ export default async function ProductPage({
                   <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span>100% Bio-zertifiziert aus Familienanbau</span>
+                  <span>100% aus Familienanbau</span>
                 </li>
                 <li className="flex items-start gap-2 text-sm text-primary-dark">
                   <svg className="w-5 h-5 text-primary-light flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -142,8 +142,8 @@ export default function AboutPage() {
                 />
                 <TimelineItem
                   year="2020"
-                  title="Bio-Zertifizierung"
-                  description="Unsere Olivenhaine erhalten die offizielle Bio-Zertifizierung. Wir arbeiten im Einklang mit der Natur – wie es schon immer war."
+                  title="Nachhaltige Produktion"
+                  description="Wir setzen konsequent auf nachhaltige Produktionsmethoden. Wir arbeiten im Einklang mit der Natur – wie es schon immer war."
                 />
                 <TimelineItem
                   year="2023"
